@@ -55,4 +55,19 @@
     <string name="search_language_hint">Tìm kiếm ngôn ngữ hoặc mã quốc gia…</string>
     <string name="active_language_status">● Đang kích hoạt • Hệ thống</string>
     <string name="language_updated">Đã đổi ngôn ngữ sang %1$s</string>
+    <string name="step_1_of_2">BƯỚC 1 / 2</string>
+    <string name="step_2_of_2">BƯỚC 2 / 2</string>
+    <string name="choose_your_language_title">Chọn Ngôn Ngữ Của Bạn</string>
+    <string name="choose_your_language_desc">Chọn ngôn ngữ hiển thị bạn muốn dùng. Bạn có thể thay đổi bất kỳ lúc nào trong Cài đặt.</string>
+    <string name="default_currencies_title">Đồng Tiền Theo Dõi Mặc Định</string>
+    <string name="default_currencies_desc">Chọn tối đa 5 đồng tiền bạn muốn theo dõi trong mục Quy đổi nhanh đa tiền tệ.</string>
+    <string name="selected_currencies_count">Đã chọn: %1$d/%2$d đồng tiền</string>
+    <string name="max_currencies_reached">Chỉ được chọn tối đa %1$d đồng tiền</string>
+    <string name="min_currency_required">Vui lòng chọn tối thiểu 1 đồng tiền</string>
+    <string name="complete_and_start">Hoàn Tất &amp; Bắt Đầu Ngay</string>
+    <string name="quick_currencies_title">Đồng tiền quy đổi nhanh</string>
+    <string name="quick_currencies_summary">Các đồng tiền hiển thị ở mục quy đổi nhanh (tối đa 5)</string>
+    <string name="quick_currencies_badge">%1$d/5 đồng tiền ›</string>
+    <string name="quick_currencies_updated">Đã cập nhật danh sách đồng tiền quy đổi nhanh</string>
+    <string name="save">Lưu thay đổi</string>
 </resources>

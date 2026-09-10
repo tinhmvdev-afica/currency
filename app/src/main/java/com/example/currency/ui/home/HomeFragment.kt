@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -45,40 +46,38 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Bottom Navigation listener
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_converter -> {
-                    binding.viewPagerMain.setCurrentItem(0, false)
-                    true
-                }
-                R.id.nav_markets -> {
-                    binding.viewPagerMain.setCurrentItem(1, false)
-                    true
-                }
-                R.id.nav_settings -> {
-                    binding.viewPagerMain.setCurrentItem(2, false)
-                    true
-                }
-                else -> false
-            }
-        }
+        binding.tabConverter.setOnClickListener { selectTab(0) }
+        binding.tabMarkets.setOnClickListener { selectTab(1) }
+        binding.tabSettings.setOnClickListener { selectTab(2) }
+        updateSelectedTab(0)
 
         binding.viewPagerMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val menuId = when (position) {
-                    0 -> R.id.nav_converter
-                    1 -> R.id.nav_markets
-                    2 -> R.id.nav_settings
-                    else -> R.id.nav_converter
-                }
-                if (binding.bottomNavigation.selectedItemId != menuId) {
-                    binding.bottomNavigation.selectedItemId = menuId
-                }
+                updateSelectedTab(position)
             }
         })
     }
+
+    private fun selectTab(position: Int) {
+        binding.viewPagerMain.setCurrentItem(position, false)
+        updateSelectedTab(position)
+    }
+
+    private fun updateSelectedTab(selectedPosition: Int) {
+        val tabs = listOf(binding.tabConverter, binding.tabMarkets, binding.tabSettings)
+        val icons = listOf(binding.iconConverter, binding.iconMarkets, binding.iconSettings)
+        val labels = listOf(binding.textConverter, binding.textMarkets, binding.textSettings)
+
+        tabs.forEachIndexed { index, tab -> tab.isSelected = index == selectedPosition }
+        icons.forEachIndexed { index, icon -> icon.setColorFilter(tabColor(index == selectedPosition)) }
+        labels.forEachIndexed { index, label -> label.setTextColor(tabColor(index == selectedPosition)) }
+    }
+
+    private fun tabColor(isSelected: Boolean): Int = ContextCompat.getColor(
+        requireContext(),
+        if (isSelected) R.color.cyan_400 else R.color.slate_400
+    )
 
     override fun onDestroyView() {
         super.onDestroyView()

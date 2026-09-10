@@ -3,24 +3,34 @@ package com.example.currency.ui.splash
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.currency.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.example.currency.data.local.PreferencesHelper
+import com.example.currency.viewmodel.CoinViewModel
+import com.example.currency.viewmodel.CoinViewModelFactory
+import kotlin.getValue
 
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
+    private val viewModel: CoinViewModel by activityViewModels {
+        CoinViewModelFactory()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.loadCoins("usd")
+        viewModel.loadFiats()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(1500)
+            delay(5000)
             if (isAdded) {
-                try {
+                if (PreferencesHelper.isOnboardingCompleted(requireContext())) {
                     findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-                } catch (e: Exception) {
-                    findNavController().navigate(R.id.homeFragment)
+                } else {
+                    findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
                 }
             }
         }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.currency.R
+import com.example.currency.data.local.PreferencesHelper
 import com.example.currency.data.repository.CurrencyMockRepository
 import com.example.currency.databinding.FragmentOnboardingBinding
 
@@ -84,9 +85,7 @@ class OnboardingFragment : Fragment() {
     }
 
     private fun finishOnboarding() {
-        val prefs = requireContext().getSharedPreferences("coinflux_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putBoolean("onboarding_completed", true).apply()
-        findNavController().navigate(R.id.action_onboardingFragment_to_homeFragment)
+        findNavController().navigate(R.id.action_onboardingFragment_to_onboardingLanguageFragment)
     }
 
     override fun onDestroyView() {

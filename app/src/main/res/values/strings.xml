@@ -55,4 +55,19 @@
     <string name="search_language_hint">Search language or code…</string>
     <string name="active_language_status">● Active • System</string>
     <string name="language_updated">Language changed to %1$s</string>
+    <string name="step_1_of_2">STEP 1 / 2</string>
+    <string name="step_2_of_2">STEP 2 / 2</string>
+    <string name="choose_your_language_title">Choose Your Language</string>
+    <string name="choose_your_language_desc">Select your preferred app language. You can change this at any time in Settings.</string>
+    <string name="default_currencies_title">Default Currencies</string>
+    <string name="default_currencies_desc">Select up to 5 currencies to track in the Quick Multi-Currency conversion section.</string>
+    <string name="selected_currencies_count">Selected: %1$d/%2$d currencies</string>
+    <string name="max_currencies_reached">You can select at most %1$d currencies</string>
+    <string name="min_currency_required">Please select at least 1 currency</string>
+    <string name="complete_and_start">Complete &amp; Get Started</string>
+    <string name="quick_currencies_title">Quick conversion currencies</string>
+    <string name="quick_currencies_summary">Currencies shown in quick multi-currency section (max 5)</string>
+    <string name="quick_currencies_badge">%1$d/5 currencies ›</string>
+    <string name="quick_currencies_updated">Quick currencies updated</string>
+    <string name="save">Save</string>
 </resources>

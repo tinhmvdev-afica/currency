@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import com.example.currency.R
+import com.example.currency.data.local.PreferencesHelper
 import com.example.currency.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
@@ -34,6 +35,9 @@ class SettingsFragment : Fragment() {
 
         // Setup Language Section
         setupLanguageSection(prefs)
+
+        // Setup Quick Multi-Currencies
+        setupQuickCurrencies()
 
         // Load default currency
         val currentDefault = prefs.getString("default_currency", "VND (₫)") ?: "VND (₫)"
@@ -62,6 +66,22 @@ class SettingsFragment : Fragment() {
             val msg = getString(if (isChecked) R.string.auto_refresh_enabled else R.string.auto_refresh_disabled)
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setupQuickCurrencies() {
+        updateQuickCurrenciesBadge()
+
+        binding.btnQuickCurrencies.setOnClickListener {
+            val bottomSheet = QuickCurrenciesBottomSheet {
+                updateQuickCurrenciesBadge()
+            }
+            bottomSheet.show(parentFragmentManager, "QuickCurrenciesBottomSheet")
+        }
+    }
+
+    private fun updateQuickCurrenciesBadge() {
+        val count = PreferencesHelper.getQuickCurrencies(requireContext()).size
+        binding.tvQuickCurrenciesBadge.text = "$count/${PreferencesHelper.MAX_QUICK_CURRENCIES} ›"
     }
 
     private fun setupLanguageSection(prefs: SharedPreferences) {

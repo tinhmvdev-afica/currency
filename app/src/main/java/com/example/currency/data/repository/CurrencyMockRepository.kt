@@ -294,50 +294,5 @@ object CurrencyMockRepository {
         }
     }
 
-    fun getQuickConversions(context: Context, inputAmount: Double, from: CurrencyItem): List<QuickCurrencyItem> {
-        val baseUsd = inputAmount * from.priceInUsd
 
-        val usdAmount = baseUsd
-        val eurAmount = baseUsd * 0.92
-        val ethAmount = if (3315.20 > 0) baseUsd / 3315.20 else 0.0
-        val solAmount = if (218.40 > 0) baseUsd / 218.40 else 0.0
-
-        return listOf(
-            QuickCurrencyItem(
-                symbol = "USD",
-                name = context.getString(R.string.us_dollar),
-                iconText = "$",
-                convertedAmount = "$" + formatNumber(usdAmount),
-                subText = context.getString(R.string.base_rate_usd),
-                isChangeBadge = false
-            ),
-            QuickCurrencyItem(
-                symbol = "EUR",
-                name = "Euro",
-                iconText = "€",
-                convertedAmount = "€" + formatNumber(eurAmount),
-                subText = context.getString(R.string.price_change_down, "0.35"),
-                isChangeBadge = true,
-                isPositive = false
-            ),
-            QuickCurrencyItem(
-                symbol = "ETH",
-                name = "Ethereum",
-                iconText = "Ξ",
-                convertedAmount = formatNumber(ethAmount) + " ETH",
-                subText = context.getString(R.string.price_change_down, "2.40"),
-                isChangeBadge = true,
-                isPositive = false
-            ),
-            QuickCurrencyItem(
-                symbol = "SOL",
-                name = "Solana",
-                iconText = "◎",
-                convertedAmount = formatNumber(solAmount) + " SOL",
-                subText = context.getString(R.string.price_change_up, "6.18"),
-                isChangeBadge = true,
-                isPositive = true
-            )
-        )
-    }
 }

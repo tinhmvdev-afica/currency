@@ -9,16 +9,13 @@
     android:padding="12dp">
 
     <!-- Icon Badge Circle -->
-    <TextView
+
+    <ImageView
         android:id="@+id/tvQuickIcon"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:background="@drawable/bg_badge_cyan"
-        android:gravity="center"
-        android:text="$"
-        android:textColor="@color/cyan_400"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop" />
 
     <!-- Name and Symbol -->
     <LinearLayout
