@@ -6,13 +6,15 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.currency.R
-import com.example.currency.data.repository.CurrencyMockRepository
+import com.example.currency.data.model.CurrencyItem
 import com.example.currency.databinding.FragmentMarketsBinding
+import com.example.currency.viewmodel.CoinViewModel
+import com.example.currency.viewmodel.CoinViewModelFactory
+import kotlinx.coroutines.launch
 
 class MarketsFragment : Fragment() {
 
@@ -20,6 +22,8 @@ class MarketsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: MarketCoinAdapter
+    private val viewModel: CoinViewModel by activityViewModels { CoinViewModelFactory() }
+    private var marketCoins: List<CurrencyItem> = emptyList()
     private var selectedCategory: String = "Tất cả"
 
     override fun onCreateView(
@@ -38,7 +42,7 @@ class MarketsFragment : Fragment() {
         binding.rvMarkets.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMarkets.adapter = adapter
 
-        // Setup Chips
+        /* Category chips are intentionally disabled: Market has one unified list.
         val chips = listOf(
             binding.chipAll to "Tất cả",
             binding.chipLayer1 to "Layer 1",
@@ -54,6 +58,7 @@ class MarketsFragment : Fragment() {
             }
         }
 
+        */
         // Setup Search Listener
         binding.etMarketSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -63,9 +68,18 @@ class MarketsFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        filterCoins()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                marketCoins = state.currencies.sortedByDescending {
+                    it.marketCap ?: Double.NEGATIVE_INFINITY
+                }
+                filterCoins()
+            }
+        }
+        viewModel.loadCoins("usd")
     }
 
+    /*
     private fun updateChipStyles(chips: List<Pair<TextView, String>>) {
         val context = requireContext()
         chips.forEach { (chipView, category) ->
@@ -96,6 +110,17 @@ class MarketsFragment : Fragment() {
             matchCategory && matchSearch
         }
 
+        adapter.updateData(filtered)
+    }
+
+    */
+    private fun filterCoins() {
+        val query = binding.etMarketSearch.text.toString().trim().lowercase()
+        val filtered = marketCoins.filter { coin ->
+            query.isEmpty() ||
+                    coin.name.lowercase().contains(query) ||
+                    coin.symbol.lowercase().contains(query)
+        }
         adapter.updateData(filtered)
     }
 

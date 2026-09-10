@@ -38,15 +38,11 @@ class CurrencyRepository(
                     name = detail.name,
                     isCrypto = true,
                     iconUrl = detail.image,
-                    symbolChar = when (detail.symbol.lowercase()) {
-                        "btc" -> "₿"
-                        "eth" -> "Ξ"
-                        "usdt" -> "₮"
-                        "doge" -> "Ð"
-                        else -> detail.symbol.take(3).uppercase()
-                    },
+                    symbolChar = detail.symbol.take(3).uppercase(),
                     priceInUsd = detail.currentPrice,
-                    priceChange24h = detail.priceChangePercentage24h
+                    priceChange24h = detail.priceChangePercentage24h,
+                    marketCap = detail.marketCap,
+                    marketCapRank = detail.marketCapRank
                 )
             }
             saveCurrencies(items)
@@ -166,6 +162,8 @@ class CurrencyRepository(
                         symbolChar = currency.symbolChar
                         priceInUsd = currency.priceInUsd
                         priceChange24h = currency.priceChange24h
+                        marketCap = currency.marketCap
+                        marketCapRank = currency.marketCapRank
                     },
                     updatePolicy = UpdatePolicy.ALL
                 )
@@ -202,7 +200,9 @@ class CurrencyRepository(
                     iconUrl = item.iconUrl,
                     symbolChar = item.symbolChar,
                     priceInUsd = item.priceInUsd,
-                    priceChange24h = item.priceChange24h
+                    priceChange24h = item.priceChange24h,
+                    marketCap = item.marketCap,
+                    marketCapRank = item.marketCapRank
                 )
             }
     }

@@ -19,17 +19,12 @@
         android:textStyle="bold" />
 
     <!-- Coin Icon -->
-    <TextView
+    <ImageView
         android:id="@+id/tvCoinIcon"
         android:layout_width="34dp"
         android:layout_height="34dp"
-        android:layout_marginStart="6dp"
-        android:background="@drawable/bg_swap_button"
-        android:gravity="center"
-        android:text="₿"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop" />
 
     <!-- Name & Cap -->
     <LinearLayout

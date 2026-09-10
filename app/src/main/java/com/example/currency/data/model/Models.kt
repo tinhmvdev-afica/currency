@@ -69,7 +69,9 @@ data class CurrencyItem(
     val iconUrl: String? = null,
     val symbolChar: String = "",
     val priceInUsd: Double = 0.0,
-    val priceChange24h: Double? = null
+    val priceChange24h: Double? = null,
+    val marketCap: Double? = null,
+    val marketCapRank: Int? = null
 )
 
 

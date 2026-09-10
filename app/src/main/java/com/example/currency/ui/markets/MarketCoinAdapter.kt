@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.currency.R
 import com.example.currency.data.model.CurrencyItem
 import com.example.currency.data.repository.CurrencyMockRepository
@@ -38,11 +39,17 @@ class MarketCoinAdapter(
         val item = items[position]
         val context = holder.itemView.context
 
-        holder.binding.tvCoinRank.text = (position + 1).toString()
-        holder.binding.tvCoinIcon.text = item.symbolChar
+        holder.binding.tvCoinRank.text = item.marketCapRank?.toString() ?: ""
+
+        holder.binding.tvCoinIcon.load(item.iconUrl) {
+            crossfade(true)
+            placeholder(R.drawable.bg_swap_button)
+            error(R.drawable.bg_swap_button)
+        }
         holder.binding.tvCoinName.text = item.name
         holder.binding.tvCoinSymbol.text = item.symbol
-        holder.binding.tvCoinMarketCap.text = if (item.isCrypto) "Crypto" else "Fiat"
+        holder.binding.tvCoinMarketCap.text = "MCap: $" +
+            CurrencyMockRepository.formatNumber(item.marketCap ?: 0.0)
         holder.binding.tvCoinPrice.text = "$" + CurrencyMockRepository.formatNumber(item.priceInUsd)
 
         val change = item.priceChange24h ?: 0.0
