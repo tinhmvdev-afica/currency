@@ -11,14 +11,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.currency.data.local.PreferencesHelper
 import com.example.currency.viewmodel.CoinViewModel
-import com.example.currency.viewmodel.CoinViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
-
+@AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
-    private val viewModel: CoinViewModel by activityViewModels {
-        CoinViewModelFactory()
-    }
+    private val viewModel: CoinViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadCoins("usd")

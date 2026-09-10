@@ -8,7 +8,8 @@ object RealmDatabase {
 
     private val config = RealmConfiguration.Builder(
         schema = setOf(
-            CurrencyRealm::class
+            CurrencyRealm::class,
+            RefreshInfo::class
         )
     )
         .name("currency.realm")

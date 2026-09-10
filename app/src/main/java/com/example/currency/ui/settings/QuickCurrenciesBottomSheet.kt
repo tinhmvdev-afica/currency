@@ -18,17 +18,15 @@ import com.example.currency.data.model.CurrencyItem
 import com.example.currency.databinding.BottomSheetQuickCurrenciesBinding
 import com.example.currency.ui.onboarding.CurrenciesSelectableAdapter
 import com.example.currency.viewmodel.CoinViewModel
-import com.example.currency.viewmodel.CoinViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class QuickCurrenciesBottomSheet(
     private val onSaved: (List<String>) -> Unit
 ) : BottomSheetDialogFragment() {
 
-    private val viewModel: CoinViewModel by activityViewModels {
-        CoinViewModelFactory()
-    }
+    private val viewModel: CoinViewModel by activityViewModels()
 
     private var _binding: BottomSheetQuickCurrenciesBinding? = null
     private val binding get() = _binding!!

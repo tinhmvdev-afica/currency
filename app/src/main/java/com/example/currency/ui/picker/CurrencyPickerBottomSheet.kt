@@ -16,17 +16,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.currency.viewmodel.CoinViewModel
-import com.example.currency.viewmodel.CoinViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CurrencyPickerBottomSheet(
     private val slot: String, // "from" or "to"
     private val initialIsCrypto: Boolean = true,
     private val onCurrencySelected: (CurrencyItem) -> Unit
 ) : BottomSheetDialogFragment() {
-    private val viewModel: CoinViewModel by activityViewModels {
-        CoinViewModelFactory()
-    }
+    private val viewModel: CoinViewModel by activityViewModels()
 
     private var _binding: BottomSheetCurrencyPickerBinding? = null
     private val binding get() = _binding!!

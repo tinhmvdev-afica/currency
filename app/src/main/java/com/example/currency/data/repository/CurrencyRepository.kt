@@ -3,28 +3,35 @@ package com.example.currency.data.repository
 import android.util.Log
 import com.example.currency.data.api.CoinGeckoApi
 import com.example.currency.data.api.CurrencyFreaksApi
-import com.example.currency.data.api.RetrofitClient
 import com.example.currency.data.local.CurrencyRealm
 import com.example.currency.data.local.RealmDatabase.realm
-//import com.example.currency.data.local.CurrencyRealm
-
-import com.example.currency.data.model.CoinMarket
-import com.example.currency.data.model.CurrencyFreaksDetail
-import com.example.currency.data.model.CurrencyFreaksRatesResponse
-import com.example.currency.data.model.CurrencyFreaksResponse
 import com.example.currency.data.model.CurrencyItem
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
+import com.example.currency.data.local.RefreshInfo
 import kotlin.text.get
 
-class CurrencyRepository(
-    private val coinGeckoApi: CoinGeckoApi = RetrofitClient.api,
-    private val currencyFreaksApi: CurrencyFreaksApi = RetrofitClient.currencyFreaksApi
+import javax.inject.Inject
+class CurrencyRepository @Inject constructor(
+    private val coinGeckoApi: CoinGeckoApi,
+    private val currencyFreaksApi: CurrencyFreaksApi
 ) {
-    suspend fun getCoinMarket(currency: String= "vnd"): Result<List<CurrencyItem>>{
+    companion object {
+
+        private const val CRYPTO_KEY = "crypto"
+        private const val FIAT_KEY = "fiat"
+
+        private const val CRYPTO_REFRESH_TIME =
+            5 * 60 * 1000L // 5 phút
+
+        private const val FIAT_REFRESH_TIME =
+            30 * 60 * 1000L // 30 phút
+    }
+
+    suspend fun getCoinMarket(currency: String= "usd",forceRefresh: Boolean = false): Result<List<CurrencyItem>>{
         return try {
             val localData = getCryptosFromLocal()
-            if (localData.isNotEmpty()) {
+            if (localData.isNotEmpty() && !shouldRefresh(CRYPTO_KEY, CRYPTO_REFRESH_TIME)) {
                 return Result.success(localData)
             }
             val result = coinGeckoApi.getCoinMarkets(
@@ -46,6 +53,7 @@ class CurrencyRepository(
                 )
             }
             saveCurrencies(items)
+            updateRefreshTime(CRYPTO_KEY)
             Result.success(items)
         }
         catch (e: Exception){
@@ -53,10 +61,10 @@ class CurrencyRepository(
         }
     }
     //getFiats đang gọi cùng lúc 2 API
-    suspend fun getFiats(): Result<List<CurrencyItem>>{
+    suspend fun getFiats(forceRefresh: Boolean = false): Result<List<CurrencyItem>>{
         return try{
             val localData = getFiatsFromLocal()
-            if (localData.isNotEmpty()) {
+            if (localData.isNotEmpty() && !shouldRefresh(FIAT_KEY, FIAT_REFRESH_TIME)) {
                 return Result.success(localData)
             }
             // 1. Lấy supported currencies
@@ -96,57 +104,55 @@ class CurrencyRepository(
                         priceInUsd = priceInUsd
                     )
                 }
-            Log.d("CHECK_FIAT", "Tổng số đồng fiat lấy được: ${items.size}")
-            items.take(5).forEach { item ->
-                Log.d("CHECK_FIAT", "Item: id=${item.id}, symbol=${item.symbol}, name=${item.name}, iconurl = ${item.iconUrl}")
-            }
             saveCurrencies(items)
-
+            updateRefreshTime(FIAT_KEY)
             Result.success(items)
 
         } catch (e: Exception){
             Result.failure(e)
         }
     }
-    suspend fun getAllCurrencies(): Result<List<CurrencyItem>> {
-        return try {
-            val localData = getCurrenciesFromLocal()
+    private fun shouldRefresh(key: String, refreshTime: Long): Boolean {
 
-            if (localData.isNotEmpty()) {
-                Log.d(
-                    "CURRENCY_DATA",
-                    "Lấy ${localData.size} currencies từ Realm"
+        val refreshInfo = realm
+            .query<RefreshInfo>(
+                "key == $0",
+                key
+            )
+            .first()
+            .find()
+
+        // Chưa từng refresh
+        if (refreshInfo == null) {
+            return true
+        }
+
+        val now = System.currentTimeMillis()
+
+        return now - refreshInfo.lastUpdated >= refreshTime
+    }
+    private suspend fun updateRefreshTime(key: String) {
+        realm.write {
+            val refreshInfo = query<RefreshInfo>(
+                "key == $0",
+                key
+            )
+                .first()
+                .find()
+            if (refreshInfo == null) {
+                copyToRealm(
+                    RefreshInfo().apply {
+                        this.key = key
+                        lastUpdated =
+                            System.currentTimeMillis()
+                    }
                 )
-
-                return Result.success(localData)
+            } else {
+                refreshInfo.lastUpdated =
+                    System.currentTimeMillis()
             }
-
-            Log.d(
-                "CURRENCY_DATA",
-                "Realm rỗng, bắt đầu gọi API"
-            )
-
-            val cryptoResult = getCoinMarket("usd")
-            val fiatResult = getFiats()
-
-            cryptoResult.getOrThrow()
-            fiatResult.getOrThrow()
-
-            val result = getCurrenciesFromLocal()
-
-            Result.success(result)
-
-        } catch (e: Exception) {
-            Log.e(
-                "CURRENCY_DATA",
-                "getAllCurrencies error",
-                e
-            )
-
-            Result.failure(e)
         }
     }
-
     suspend fun saveCurrencies(currencies: List<CurrencyItem>) {
         realm.write {
 
@@ -170,23 +176,8 @@ class CurrencyRepository(
             }
         }
     }
-    fun getCurrenciesFromLocal(): List<CurrencyItem> {
-        return realm
-            .query<CurrencyRealm>()
-            .find()
-            .map { item ->
-                CurrencyItem(
-                    id = item.id,
-                    symbol = item.symbol,
-                    name = item.name,
-                    isCrypto = item.isCrypto,
-                    iconUrl = item.iconUrl,
-                    symbolChar = item.symbolChar,
-                    priceInUsd = item.priceInUsd,
-                    priceChange24h = item.priceChange24h
-                )
-            }
-    }
+
+
     fun getCryptosFromLocal(): List<CurrencyItem> {
         return realm
             .query<CurrencyRealm>("isCrypto == true")

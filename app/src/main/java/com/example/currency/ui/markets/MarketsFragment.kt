@@ -13,16 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currency.data.model.CurrencyItem
 import com.example.currency.databinding.FragmentMarketsBinding
 import com.example.currency.viewmodel.CoinViewModel
-import com.example.currency.viewmodel.CoinViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MarketsFragment : Fragment() {
 
     private var _binding: FragmentMarketsBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var adapter: MarketCoinAdapter
-    private val viewModel: CoinViewModel by activityViewModels { CoinViewModelFactory() }
+    private val viewModel: CoinViewModel by activityViewModels()
     private var marketCoins: List<CurrencyItem> = emptyList()
     private var selectedCategory: String = "Tất cả"
 

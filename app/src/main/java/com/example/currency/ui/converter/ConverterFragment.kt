@@ -20,17 +20,15 @@ import com.example.currency.data.model.QuickCurrencyItem
 import com.example.currency.databinding.FragmentConverterBinding
 import com.example.currency.ui.picker.CurrencyPickerBottomSheet
 import com.example.currency.viewmodel.CoinViewModel
-import com.example.currency.viewmodel.CoinViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
-
+@AndroidEntryPoint
 class ConverterFragment : Fragment() {
 
-    private val viewModel: CoinViewModel by activityViewModels {
-        CoinViewModelFactory()
-    }
+    private val viewModel: CoinViewModel by activityViewModels()
     private var _binding: FragmentConverterBinding? = null
     private val binding get() = _binding!!
 
@@ -130,7 +128,7 @@ class ConverterFragment : Fragment() {
                 .setDuration(600)
                 .setInterpolator(LinearInterpolator())
                 .start()
-
+            viewModel.refreshAll()
             calculateConversion()
         }
 

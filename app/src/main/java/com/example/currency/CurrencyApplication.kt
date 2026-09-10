@@ -6,8 +6,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import dagger.hilt.android.HiltAndroidApp
+
 
 /** Cấu hình Coil dùng chung cho toàn bộ AsyncImage trong ứng dụng. */
+@HiltAndroidApp
 class CurrencyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()

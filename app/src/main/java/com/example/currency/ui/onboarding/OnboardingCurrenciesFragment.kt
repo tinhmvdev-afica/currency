@@ -19,14 +19,12 @@ import com.example.currency.data.local.PreferencesHelper
 import com.example.currency.data.model.CurrencyItem
 import com.example.currency.databinding.FragmentOnboardingCurrenciesBinding
 import com.example.currency.viewmodel.CoinViewModel
-import com.example.currency.viewmodel.CoinViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class OnboardingCurrenciesFragment : Fragment() {
 
-    private val viewModel: CoinViewModel by activityViewModels {
-        CoinViewModelFactory()
-    }
+    private val viewModel: CoinViewModel by activityViewModels()
 
     private var _binding: FragmentOnboardingCurrenciesBinding? = null
     private val binding get() = _binding!!

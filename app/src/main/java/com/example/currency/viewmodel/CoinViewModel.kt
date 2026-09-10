@@ -1,5 +1,6 @@
 package com.example.currency.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 data class CryptoUiState(
     val isLoading: Boolean = false,
@@ -25,7 +28,8 @@ data class FiatsUiState(
     val selectedCurrency: CurrencyItem? = null,
     val errorMessage: String? = null
 )
-class CoinViewModel(
+@HiltViewModel
+class CoinViewModel  @Inject constructor (
     private val repository: CurrencyRepository
 ) : ViewModel() {
 
@@ -94,7 +98,16 @@ class CoinViewModel(
                 }
         }
     }
-
+    fun refreshAll() {
+        viewModelScope.launch {
+            val cryptoResult = repository.getCoinMarket(currency = "usd", forceRefresh = true)
+            val fiatResult = repository.getFiats(forceRefresh = true)
+            if (cryptoResult.isSuccess && fiatResult.isSuccess
+            ) {
+                Log.d("REFRESH", "Refresh thành công")
+            }
+        }
+    }
     /**
      * Lấy một coin cụ thể.
      *
@@ -113,12 +126,3 @@ class CoinViewModel(
 }
 
 /** Supplies the repository dependency when Compose creates [CoinViewModel]. */
-class CoinViewModelFactory : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        if (modelClass.isAssignableFrom(CoinViewModel::class.java)) {
-            return CoinViewModel(CurrencyRepository()) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
-    }
-}
