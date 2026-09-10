@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_convert">রূপান্তর</string>
+    <string name="nav_markets">বাজার</string>
+    <string name="nav_settings">সেটিংস</string>
+    <string name="settings">সেটিংস</string>
+    <string name="markets">ক্রিপ্টো বাজার</string>
+    <string name="base_rate_usd">মূল হার (USD)</string>
+    <string name="us_dollar">মার্কিন ডলার</string>
+    <string name="settings_subtitle">সিস্টেম কাস্টমাইজ করুন</string>
+    <string name="app_name">কয়েনফ্লাক্স</string>
+    <string name="converter_title">মুদ্রা রূপান্তরকারী</string>
+    <string name="fast_convenient">দ্রুত ও সুবিধাজনক</string>
+    <string name="amount_to_convert">রূপান্তরের পরিমাণ</string>
+    <string name="amount_to_receive">প্রাপ্ত পরিমাণ</string>
+    <string name="exchange_rate">বিনিময় হার:</string>
+    <string name="quick_multi_currency">দ্রুত বহু-মুদ্রা রূপান্তর</string>
+    <string name="auto_updated">স্বয়ংক্রিয়ভাবে আপডেট হয়</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ বৃদ্ধি +%1$s%% (24ঘ)</string>
+    <string name="price_change_down">↓ কমেছে -%1$s%% (24ঘ)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+</resources>

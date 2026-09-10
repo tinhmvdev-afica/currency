@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:gravity="center"
-        android:text="Quy Đổi Đa Năng Tức Thì"
+        android:text="@string/instant_converter"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -47,7 +47,7 @@
         android:layout_marginTop="12dp"
         android:gravity="center"
         android:lineSpacingMultiplier="1.2"
-        android:text="Chuyển đổi liền mạch giữa các đồng tiền pháp định (USD, VND, EUR) và hơn 100+ đồng Crypto hàng đầu."
+        android:text="@string/instant_converter_description"
         android:textColor="@color/slate_400"
         android:textSize="14sp" />
 

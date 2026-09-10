@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Thị Trường Crypto"
+        android:text="@string/markets"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="Top 100 coin theo vốn hóa từ CoinGecko"
+        android:text="@string/markets_subtitle"
         android:textColor="@color/slate_400"
         android:textSize="11sp" />
 
@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:background="@null"
-            android:hint="Tìm kiếm Bitcoin, ETH, Solana..."
+        android:hint="@string/search_coins"
             android:inputType="text"
             android:textColor="@color/white"
             android:textColorHint="@color/slate_500"
@@ -74,7 +74,7 @@
                 android:paddingTop="6dp"
                 android:paddingEnd="14dp"
                 android:paddingBottom="6dp"
-                android:text="Tất cả"
+        android:text="@string/all"
                 android:textColor="@color/cyan_400"
                 android:textSize="11sp"
                 android:textStyle="bold" />

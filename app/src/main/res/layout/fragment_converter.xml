@@ -47,7 +47,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quy đổi Tỷ giá"
+                    android:text="@string/converter_title"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -68,7 +68,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:text="Nhanh chóng tiện lợi"
+                    android:text="@string/fast_convenient"
                         android:textColor="@color/emerald_400"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -117,7 +117,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Số tiền chuyển đi"
+                            android:text="@string/amount_to_convert"
                             android:textColor="@color/slate_400"
                             android:textSize="11sp" />
 
@@ -207,7 +207,7 @@
                             android:paddingTop="2dp"
                             android:paddingEnd="6dp"
                             android:paddingBottom="2dp"
-                            android:text="↓ Giảm -1.85% (24h)"
+                            android:text="@string/sample_price_change_down"
                             android:textColor="@color/rose_400"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -238,7 +238,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Số tiền nhận được"
+                            android:text="@string/amount_to_receive"
                             android:textColor="@color/slate_400"
                             android:textSize="11sp" />
 
@@ -327,7 +327,7 @@
                             android:paddingTop="2dp"
                             android:paddingEnd="6dp"
                             android:paddingBottom="2dp"
-                            android:text="↓ Giảm -1.85% (24h)"
+                            android:text="@string/sample_price_change_down"
                             android:textColor="@color/rose_400"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -345,7 +345,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tỷ giá: "
+                        android:text="@string/exchange_rate"
                         android:textColor="@color/slate_400"
                         android:textSize="11sp" />
 
@@ -404,7 +404,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="QUY ĐỔI NHANH ĐA TIỀN TỆ"
+                android:text="@string/quick_multi_currency"
                 android:textColor="@color/slate_300"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -412,7 +412,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tự động cập nhật"
+                android:text="@string/auto_updated"
                 android:textColor="@color/cyan_400"
                 android:textSize="10sp"
                 android:textStyle="bold" />

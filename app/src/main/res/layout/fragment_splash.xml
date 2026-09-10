@@ -87,7 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
-        android:text="Đang khởi động dữ liệu tỷ giá..."
+        android:text="@string/starting_rates"
         android:textColor="#64748B"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

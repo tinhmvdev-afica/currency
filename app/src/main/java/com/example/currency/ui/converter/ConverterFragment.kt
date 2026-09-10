@@ -156,13 +156,18 @@ class ConverterFragment : Fragment() {
         }
 
         if (fromCurrency.isCrypto) {
-            binding.tvFromSubtext.text = "1 ${fromCurrency.symbol} ≈ $" +
-                    CurrencyMockRepository.formatNumber(fromCurrency.priceInUsd)
+            binding.tvFromSubtext.text = getString(
+                R.string.price_reference,
+                fromCurrency.symbol,
+                CurrencyMockRepository.formatNumber(fromCurrency.priceInUsd)
+            )
 
             val change = fromCurrency.priceChange24h ?: 0.0
             val isPos = change >= 0
-            val prefix = if (isPos) "↑ Tăng +" else "↓ Giảm "
-            val changeText = prefix + String.format("%.2f%% (24h)", kotlin.math.abs(change))
+            val changeText = getString(
+                if (isPos) R.string.price_change_up else R.string.price_change_down,
+                String.format("%.2f", kotlin.math.abs(change))
+            )
             binding.tvFromChangeBadge.text = changeText
             binding.tvFromChangeBadge.visibility = View.VISIBLE
 
@@ -174,18 +179,18 @@ class ConverterFragment : Fragment() {
                 binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
             }
         } else {
-            binding.tvFromSubtext.text = "1 ${fromCurrency.symbol} ≈ $" +
-                    CurrencyMockRepository.formatNumber(fromCurrency.priceInUsd)
+            binding.tvFromSubtext.text = getString(R.string.price_reference, fromCurrency.symbol, CurrencyMockRepository.formatNumber(fromCurrency.priceInUsd))
             binding.tvFromChangeBadge.visibility = View.GONE
         }
         if (toCurrency.isCrypto) {
-            binding.tvToSubtext.text = "1 ${toCurrency.symbol} ≈ $" +
-                    CurrencyMockRepository.formatNumber(toCurrency.priceInUsd)
+            binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, CurrencyMockRepository.formatNumber(toCurrency.priceInUsd))
 
             val change = toCurrency.priceChange24h ?: 0.0
             val isPos = change >= 0
-            val prefix = if (isPos) "↑ Tăng +" else "↓ Giảm "
-            val changeText = prefix + String.format("%.2f%% (24h)", kotlin.math.abs(change))
+            val changeText = getString(
+                if (isPos) R.string.price_change_up else R.string.price_change_down,
+                String.format("%.2f", kotlin.math.abs(change))
+            )
             binding.tvToChangeBadge.text = changeText
             binding.tvToChangeBadge.visibility = View.VISIBLE
 
@@ -197,8 +202,7 @@ class ConverterFragment : Fragment() {
                 binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
             }
         } else {
-            binding.tvToSubtext.text = "1 ${toCurrency.symbol} ≈ $" +
-                    CurrencyMockRepository.formatNumber(toCurrency.priceInUsd)
+            binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, CurrencyMockRepository.formatNumber(toCurrency.priceInUsd))
             binding.tvToChangeBadge.visibility = View.GONE
         }
 
@@ -209,8 +213,7 @@ class ConverterFragment : Fragment() {
             placeholder(R.drawable.bg_swap_button)
             error(R.drawable.bg_swap_button)
         }
-        binding.tvToSubtext.text = "1 ${toCurrency.symbol} ≈ $" +
-                CurrencyMockRepository.formatNumber(toCurrency.priceInUsd)
+        binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, CurrencyMockRepository.formatNumber(toCurrency.priceInUsd))
 //        if (toCurrency.isCrypto) {
 //
 //        } else {
@@ -220,7 +223,7 @@ class ConverterFragment : Fragment() {
         // RATE RATIO
         val rate = CurrencyMockRepository.calculateRate(fromCurrency, toCurrency)
         val rateString = CurrencyMockRepository.formatNumber(rate)
-        binding.tvRateRatio.text = "1 ${fromCurrency.symbol} = $rateString ${toCurrency.symbol}"
+        binding.tvRateRatio.text = getString(R.string.rate_ratio, fromCurrency.symbol, rateString, toCurrency.symbol)
 
 
     }
@@ -231,7 +234,7 @@ class ConverterFragment : Fragment() {
         binding.tvOutputAmount.text = CurrencyMockRepository.formatNumber(result)
 
         // Update Quick Multi-Currency list
-        val quickList = CurrencyMockRepository.getQuickConversions(inputAmount, fromCurrency)
+        val quickList = CurrencyMockRepository.getQuickConversions(requireContext(), inputAmount, fromCurrency)
         quickAdapter.updateData(quickList)
     }
 

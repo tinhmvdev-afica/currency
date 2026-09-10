@@ -72,7 +72,7 @@
             android:paddingTop="2dp"
             android:paddingEnd="6dp"
             android:paddingBottom="2dp"
-            android:text="Tỷ giá gốc (USD)"
+            android:text="@string/base_rate_usd"
             android:textColor="@color/slate_400"
             android:textSize="10sp" />
     </LinearLayout>

@@ -3,15 +3,15 @@
     <item
         android:id="@+id/nav_converter"
         android:icon="@drawable/ic_tab_converter"
-        android:title="Quy đổi" />
+        android:title="@string/nav_convert" />
 
     <item
         android:id="@+id/nav_markets"
         android:icon="@drawable/ic_tab_markets"
-        android:title="Thị trường" />
+        android:title="@string/nav_markets" />
 
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_tab_settings"
-        android:title="Cài đặt" />
+        android:title="@string/nav_settings" />
 </menu>

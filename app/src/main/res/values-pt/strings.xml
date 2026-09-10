@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_convert">Converter</string>
+    <string name="nav_markets">Mercados</string>
+    <string name="nav_settings">Definições</string>
+    <string name="settings">Definições</string>
+    <string name="markets">Mercados de cripto</string>
+    <string name="base_rate_usd">Taxa base (USD)</string>
+    <string name="us_dollar">Dólar americano</string>
+    <string name="app_name">CoinFlux</string>
+    <string name="converter_title">Conversor de moedas</string>
+    <string name="fast_convenient">Rápido e prático</string>
+    <string name="amount_to_convert">Montante a converter</string>
+    <string name="amount_to_receive">Montante recebido</string>
+    <string name="exchange_rate">Taxa de câmbio:</string>
+    <string name="quick_multi_currency">CONVERSÃO RÁPIDA MULTIMOEDA</string>
+    <string name="auto_updated">Atualizado automaticamente</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ Subida +%1$s%% (24h)</string>
+    <string name="price_change_down">↓ Descida -%1$s%% (24h)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+    <string name="settings_subtitle">Personalizar o sistema</string>
+</resources>

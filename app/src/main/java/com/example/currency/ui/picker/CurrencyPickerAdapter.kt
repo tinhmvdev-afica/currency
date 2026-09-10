@@ -88,7 +88,7 @@ class CurrencyPickerAdapter(
                     holder.binding.tvPickerChange.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
                 }
             } else {
-                holder.binding.tvPickerChange.text = "Tỷ giá ổn định"
+                holder.binding.tvPickerChange.setText(R.string.stable_rate)
                 holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_chip_unselected)
                 holder.binding.tvPickerChange.setTextColor(
                     ContextCompat.getColor(context, R.color.slate_400)

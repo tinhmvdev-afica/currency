@@ -1,15 +1,15 @@
 package com.example.currency.ui.settings
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.currency.R
 import com.example.currency.databinding.FragmentSettingsBinding
 
@@ -32,6 +32,9 @@ class SettingsFragment : Fragment() {
 
         val prefs = requireContext().getSharedPreferences("coinflux_prefs", Context.MODE_PRIVATE)
 
+        // Setup Language Section
+        setupLanguageSection(prefs)
+
         // Load default currency
         val currentDefault = prefs.getString("default_currency", "VND (₫)") ?: "VND (₫)"
         binding.tvDefaultCurrencyBadge.text = currentDefault
@@ -44,7 +47,11 @@ class SettingsFragment : Fragment() {
             val nextCurrency = currencies[nextIdx]
             binding.tvDefaultCurrencyBadge.text = nextCurrency
             prefs.edit().putString("default_currency", nextCurrency).apply()
-            Toast.makeText(requireContext(), "Đã đặt đồng tiền mặc định: $nextCurrency", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.default_currency_saved, nextCurrency),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         // Auto Refresh switch
@@ -52,10 +59,44 @@ class SettingsFragment : Fragment() {
         binding.switchAutoRefresh.isChecked = autoRefresh
         binding.switchAutoRefresh.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("auto_refresh", isChecked).apply()
-            val msg = if (isChecked) "Đã bật tự động làm mới" else "Đã tắt tự động làm mới"
+            val msg = getString(if (isChecked) R.string.auto_refresh_enabled else R.string.auto_refresh_disabled)
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
         }
+    }
 
+    private fun setupLanguageSection(prefs: SharedPreferences) {
+        val selectedTag = prefs.getString("app_language", "en") ?: "en"
+        updateActiveLanguageUI(selectedTag)
+
+        // Open BottomSheet when clicking language row
+        binding.btnLanguagePicker.setOnClickListener {
+            val bottomSheet = LanguagePickerBottomSheet(selectedTag) { newLanguage ->
+                applyLanguage(prefs, newLanguage)
+            }
+            bottomSheet.show(parentFragmentManager, "LanguagePickerBottomSheet")
+        }
+    }
+
+    private fun updateActiveLanguageUI(selectedTag: String) {
+        val langItem = LanguagePickerBottomSheet.ALL_LANGUAGES.firstOrNull {
+            it.tag.equals(selectedTag, ignoreCase = true)
+        } ?: LanguagePickerBottomSheet.ALL_LANGUAGES.first { it.tag == "en" }
+
+        binding.tvActiveLanguageFlag.text = langItem.flagEmoji
+        binding.tvActiveLanguageName.text = langItem.displayName
+        binding.tvAllLanguagesBadge.text = getString(R.string.select_language)
+    }
+
+    private fun applyLanguage(prefs: SharedPreferences, language: LanguageItem) {
+        prefs.edit().putString("app_language", language.tag).apply()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.language_updated, language.displayName),
+            Toast.LENGTH_SHORT
+        ).show()
+
+        // Set application locale - this automatically recreates the activity and applies new locale
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language.tag))
     }
 
     override fun onDestroyView() {

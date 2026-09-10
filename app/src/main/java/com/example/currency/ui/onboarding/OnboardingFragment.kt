@@ -40,9 +40,9 @@ class OnboardingFragment : Fragment() {
                 super.onPageSelected(position)
                 updateDots(position)
                 if (position == slides.size - 1) {
-                    binding.btnNext.text = "Bắt đầu ngay"
+                    binding.btnNext.setText(R.string.get_started)
                 } else {
-                    binding.btnNext.text = "Tiếp tục"
+                    binding.btnNext.setText(R.string.continue_text)
                 }
             }
         })

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_subtitle">Настройка системы</string>
+    <string name="currency_options">НАСТРОЙКИ ВАЛЮТЫ</string>
+    <string name="default_currency">Валюта по умолчанию</string>
+    <string name="default_currency_summary">Показывается при открытии приложения</string>
+    <string name="auto_refresh">Автообновление</string>
+    <string name="refresh_every_minute">Обновление каждые 60 секунд</string>
+    <string name="markets_subtitle">Топ-100 монет по капитализации CoinGecko</string>
+    <string name="search_coins">Поиск Bitcoin, ETH, Solana…</string>
+    <string name="all">Все</string>
+    <string name="nav_convert">Конвертация</string>
+    <string name="nav_markets">Рынки</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="settings">Настройки</string>
+    <string name="markets">Крипторынки</string>
+    <string name="base_rate_usd">Базовый курс (USD)</string>
+    <string name="us_dollar">Доллар США</string>
+    <string name="app_name">CoinFlux</string>
+    <string name="converter_title">Конвертер валют</string>
+    <string name="fast_convenient">Быстро и удобно</string>
+    <string name="amount_to_convert">Сумма для конвертации</string>
+    <string name="amount_to_receive">Получаемая сумма</string>
+    <string name="exchange_rate">Курс обмена:</string>
+    <string name="quick_multi_currency">БЫСТРАЯ МУЛЬТИВАЛЮТНАЯ КОНВЕРТАЦИЯ</string>
+    <string name="auto_updated">Обновляется автоматически</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ Рост +%1$s%% (24ч)</string>
+    <string name="price_change_down">↓ Падение -%1$s%% (24ч)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+</resources>

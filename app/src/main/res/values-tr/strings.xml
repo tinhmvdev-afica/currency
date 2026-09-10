@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_convert">Dönüştür</string>
+    <string name="nav_markets">Piyasalar</string>
+    <string name="nav_settings">Ayarlar</string>
+    <string name="settings">Ayarlar</string>
+    <string name="markets">Kripto piyasaları</string>
+    <string name="base_rate_usd">Temel kur (USD)</string>
+    <string name="us_dollar">ABD doları</string>
+    <string name="app_name">CoinFlux</string>
+    <string name="converter_title">Döviz çevirici</string>
+    <string name="fast_convenient">Hızlı ve kullanışlı</string>
+    <string name="amount_to_convert">Dönüştürülecek tutar</string>
+    <string name="amount_to_receive">Alınacak tutar</string>
+    <string name="exchange_rate">Döviz kuru:</string>
+    <string name="quick_multi_currency">HIZLI ÇOKLU PARA BİRİMİ DÖNÜŞÜMÜ</string>
+    <string name="auto_updated">Otomatik güncellenir</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ Artış +%1$s%% (24sa)</string>
+    <string name="price_change_down">↓ Düşüş -%1$s%% (24sa)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+    <string name="settings_subtitle">Sistemi özelleştir</string>
+</resources>

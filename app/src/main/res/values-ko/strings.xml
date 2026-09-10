@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_subtitle">시스템 맞춤 설정</string>
+    <string name="currency_options">통화 옵션</string>
+    <string name="default_currency">기본 통화</string>
+    <string name="default_currency_summary">앱을 열 때 표시</string>
+    <string name="auto_refresh">자동 새로고침</string>
+    <string name="refresh_every_minute">60초마다 업데이트</string>
+    <string name="markets_subtitle">CoinGecko 기준 시가총액 상위 100개 코인</string>
+    <string name="search_coins">Bitcoin, ETH, Solana 검색…</string>
+    <string name="all">전체</string>
+    <string name="nav_convert">환전</string>
+    <string name="nav_markets">마켓</string>
+    <string name="nav_settings">설정</string>
+    <string name="settings">설정</string>
+    <string name="markets">암호화폐 시장</string>
+    <string name="base_rate_usd">기준 환율 (USD)</string>
+    <string name="us_dollar">미국 달러</string>
+    <string name="app_name">코인플럭스</string>
+    <string name="converter_title">환율 변환기</string>
+    <string name="fast_convenient">빠르고 편리하게</string>
+    <string name="amount_to_convert">환전할 금액</string>
+    <string name="amount_to_receive">받는 금액</string>
+    <string name="exchange_rate">환율:</string>
+    <string name="quick_multi_currency">빠른 다중 통화 변환</string>
+    <string name="auto_updated">자동 업데이트</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ 상승 +%1$s%% (24시간)</string>
+    <string name="price_change_down">↓ 하락 -%1$s%% (24시간)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+</resources>

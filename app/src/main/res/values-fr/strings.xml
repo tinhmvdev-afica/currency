@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_subtitle">Personnaliser le système</string>
+    <string name="currency_options">OPTIONS DE DEVISE</string>
+    <string name="default_currency">Devise par défaut</string>
+    <string name="default_currency_summary">Affichée à l’ouverture de l’application</string>
+    <string name="auto_refresh">Actualisation automatique</string>
+    <string name="refresh_every_minute">Mise à jour toutes les 60 secondes</string>
+    <string name="markets_subtitle">Top 100 des coins par capitalisation sur CoinGecko</string>
+    <string name="search_coins">Rechercher Bitcoin, ETH, Solana…</string>
+    <string name="all">Tout</string>
+    <string name="nav_convert">Convertir</string>
+    <string name="nav_markets">Marchés</string>
+    <string name="nav_settings">Paramètres</string>
+    <string name="settings">Paramètres</string>
+    <string name="markets">Marchés crypto</string>
+    <string name="base_rate_usd">Taux de base (USD)</string>
+    <string name="us_dollar">Dollar américain</string>
+    <string name="app_name">CoinFlux</string>
+    <string name="converter_title">Convertisseur de devises</string>
+    <string name="fast_convenient">Rapide et pratique</string>
+    <string name="amount_to_convert">Montant à convertir</string>
+    <string name="amount_to_receive">Montant reçu</string>
+    <string name="exchange_rate">Taux de change :</string>
+    <string name="quick_multi_currency">CONVERSION RAPIDE MULTI-DEVISES</string>
+    <string name="auto_updated">Mis à jour automatiquement</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ Hausse +%1$s%% (24 h)</string>
+    <string name="price_change_down">↓ Baisse -%1$s%% (24 h)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+</resources>

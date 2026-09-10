@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_subtitle">システムをカスタマイズ</string>
+    <string name="currency_options">通貨オプション</string>
+    <string name="default_currency">デフォルト通貨</string>
+    <string name="default_currency_summary">アプリ起動時に表示</string>
+    <string name="auto_refresh">自動更新</string>
+    <string name="refresh_every_minute">60 秒ごとに更新</string>
+    <string name="markets_subtitle">CoinGecko の時価総額上位 100 コイン</string>
+    <string name="search_coins">Bitcoin、ETH、Solana を検索…</string>
+    <string name="all">すべて</string>
+    <string name="nav_convert">換算</string>
+    <string name="nav_markets">市場</string>
+    <string name="nav_settings">設定</string>
+    <string name="settings">設定</string>
+    <string name="markets">暗号資産市場</string>
+    <string name="base_rate_usd">基準レート (USD)</string>
+    <string name="us_dollar">米ドル</string>
+    <string name="app_name">CoinFlux</string>
+    <string name="converter_title">通貨コンバーター</string>
+    <string name="fast_convenient">高速で便利</string>
+    <string name="amount_to_convert">換算する金額</string>
+    <string name="amount_to_receive">受取金額</string>
+    <string name="exchange_rate">為替レート：</string>
+    <string name="quick_multi_currency">クイック複数通貨換算</string>
+    <string name="auto_updated">自動更新</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ 上昇 +%1$s%%（24時間）</string>
+    <string name="price_change_down">↓ 下落 -%1$s%%（24時間）</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+</resources>

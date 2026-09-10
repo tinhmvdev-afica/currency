@@ -1,5 +1,7 @@
 package com.example.currency.data.repository
 
+import android.content.Context
+import com.example.currency.R
 import com.example.currency.data.model.CurrencyItem
 import com.example.currency.data.model.OnboardingSlideItem
 import com.example.currency.data.model.QuickCurrencyItem
@@ -250,18 +252,18 @@ object CurrencyMockRepository {
     val onboardingSlides: List<OnboardingSlideItem> = listOf(
         OnboardingSlideItem(
             icon = "⚡",
-            title = "Quy Đổi Đa Năng Tức Thì",
-            description = "Chuyển đổi liền mạch giữa các đồng tiền pháp định (USD, VND, EUR) và hơn 100+ đồng Crypto hàng đầu."
+            title = "Instant Multi-Currency Converter",
+            description = "Convert seamlessly between fiat currencies (USD, VND, EUR) and over 100 leading cryptocurrencies."
         ),
         OnboardingSlideItem(
             icon = "📈",
-            title = "Dữ Liệu Chuẩn CoinGecko",
-            description = "Tỷ giá thị trường cập nhật theo thời gian thực với độ chính xác cao từ hệ thống API CoinGecko."
+            title = "CoinGecko-Powered Data",
+            description = "Real-time market rates with accurate data from the CoinGecko API."
         ),
         OnboardingSlideItem(
             icon = "🎯",
-            title = "Theo Dõi & Tùy Biến Dễ Dàng",
-            description = "Lập danh sách theo dõi các coin yêu thích, xem biến động 24h và đặt đồng tiền cơ sở mặc định."
+            title = "Easy Tracking & Customization",
+            description = "Track favorite coins, view 24-hour changes, and set a default base currency."
         )
     )
 
@@ -292,7 +294,7 @@ object CurrencyMockRepository {
         }
     }
 
-    fun getQuickConversions(inputAmount: Double, from: CurrencyItem): List<QuickCurrencyItem> {
+    fun getQuickConversions(context: Context, inputAmount: Double, from: CurrencyItem): List<QuickCurrencyItem> {
         val baseUsd = inputAmount * from.priceInUsd
 
         val usdAmount = baseUsd
@@ -303,10 +305,10 @@ object CurrencyMockRepository {
         return listOf(
             QuickCurrencyItem(
                 symbol = "USD",
-                name = "Đô la Mỹ",
+                name = context.getString(R.string.us_dollar),
                 iconText = "$",
                 convertedAmount = "$" + formatNumber(usdAmount),
-                subText = "Tỷ giá gốc (USD)",
+                subText = context.getString(R.string.base_rate_usd),
                 isChangeBadge = false
             ),
             QuickCurrencyItem(
@@ -314,7 +316,7 @@ object CurrencyMockRepository {
                 name = "Euro",
                 iconText = "€",
                 convertedAmount = "€" + formatNumber(eurAmount),
-                subText = "Giảm -0.35% (24h)",
+                subText = context.getString(R.string.price_change_down, "0.35"),
                 isChangeBadge = true,
                 isPositive = false
             ),
@@ -323,7 +325,7 @@ object CurrencyMockRepository {
                 name = "Ethereum",
                 iconText = "Ξ",
                 convertedAmount = formatNumber(ethAmount) + " ETH",
-                subText = "Giảm -2.40% (24h)",
+                subText = context.getString(R.string.price_change_down, "2.40"),
                 isChangeBadge = true,
                 isPositive = false
             ),
@@ -332,7 +334,7 @@ object CurrencyMockRepository {
                 name = "Solana",
                 iconText = "◎",
                 convertedAmount = formatNumber(solAmount) + " SOL",
-                subText = "Tăng +6.18% (24h)",
+                subText = context.getString(R.string.price_change_up, "6.18"),
                 isChangeBadge = true,
                 isPositive = true
             )

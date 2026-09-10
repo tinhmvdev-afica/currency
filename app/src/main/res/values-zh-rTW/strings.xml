@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_subtitle">自訂系統</string>
+    <string name="currency_options">貨幣選項</string>
+    <string name="default_currency">預設貨幣</string>
+    <string name="default_currency_summary">開啟應用程式時顯示</string>
+    <string name="auto_refresh">自動重新整理</string>
+    <string name="refresh_every_minute">每 60 秒更新</string>
+    <string name="markets_subtitle">CoinGecko 市值前 100 種貨幣</string>
+    <string name="search_coins">搜尋 Bitcoin、ETH、Solana…</string>
+    <string name="all">全部</string>
+    <string name="nav_convert">兌換</string>
+    <string name="nav_markets">市場</string>
+    <string name="nav_settings">設定</string>
+    <string name="settings">設定</string>
+    <string name="markets">加密貨幣市場</string>
+    <string name="base_rate_usd">基準匯率 (USD)</string>
+    <string name="us_dollar">美元</string>
+    <string name="app_name">CoinFlux</string>
+    <string name="converter_title">貨幣轉換器</string>
+    <string name="fast_convenient">快速便利</string>
+    <string name="amount_to_convert">轉出金額</string>
+    <string name="amount_to_receive">收到金額</string>
+    <string name="exchange_rate">匯率：</string>
+    <string name="quick_multi_currency">快速多幣別換算</string>
+    <string name="auto_updated">自動更新</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ 上漲 +%1$s%%（24小時）</string>
+    <string name="price_change_down">↓ 下跌 -%1$s%%（24小時）</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+</resources>

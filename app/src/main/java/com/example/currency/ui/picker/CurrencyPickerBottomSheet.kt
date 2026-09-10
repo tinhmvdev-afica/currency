@@ -48,15 +48,15 @@ class CurrencyPickerBottomSheet(
 
         // Title and badge setup
         if (slot == "from") {
-            binding.tvPickerTitle.text = "Chọn đồng tiền chuyển đi"
-            binding.tvPickerSlotBadge.text = "From Currency"
+            binding.tvPickerTitle.setText(R.string.picker_from_title)
+            binding.tvPickerSlotBadge.setText(R.string.from_currency)
             binding.tvPickerSlotBadge.setBackgroundResource(R.drawable.bg_badge_cyan)
             binding.tvPickerSlotBadge.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.cyan_400)
             )
         } else {
-            binding.tvPickerTitle.text = "Chọn đồng tiền nhận được"
-            binding.tvPickerSlotBadge.text = "To Currency"
+            binding.tvPickerTitle.setText(R.string.picker_to_title)
+            binding.tvPickerSlotBadge.setText(R.string.to_currency)
             binding.tvPickerSlotBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
             binding.tvPickerSlotBadge.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.emerald_400)

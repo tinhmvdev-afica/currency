@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_convert">बदलें</string>
+    <string name="nav_markets">बाज़ार</string>
+    <string name="nav_settings">सेटिंग्स</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="markets">क्रिप्टो बाज़ार</string>
+    <string name="base_rate_usd">आधार दर (USD)</string>
+    <string name="us_dollar">अमेरिकी डॉलर</string>
+    <string name="app_name">कॉइनफ्लक्स</string>
+    <string name="converter_title">मुद्रा परिवर्तक</string>
+    <string name="fast_convenient">तेज़ और सुविधाजनक</string>
+    <string name="amount_to_convert">बदलने की राशि</string>
+    <string name="amount_to_receive">प्राप्त राशि</string>
+    <string name="exchange_rate">विनिमय दर:</string>
+    <string name="quick_multi_currency">त्वरित बहु-मुद्रा रूपांतरण</string>
+    <string name="auto_updated">स्वचालित रूप से अपडेट</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ बढ़ा +%1$s%% (24घं)</string>
+    <string name="price_change_down">↓ घटा -%1$s%% (24घं)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+    <string name="settings_subtitle">सिस्टम अनुकूलित करें</string>
+</resources>

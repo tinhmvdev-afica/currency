@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_convert">Konversi</string>
+    <string name="nav_markets">Pasar</string>
+    <string name="nav_settings">Pengaturan</string>
+    <string name="settings">Pengaturan</string>
+    <string name="markets">Pasar kripto</string>
+    <string name="base_rate_usd">Kurs dasar (USD)</string>
+    <string name="us_dollar">Dolar AS</string>
+    <string name="app_name">CoinFlux</string>
+    <string name="converter_title">Konverter mata uang</string>
+    <string name="fast_convenient">Cepat dan praktis</string>
+    <string name="amount_to_convert">Jumlah yang dikonversi</string>
+    <string name="amount_to_receive">Jumlah diterima</string>
+    <string name="exchange_rate">Nilai tukar:</string>
+    <string name="quick_multi_currency">KONVERSI CEPAT MULTI-MATA UANG</string>
+    <string name="auto_updated">Diperbarui otomatis</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ Naik +%1$s%% (24j)</string>
+    <string name="price_change_down">↓ Turun -%1$s%% (24j)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+    <string name="settings_subtitle">Sesuaikan sistem</string>
+</resources>

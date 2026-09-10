@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_convert">تحويل</string>
+    <string name="nav_markets">الأسواق</string>
+    <string name="nav_settings">الإعدادات</string>
+    <string name="settings">الإعدادات</string>
+    <string name="markets">أسواق العملات الرقمية</string>
+    <string name="base_rate_usd">السعر الأساسي (USD)</string>
+    <string name="us_dollar">الدولار الأمريكي</string>
+    <string name="settings_subtitle">تخصيص النظام</string>
+    <string name="app_name">كوين فلوكس</string>
+    <string name="converter_title">محول العملات</string>
+    <string name="fast_convenient">سريع ومريح</string>
+    <string name="amount_to_convert">المبلغ المراد تحويله</string>
+    <string name="amount_to_receive">المبلغ المستلم</string>
+    <string name="exchange_rate">سعر الصرف:</string>
+    <string name="quick_multi_currency">تحويل سريع متعدد العملات</string>
+    <string name="auto_updated">يُحدّث تلقائياً</string>
+    <string name="price_reference">1 %1$s ≈ $%2$s</string>
+    <string name="price_change_up">↑ ارتفاع +%1$s%% (24 ساعة)</string>
+    <string name="price_change_down">↓ انخفاض -%1$s%% (24 ساعة)</string>
+    <string name="rate_ratio">1 %1$s = %2$s %3$s</string>
+</resources>
