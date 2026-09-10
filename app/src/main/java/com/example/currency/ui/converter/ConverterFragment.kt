@@ -174,8 +174,32 @@ class ConverterFragment : Fragment() {
                 binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
             }
         } else {
-            binding.tvFromSubtext.text = "Đồng tiền pháp định (${fromCurrency.name})"
+            binding.tvFromSubtext.text = "1 ${fromCurrency.symbol} ≈ $" +
+                    CurrencyMockRepository.formatNumber(fromCurrency.priceInUsd)
             binding.tvFromChangeBadge.visibility = View.GONE
+        }
+        if (toCurrency.isCrypto) {
+            binding.tvToSubtext.text = "1 ${toCurrency.symbol} ≈ $" +
+                    CurrencyMockRepository.formatNumber(toCurrency.priceInUsd)
+
+            val change = toCurrency.priceChange24h ?: 0.0
+            val isPos = change >= 0
+            val prefix = if (isPos) "↑ Tăng +" else "↓ Giảm "
+            val changeText = prefix + String.format("%.2f%% (24h)", kotlin.math.abs(change))
+            binding.tvToChangeBadge.text = changeText
+            binding.tvToChangeBadge.visibility = View.VISIBLE
+
+            if (isPos) {
+                binding.tvToChangeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
+                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.emerald_400))
+            } else {
+                binding.tvToChangeBadge.setBackgroundResource(R.drawable.bg_badge_rose)
+                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
+            }
+        } else {
+            binding.tvToSubtext.text = "1 ${toCurrency.symbol} ≈ $" +
+                    CurrencyMockRepository.formatNumber(toCurrency.priceInUsd)
+            binding.tvToChangeBadge.visibility = View.GONE
         }
 
         // TO UI
@@ -185,39 +209,20 @@ class ConverterFragment : Fragment() {
             placeholder(R.drawable.bg_swap_button)
             error(R.drawable.bg_swap_button)
         }
-        if (toCurrency.isCrypto) {
-            binding.tvToSubtext.text = "1 ${toCurrency.symbol} ≈ $" +
-                    CurrencyMockRepository.formatNumber(toCurrency.priceInUsd)
-        } else {
-            binding.tvToSubtext.text = "Đồng tiền pháp định (${toCurrency.name})"
-        }
+        binding.tvToSubtext.text = "1 ${toCurrency.symbol} ≈ $" +
+                CurrencyMockRepository.formatNumber(toCurrency.priceInUsd)
+//        if (toCurrency.isCrypto) {
+//
+//        } else {
+//            binding.tvToSubtext.text = "Đồng tiền pháp định (${toCurrency.name})"
+//        }
 
         // RATE RATIO
         val rate = CurrencyMockRepository.calculateRate(fromCurrency, toCurrency)
         val rateString = CurrencyMockRepository.formatNumber(rate)
         binding.tvRateRatio.text = "1 ${fromCurrency.symbol} = $rateString ${toCurrency.symbol}"
 
-        // RATE CHANGE BADGE
-        if (fromCurrency.isCrypto) {
-            val change = fromCurrency.priceChange24h ?: 0.0
-            val isPos = change >= 0
-            val prefix = if (isPos) "↑ +" else "↓ "
-            val badgeText = prefix + String.format("%.2f%% (24h)", kotlin.math.abs(change))
-            binding.tvRateChangeBadge.text = badgeText
-            binding.tvRateChangeBadge.visibility = View.VISIBLE
 
-            if (isPos) {
-                binding.tvRateChangeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
-                binding.tvRateChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.emerald_400))
-            } else {
-                binding.tvRateChangeBadge.setBackgroundResource(R.drawable.bg_badge_rose)
-                binding.tvRateChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
-            }
-        } else {
-            binding.tvRateChangeBadge.text = "Tỷ giá ổn định"
-            binding.tvRateChangeBadge.setBackgroundResource(R.drawable.bg_chip_unselected)
-            binding.tvRateChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.slate_400))
-        }
     }
 
     private fun calculateConversion() {

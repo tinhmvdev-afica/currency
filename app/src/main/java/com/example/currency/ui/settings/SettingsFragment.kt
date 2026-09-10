@@ -56,23 +56,6 @@ class SettingsFragment : Fragment() {
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
         }
 
-        // API Key
-        val apiKey = prefs.getString("coingecko_api_key", "") ?: ""
-        binding.etApiKey.setText(apiKey)
-        binding.etApiKey.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                prefs.edit().putString("coingecko_api_key", s.toString().trim()).apply()
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        // Reset Onboarding Button
-        binding.btnResetOnboarding.setOnClickListener {
-            prefs.edit().putBoolean("onboarding_completed", false).apply()
-            Toast.makeText(requireContext(), "Đã đặt lại Onboarding!", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_homeFragment_to_onboardingFragment)
-        }
     }
 
     override fun onDestroyView() {

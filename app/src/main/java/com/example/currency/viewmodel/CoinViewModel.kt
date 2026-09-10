@@ -42,15 +42,12 @@ class CoinViewModel(
      * currency = "usd"
      * currency = "eur"
      */
-    fun loadCoins(currency: String = "vnd") {
-
+    fun loadCoins(currency: String) {
         viewModelScope.launch {
-
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 errorMessage = null
             )
-
             repository.getCoinMarket(currency)
                 .onSuccess { currencies ->
 

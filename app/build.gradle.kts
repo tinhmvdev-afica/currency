@@ -1,18 +1,49 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.realm)
 
 }
 
+//android {
+//    namespace = "com.example.currency"
+//    compileSdk {
+//        version = release(37)
+//    }
+//
+//    defaultConfig {
+//        applicationId = "com.example.currency"
+//        minSdk = 24
+//        targetSdk = 37
+//        versionCode = 1
+//        versionName = "1.0"
+//
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//    }
+//
+//    buildTypes {
+//        release {
+//            optimization {
+//                enable = false
+//            }
+//        }
+//    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+//    }
+//    buildFeatures {
+//        viewBinding = true
+//    }
+//}
 android {
     namespace = "com.example.currency"
-    compileSdk {
-        version = release(37)
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.currency"
         minSdk = 24
-        targetSdk = 37
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -21,15 +52,18 @@ android {
 
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
     buildFeatures {
         viewBinding = true
     }
@@ -44,16 +78,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
-    implementation("androidx.navigation:navigation-fragment-ktx:2.9.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.9.5")
+//    implementation("androidx.navigation:navigation-fragment-ktx:2.9.5")
+//    implementation("androidx.navigation:navigation-ui-ktx:2.9.5")
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.5")
-
-    // Coil for Compose image loading
-    implementation("io.coil-kt:coil-compose:2.7.0")
-
-    // ViewModel Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation("io.coil-kt:coil:2.7.0")
 
     // Retrofit & Gson Converter
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
@@ -63,5 +94,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
 
-//    implementation("io.realm.kotlin:library-base:3.0.0")
+    implementation(libs.realm.base)
 }
