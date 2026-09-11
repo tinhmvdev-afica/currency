@@ -40,32 +40,32 @@ class SettingsFragment : Fragment() {
         setupQuickCurrencies()
 
         // Load default currency
-        val currentDefault = prefs.getString("default_currency", "VND (₫)") ?: "VND (₫)"
-        binding.tvDefaultCurrencyBadge.text = currentDefault
-
-        // Cycle through currencies when clicked
-        val currencies = listOf("VND (₫)", "USD ($)", "EUR (€)", "JPY (¥)")
-        binding.btnDefaultCurrency.setOnClickListener {
-            val currentIdx = currencies.indexOf(binding.tvDefaultCurrencyBadge.text.toString())
-            val nextIdx = (currentIdx + 1) % currencies.size
-            val nextCurrency = currencies[nextIdx]
-            binding.tvDefaultCurrencyBadge.text = nextCurrency
-            prefs.edit().putString("default_currency", nextCurrency).apply()
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.default_currency_saved, nextCurrency),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+//        val currentDefault = prefs.getString("default_currency", "VND (₫)") ?: "VND (₫)"
+//        binding.tvDefaultCurrencyBadge.text = currentDefault
+//
+//        // Cycle through currencies when clicked
+//        val currencies = listOf("VND (₫)", "USD ($)", "EUR (€)", "JPY (¥)")
+//        binding.btnDefaultCurrency.setOnClickListener {
+//            val currentIdx = currencies.indexOf(binding.tvDefaultCurrencyBadge.text.toString())
+//            val nextIdx = (currentIdx + 1) % currencies.size
+//            val nextCurrency = currencies[nextIdx]
+//            binding.tvDefaultCurrencyBadge.text = nextCurrency
+//            prefs.edit().putString("default_currency", nextCurrency).apply()
+//            Toast.makeText(
+//                requireContext(),
+//                getString(R.string.default_currency_saved, nextCurrency),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
 
         // Auto Refresh switch
-        val autoRefresh = prefs.getBoolean("auto_refresh", true)
-        binding.switchAutoRefresh.isChecked = autoRefresh
-        binding.switchAutoRefresh.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("auto_refresh", isChecked).apply()
-            val msg = getString(if (isChecked) R.string.auto_refresh_enabled else R.string.auto_refresh_disabled)
-            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-        }
+//        val autoRefresh = prefs.getBoolean("auto_refresh", true)
+//        binding.switchAutoRefresh.isChecked = autoRefresh
+//        binding.switchAutoRefresh.setOnCheckedChangeListener { _, isChecked ->
+//            prefs.edit().putBoolean("auto_refresh", isChecked).apply()
+//            val msg = getString(if (isChecked) R.string.auto_refresh_enabled else R.string.auto_refresh_disabled)
+//            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+//        }
     }
 
     private fun setupQuickCurrencies() {

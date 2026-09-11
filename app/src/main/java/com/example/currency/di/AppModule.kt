@@ -21,8 +21,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCurrencyFreaksApi(): CurrencyFreaksApi =
-        RetrofitClient.currencyFreaksApi
+    fun provideCurrencyFreaksApi(): CurrencyFreaksApi = RetrofitClient.currencyFreaksApi
 
     @Provides
     @Singleton

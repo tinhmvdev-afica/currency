@@ -10,6 +10,7 @@ import com.example.currency.data.model.QuickCurrencyItem
 import com.example.currency.databinding.ItemQuickCurrencyBinding
 
 class QuickCurrencyAdapter(
+    private val onCurrencyClick: (QuickCurrencyItem) -> Unit,
     private var items: List<QuickCurrencyItem> = emptyList()
 ) : RecyclerView.Adapter<QuickCurrencyAdapter.QuickViewHolder>() {
 
@@ -42,6 +43,7 @@ class QuickCurrencyAdapter(
         holder.binding.tvQuickSymbol.text = item.symbol
         holder.binding.tvQuickAmount.text = item.convertedAmount
         holder.binding.tvQuickSubtext.text = item.subText
+        holder.binding.root.setOnClickListener { onCurrencyClick(item) }
 
 //        if (item.isChangeBadge) {
 //            if (item.isPositive) {

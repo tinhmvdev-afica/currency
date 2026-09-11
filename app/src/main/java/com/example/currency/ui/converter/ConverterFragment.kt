@@ -55,7 +55,17 @@ class ConverterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Setup Quick Currencies RecyclerView
-        quickAdapter = QuickCurrencyAdapter()
+        quickAdapter = QuickCurrencyAdapter(
+            onCurrencyClick = { quickItem ->
+                val selectedCurrency = (cryptoCurrencies + fiatCurrencies).firstOrNull {
+                    it.symbol.equals(quickItem.symbol, ignoreCase = true)
+                }
+                if (selectedCurrency != null) {
+                    toCurrency = selectedCurrency
+                    renderConversion()
+                }
+            }
+        )
         binding.rvQuickCurrencies.layoutManager = LinearLayoutManager(requireContext())
         binding.rvQuickCurrencies.adapter = quickAdapter
         viewLifecycleOwner.lifecycleScope.launch {
@@ -131,7 +141,6 @@ class ConverterFragment : Fragment() {
             viewModel.refreshAll()
             calculateConversion()
         }
-
         renderConversion()
     }
 
