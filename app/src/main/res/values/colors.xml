@@ -15,11 +15,13 @@
     <color name="slate_600">#475569</color>
     <color name="slate_500">#64748B</color>
     <color name="slate_400">#94A3B8</color>
+    <color name="text_secondary">#94A3B8</color>
     <color name="slate_300">#CBD5E1</color>
     <color name="slate_200">#E2E8F0</color>
 
     <!-- Brand Cyan & Blue -->
     <color name="cyan_400">#22D3EE</color>
+    <color name="brand_accent">#22D3EE</color>
     <color name="cyan_500">#06B6D4</color>
     <color name="cyan_badge_bg">#2606B6D4</color>
     <color name="blue_500">#3B82F6</color>

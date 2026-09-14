@@ -133,13 +133,17 @@ class ConverterFragment : Fragment() {
 
         // Refresh Button with 360-degree spin animation
         binding.btnRefresh.setOnClickListener {
-            binding.btnRefresh.animate()
+            binding.btnRefresh.isEnabled = false
+            binding.ivRefreshIcon.animate()
                 .rotationBy(360f)
                 .setDuration(600)
                 .setInterpolator(LinearInterpolator())
                 .start()
             viewModel.refreshAll()
             calculateConversion()
+            binding.btnRefresh.postDelayed({
+                binding.btnRefresh.isEnabled = true
+            }, 1000)
         }
         renderConversion()
     }
@@ -199,7 +203,8 @@ class ConverterFragment : Fragment() {
             }
         } else {
             binding.tvFromSubtext.text = getString(R.string.price_reference, fromCurrency.symbol, formatNumber(fromCurrency.priceInUsd))
-            binding.tvFromChangeBadge.visibility = View.GONE
+            // Keep the badge's layout space so the FROM box stays the same height as crypto.
+            binding.tvFromChangeBadge.visibility = View.INVISIBLE
         }
         if (toCurrency.isCrypto) {
             binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))
@@ -222,7 +227,8 @@ class ConverterFragment : Fragment() {
             }
         } else {
             binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))
-            binding.tvToChangeBadge.visibility = View.GONE
+            // Keep the badge's layout space so the TO box stays the same height as crypto.
+            binding.tvToChangeBadge.visibility = View.INVISIBLE
         }
 
         // TO UI

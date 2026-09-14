@@ -44,25 +44,6 @@ class QuickCurrencyAdapter(
         holder.binding.tvQuickAmount.text = item.convertedAmount
         holder.binding.tvQuickSubtext.text = item.subText
         holder.binding.root.setOnClickListener { onCurrencyClick(item) }
-
-//        if (item.isChangeBadge) {
-//            if (item.isPositive) {
-//                holder.binding.tvQuickSubtext.setBackgroundResource(R.drawable.bg_badge_emerald)
-//                holder.binding.tvQuickSubtext.setTextColor(
-//                    ContextCompat.getColor(context, R.color.emerald_400)
-//                )
-//            } else {
-//                holder.binding.tvQuickSubtext.setBackgroundResource(R.drawable.bg_badge_rose)
-//                holder.binding.tvQuickSubtext.setTextColor(
-//                    ContextCompat.getColor(context, R.color.rose_400)
-//                )
-//            }
-//        } else {
-//            holder.binding.tvQuickSubtext.background = null
-//            holder.binding.tvQuickSubtext.setTextColor(
-//                ContextCompat.getColor(context, R.color.slate_400)
-//            )
-//        }
     }
 
     override fun getItemCount(): Int = items.size

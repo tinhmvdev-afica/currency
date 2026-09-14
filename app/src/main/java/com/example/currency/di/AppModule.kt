@@ -14,11 +14,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     fun provideCoinGeckoApi(): CoinGeckoApi = RetrofitClient.api
-
     @Provides
     @Singleton
     fun provideCurrencyFreaksApi(): CurrencyFreaksApi = RetrofitClient.currencyFreaksApi

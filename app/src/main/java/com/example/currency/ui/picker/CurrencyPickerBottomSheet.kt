@@ -114,7 +114,6 @@ class CurrencyPickerBottomSheet(
         updateTabUI()
         filterCurrencies()
     }
-
     private fun updateTabUI() {
         val context = requireContext()
         if (isCryptoTab) {

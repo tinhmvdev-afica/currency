@@ -1,5 +1,6 @@
 package com.example.currency.ui.picker
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -32,6 +33,7 @@ class CurrencyPickerAdapter(
         return PickerViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n", "DefaultLocale")
     override fun onBindViewHolder(holder: PickerViewHolder, position: Int) {
         val item = items[position]
         val context = holder.itemView.context

@@ -76,13 +76,20 @@
             </LinearLayout>
 
             <!-- Refresh Button -->
-            <ImageView
+            <FrameLayout
                 android:id="@+id/btnRefresh"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:background="@drawable/bg_currency_selector_btn"
-                android:padding="8dp"
-                android:src="@drawable/ic_refresh" />
+                android:background="@drawable/bg_currency_selector_btn">
+
+                <ImageView
+                    android:id="@+id/ivRefreshIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/auto_refresh"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_refresh" />
+            </FrameLayout>
         </LinearLayout>
 
         <!-- Main Card Container -->
@@ -348,25 +355,6 @@
                         android:text="@string/exchange_rate"
                         android:textColor="@color/slate_400"
                         android:textSize="11sp" />
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/tvRateChangeBadge"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:background="@drawable/bg_badge_rose"-->
-<!--                        android:paddingStart="6dp"-->
-<!--                        android:paddingTop="2dp"-->
-<!--                        android:paddingEnd="6dp"-->
-<!--                        android:paddingBottom="2dp"-->
-<!--                        android:text="↓ Giảm -1.85%"-->
-<!--                        android:textColor="@color/rose_400"-->
-<!--                        android:textSize="10sp"-->
-<!--                        android:textStyle="bold" />-->
-
-<!--                    <View-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="1dp"-->
-<!--                        android:layout_weight="1" />-->
 
                     <TextView
                         android:id="@+id/tvRateRatio"
