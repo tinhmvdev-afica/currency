@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@color/background_app"
     android:fillViewport="true">
 
     <LinearLayout
@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="₿"
-                    android:textColor="@color/white"
+                    android:textColor="@color/content_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </FrameLayout>
@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/converter_title"
-                    android:textColor="@color/white"
+                    android:textColor="@color/content_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                     android:text="@string/fast_convenient"
-                        android:textColor="@color/emerald_400"
+                        android:textColor="@color/status_positive"
                         android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -125,7 +125,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/amount_to_convert"
-                            android:textColor="@color/slate_400"
+                            android:textColor="@color/content_secondary"
                             android:textSize="11sp" />
 
 
@@ -147,8 +147,8 @@
                             android:hint="0.0"
                             android:inputType="numberDecimal"
                             android:text="1"
-                            android:textColor="@color/white"
-                            android:textColorHint="@color/slate_600"
+                            android:textColor="@color/content_primary"
+                            android:textColorHint="@color/content_hint"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -177,7 +177,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
                                 android:text="BTC"
-                                android:textColor="@color/white"
+                                android:textColor="@color/content_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -202,7 +202,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="1 BTC ≈ $102,400.00"
-                            android:textColor="@color/slate_400"
+                            android:textColor="@color/content_secondary"
                             android:textSize="10sp" />
 
                         <TextView
@@ -215,7 +215,7 @@
                             android:paddingEnd="6dp"
                             android:paddingBottom="2dp"
                             android:text="@string/sample_price_change_down"
-                            android:textColor="@color/rose_400"
+                            android:textColor="@color/status_negative"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -246,7 +246,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/amount_to_receive"
-                            android:textColor="@color/slate_400"
+                            android:textColor="@color/content_secondary"
                             android:textSize="11sp" />
 
 
@@ -267,7 +267,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="2,550,000,000"
-                            android:textColor="@color/cyan_400"
+                            android:textColor="@color/brand_accent"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -296,7 +296,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
                                 android:text="VND"
-                                android:textColor="@color/white"
+                                android:textColor="@color/content_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -322,7 +322,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="1 BTC ≈ $102,400.00"
-                            android:textColor="@color/slate_400"
+                            android:textColor="@color/content_secondary"
                             android:textSize="10sp" />
 
                         <TextView
@@ -335,7 +335,7 @@
                             android:paddingEnd="6dp"
                             android:paddingBottom="2dp"
                             android:text="@string/sample_price_change_down"
-                            android:textColor="@color/rose_400"
+                            android:textColor="@color/status_negative"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -353,7 +353,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/exchange_rate"
-                        android:textColor="@color/slate_400"
+                        android:textColor="@color/content_secondary"
                         android:textSize="11sp" />
 
                     <TextView
@@ -361,7 +361,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1 BTC = 2,550,000,000 VND"
-                        android:textColor="@color/slate_200"
+                        android:textColor="@color/content_emphasized"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -393,7 +393,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/quick_multi_currency"
-                android:textColor="@color/slate_300"
+                android:textColor="@color/content_section_title"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -401,7 +401,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/auto_updated"
-                android:textColor="@color/cyan_400"
+                android:textColor="@color/brand_accent"
                 android:textSize="10sp"
                 android:textStyle="bold" />
         </LinearLayout>

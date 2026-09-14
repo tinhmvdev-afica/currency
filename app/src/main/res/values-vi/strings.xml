@@ -70,4 +70,15 @@
     <string name="quick_currencies_badge">%1$d/5 đồng tiền ›</string>
     <string name="quick_currencies_updated">Đã cập nhật danh sách đồng tiền quy đổi nhanh</string>
     <string name="save">Lưu thay đổi</string>
+    <string name="theme_and_display">GIAO DIỆN &amp; HIỂN THỊ</string>
+    <string name="theme_mode_title">Chế độ giao diện</string>
+    <string name="theme_subtitle">Tùy chỉnh chế độ sáng, tối hoặc theo hệ thống</string>
+    <string name="theme_light">Sáng</string>
+    <string name="theme_light_desc">Giao diện sáng dịu mắt</string>
+    <string name="theme_dark">Tối</string>
+    <string name="theme_dark_desc">Giao diện tối huyền bí</string>
+    <string name="theme_system">Theo hệ thống</string>
+    <string name="theme_system_desc">Tự động thích ứng theo thiết bị</string>
+    <string name="theme_dialog_title">Chọn chế độ giao diện</string>
+    <string name="theme_dialog_subtitle">Tùy chỉnh phong cách hiển thị của CoinFlux</string>
 </resources>

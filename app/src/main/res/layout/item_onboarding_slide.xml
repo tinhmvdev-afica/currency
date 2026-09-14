@@ -36,7 +36,7 @@
         android:layout_marginTop="36dp"
         android:gravity="center"
         android:text="@string/instant_converter"
-        android:textColor="@color/white"
+        android:textColor="@color/content_primary"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -48,7 +48,7 @@
         android:gravity="center"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/instant_converter_description"
-        android:textColor="@color/slate_400"
+        android:textColor="@color/content_secondary"
         android:textSize="14sp" />
 
 </LinearLayout>

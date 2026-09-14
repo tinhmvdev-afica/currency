@@ -60,12 +60,12 @@ class MarketCoinAdapter(
         if (isPos) {
             holder.binding.tvCoinChange.setBackgroundResource(R.drawable.bg_badge_emerald)
             holder.binding.tvCoinChange.setTextColor(
-                ContextCompat.getColor(context, R.color.emerald_400)
+                ContextCompat.getColor(context, R.color.status_positive)
             )
         } else {
             holder.binding.tvCoinChange.setBackgroundResource(R.drawable.bg_badge_rose)
             holder.binding.tvCoinChange.setTextColor(
-                ContextCompat.getColor(context, R.color.rose_400)
+                ContextCompat.getColor(context, R.color.status_negative)
             )
         }
 

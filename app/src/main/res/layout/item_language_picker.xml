@@ -35,7 +35,7 @@
             android:id="@+id/tvLanguageName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/content_primary"
             android:textSize="13sp"
             android:textStyle="bold"
             tools:text="Tiếng Việt" />
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="@color/slate_400"
+            android:textColor="@color/content_secondary"
             android:textSize="11sp"
             tools:text="Vietnamese • Việt Nam" />
     </LinearLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App surfaces -->
+    <color name="background_app">#0B0F19</color>
+    <color name="surface_card">#0F172A</color>
+    <color name="surface_input">#020617</color>
+    <color name="surface_control">#1E293B</color>
+    <color name="surface_chip">#0F172A</color>
+    <color name="outline_default">#1E293B</color>
+    <color name="outline_strong">#334155</color>
+
+    <!-- Content -->
+    <color name="content_primary">#FFFFFFFF</color>
+    <color name="content_emphasized">#E2E8F0</color>
+    <color name="content_section_title">#CBD5E1</color>
+    <color name="content_secondary">#94A3B8</color>
+    <color name="content_tertiary">#64748B</color>
+    <color name="content_hint">#475569</color>
+    <color name="content_on_brand">#FFFFFFFF</color>
+
+    <!-- Brand -->
+    <color name="brand_accent">#22D3EE</color>
+    <color name="brand_primary">#06B6D4</color>
+    <color name="brand_container">#2606B6D4</color>
+    <color name="brand_container_outline">#4006B6D4</color>
+    <color name="brand_gradient_end">#2563EB</color>
+    <color name="accent_purple">#A855F7</color>
+
+    <!-- Status -->
+    <color name="status_positive">#34D399</color>
+    <color name="status_positive_container">#2610B981</color>
+    <color name="status_positive_outline">#4010B981</color>
+    <color name="status_negative">#FB7185</color>
+    <color name="status_negative_container">#26F43F5E</color>
+    <color name="status_negative_outline">#40F43F5E</color>
+    <color name="status_warning">#FBBF24</color>
+
+    <!-- Splash screen -->
+    <color name="splash_background_start">#0B1220</color>
+    <color name="splash_background_center">#111827</color>
+    <color name="splash_background_end">#251B5A</color>
+    <color name="splash_logo_surface">#0B1220</color>
+    <color name="splash_logo_gradient_center">#2196F3</color>
+    <color name="splash_logo_gradient_end">#6366F1</color>
+    <color name="splash_brand_accent">#00D9FF</color>
+</resources>

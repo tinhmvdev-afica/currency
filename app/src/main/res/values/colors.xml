@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- App surfaces (Khung hiển thị màu TRẮNG, bên ngoài là TRẮNG XANH) -->
+    <color name="background_app">#F0FDFA</color>         <!-- Nền bên ngoài: Trắng xanh Icy rất dịu mắt -->
+    <color name="surface_card">#FFFFFFFF</color>          <!-- Khung hiển thị: Trắng tinh -->
+    <color name="surface_input">#FFFFFFFF</color>         <!-- Khung ô tìm kiếm, ô nhập: Trắng tinh -->
+    <color name="surface_control">#F1F5F9</color>       <!-- Nền các nút tròn điều khiển nhỏ (Close, Refresh) -->
+    <color name="surface_chip">#FFFFFFFF</color>          <!-- Nền chip lọc chưa chọn: Trắng -->
+    <color name="outline_default">#E2E8F0</color>       <!-- Viền khung và đường kẻ phân cách: Xám sáng nhẹ nhàng -->
+    <color name="outline_strong">#CBD5E1</color>        <!-- Viền nổi bật hơn -->
 
-    <!-- Theme Dark Palette -->
-    <color name="bg_dark">#0B0F19</color>
-    <color name="card_dark">#0F172A</color>
-    <color name="input_dark">#020617</color>
-    <color name="border_dark">#1E293B</color>
+    <!-- Content (Toàn bộ chữ hiển thị sang màu ĐEN / Than đậm) -->
+    <color name="content_primary">#0F172A</color>       <!-- Chữ chính, số tiền lớn: Đen than sắc nét -->
+    <color name="content_emphasized">#1E293B</color>    <!-- Chữ nhấn mạnh: Đen đậm -->
+    <color name="content_section_title">#475569</color> <!-- Tiêu đề phân mục: Xám đen đậm rõ ràng -->
+    <color name="content_secondary">#64748B</color>     <!-- Phụ đề, mô tả: Xám than dễ đọc -->
+    <color name="content_tertiary">#94A3B8</color>      <!-- Chữ thông tin nhỏ, footer -->
+    <color name="content_hint">#94A3B8</color>          <!-- Chữ gợi ý trong ô nhập liệu -->
+    <color name="content_on_brand">#FFFFFFFF</color>    <!-- Chữ TRÊN nền nút bấm Gradient Cyan/Blue: Giữ trắng tinh -->
 
-    <color name="slate_900">#0F172A</color>
-    <color name="slate_800">#1E293B</color>
-    <color name="slate_700">#334155</color>
-    <color name="slate_600">#475569</color>
-    <color name="slate_500">#64748B</color>
-    <color name="slate_400">#94A3B8</color>
-    <color name="text_secondary">#94A3B8</color>
-    <color name="slate_300">#CBD5E1</color>
-    <color name="slate_200">#E2E8F0</color>
+    <!-- Brand (Tone Cyan/Blue đậm đà hơn để tương phản tốt trên nền sáng) -->
+    <color name="brand_accent">#0891B2</color>          <!-- Cyan 600: Chữ icon & huy hiệu đậm nét -->
+    <color name="brand_primary">#0891B2</color>         <!-- Màu thương hiệu chính -->
+    <color name="brand_container">#E0F2FE</color>       <!-- Nền huy hiệu Cyan pastel dịu mát -->
+    <color name="brand_container_outline">#BAE6FD</color><!-- Viền huy hiệu Cyan pastel -->
+    <color name="brand_gradient_end">#2563EB</color>    <!-- Điểm cuối gradient nút bấm (Blue 600) -->
+    <color name="accent_purple">#9333EA</color>
 
-    <!-- Brand Cyan & Blue -->
-    <color name="cyan_400">#22D3EE</color>
-    <color name="brand_accent">#22D3EE</color>
-    <color name="cyan_500">#06B6D4</color>
-    <color name="cyan_badge_bg">#2606B6D4</color>
-    <color name="blue_500">#3B82F6</color>
-    <color name="blue_600">#2563EB</color>
+    <!-- Status (Thị trường tăng/giảm với chữ đậm và nền pastel) -->
+    <color name="status_positive">#059669</color>           <!-- Xanh lá đậm hiển thị % Tăng (24h) cực rõ -->
+    <color name="status_positive_container">#ECFDF5</color> <!-- Nền huy hiệu Tăng pastel -->
+    <color name="status_positive_outline">#A7F3D0</color>   <!-- Viền huy hiệu Tăng -->
+    <color name="status_negative">#E11D48</color>           <!-- Đỏ đậm hiển thị % Giảm (24h) -->
+    <color name="status_negative_container">#FFF1F2</color> <!-- Nền huy hiệu Giảm pastel -->
+    <color name="status_negative_outline">#FECDD3</color>   <!-- Viền huy hiệu Giảm -->
+    <color name="status_warning">#D97706</color>            <!-- Vàng hổ phách đậm -->
 
-    <!-- Status Green & Red -->
-    <color name="emerald_400">#34D399</color>
-    <color name="emerald_500">#10B981</color>
-    <color name="emerald_badge_bg">#2610B981</color>
-    <color name="rose_400">#FB7185</color>
-    <color name="rose_500">#F43F5E</color>
-    <color name="rose_badge_bg">#26F43F5E</color>
-
-    <!-- Accents -->
-    <color name="amber_400">#FBBF24</color>
-    <color name="purple_500">#A855F7</color>
+    <!-- Splash screen (Gradient Trắng Xanh sang trọng thay vì nền đen tím) -->
+    <color name="splash_background_start">#E0F7FA</color>   <!-- Trắng xanh băng tuyết trên cùng -->
+    <color name="splash_background_center">#ECFEFF</color>  <!-- Trắng xanh ngọc ở giữa -->
+    <color name="splash_background_end">#E0F2FE</color>     <!-- Trắng xanh dương nhạt ở dưới -->
+    <color name="splash_logo_surface">#FFFFFFFF</color>     <!-- Khung chứa logo: Màu trắng tinh -->
+    <color name="splash_logo_gradient_center">#0284C7</color>
+    <color name="splash_logo_gradient_end">#4F46E5</color>
+    <color name="splash_brand_accent">#0891B2</color>       <!-- Chữ biểu tượng CoinFlux sắc nét -->
 </resources>

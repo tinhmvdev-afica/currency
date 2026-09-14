@@ -98,11 +98,11 @@ class CurrenciesSelectableAdapter(
             if (item.isCrypto) {
                 binding.tvCurrencyTypeBadge.text = "Crypto"
                 binding.tvCurrencyTypeBadge.setBackgroundResource(R.drawable.bg_badge_cyan)
-                binding.tvCurrencyTypeBadge.setTextColor(ContextCompat.getColor(context, R.color.cyan_400))
+                binding.tvCurrencyTypeBadge.setTextColor(ContextCompat.getColor(context, R.color.brand_accent))
             } else {
                 binding.tvCurrencyTypeBadge.text = "Fiat"
                 binding.tvCurrencyTypeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
-                binding.tvCurrencyTypeBadge.setTextColor(ContextCompat.getColor(context, R.color.emerald_400))
+                binding.tvCurrencyTypeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
             }
 
             if (isSelected) {

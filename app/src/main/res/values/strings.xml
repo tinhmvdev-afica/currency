@@ -70,4 +70,15 @@
     <string name="quick_currencies_badge">%1$d/5 currencies ›</string>
     <string name="quick_currencies_updated">Quick currencies updated</string>
     <string name="save">Save</string>
+    <string name="theme_and_display">THEME &amp; APPEARANCE</string>
+    <string name="theme_mode_title">Theme Mode</string>
+    <string name="theme_subtitle">Choose your preferred app appearance</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_light_desc">Bright &amp; clean appearance</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_dark_desc">Classic dark appearance</string>
+    <string name="theme_system">System Default</string>
+    <string name="theme_system_desc">Matches device settings</string>
+    <string name="theme_dialog_title">Select Theme</string>
+    <string name="theme_dialog_subtitle">Choose how CoinFlux looks to you</string>
 </resources>

@@ -196,10 +196,10 @@ class ConverterFragment : Fragment() {
 
             if (isPos) {
                 binding.tvFromChangeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
-                binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.emerald_400))
+                binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
             } else {
                 binding.tvFromChangeBadge.setBackgroundResource(R.drawable.bg_badge_rose)
-                binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
+                binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_negative))
             }
         } else {
             binding.tvFromSubtext.text = getString(R.string.price_reference, fromCurrency.symbol, formatNumber(fromCurrency.priceInUsd))
@@ -220,10 +220,10 @@ class ConverterFragment : Fragment() {
 
             if (isPos) {
                 binding.tvToChangeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
-                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.emerald_400))
+                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
             } else {
                 binding.tvToChangeBadge.setBackgroundResource(R.drawable.bg_badge_rose)
-                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
+                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_negative))
             }
         } else {
             binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))

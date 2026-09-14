@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@color/background_app"
     android:orientation="vertical"
     android:paddingStart="20dp"
     android:paddingTop="28dp"
@@ -26,7 +26,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="4dp"
             android:text="@string/step_2_of_2"
-            android:textColor="@color/cyan_400"
+            android:textColor="@color/brand_accent"
             android:textSize="11sp"
             android:textStyle="bold" />
 
@@ -45,7 +45,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="4dp"
             android:text="5/5 đồng tiền"
-            android:textColor="@color/emerald_400"
+            android:textColor="@color/status_positive"
             android:textSize="11sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="@string/default_currencies_title"
-        android:textColor="@color/white"
+        android:textColor="@color/content_primary"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="@string/default_currencies_desc"
-        android:textColor="@color/slate_400"
+        android:textColor="@color/content_secondary"
         android:textSize="12sp" />
 
     <!-- Category Tabs: [Tất cả] [Crypto] [Fiat] -->
@@ -84,7 +84,7 @@
             android:background="@drawable/bg_button_gradient"
             android:gravity="center"
             android:text="@string/all"
-            android:textColor="@color/white"
+            android:textColor="@color/content_primary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
             android:background="@null"
             android:gravity="center"
             android:text="🪙 Crypto"
-            android:textColor="@color/slate_400"
+            android:textColor="@color/content_secondary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -108,7 +108,7 @@
             android:background="@null"
             android:gravity="center"
             android:text="💵 Fiat"
-            android:textColor="@color/slate_400"
+            android:textColor="@color/content_secondary"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -138,8 +138,8 @@
             android:background="@null"
             android:hint="@string/search_currency"
             android:inputType="text"
-            android:textColor="@color/white"
-            android:textColorHint="@color/slate_500"
+            android:textColor="@color/content_primary"
+            android:textColorHint="@color/content_tertiary"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -161,7 +161,7 @@
         android:background="@drawable/bg_button_gradient"
         android:text="@string/complete_and_start"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/content_primary"
         android:textSize="15sp"
         android:textStyle="bold" />
 

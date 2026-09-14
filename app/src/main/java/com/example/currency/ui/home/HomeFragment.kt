@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
 
     private fun tabColor(isSelected: Boolean): Int = ContextCompat.getColor(
         requireContext(),
-        if (isSelected) R.color.cyan_400 else R.color.slate_400
+        if (isSelected) R.color.brand_accent else R.color.content_secondary
     )
 
     override fun onDestroyView() {

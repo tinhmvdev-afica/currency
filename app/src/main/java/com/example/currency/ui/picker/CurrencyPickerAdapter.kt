@@ -49,7 +49,7 @@ class CurrencyPickerAdapter(
         if (item.isCrypto) {
             holder.binding.tvPickerTypeTag.text = "Crypto"
             holder.binding.tvPickerTypeTag.setTextColor(
-                ContextCompat.getColor(context, R.color.cyan_400)
+                ContextCompat.getColor(context, R.color.brand_accent)
             )
 
             holder.binding.tvPickerPrice.text = "$" + CurrencyMockRepository.formatNumber(item.priceInUsd)
@@ -62,18 +62,18 @@ class CurrencyPickerAdapter(
             if (isPos) {
                 holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_badge_emerald)
                 holder.binding.tvPickerChange.setTextColor(
-                    ContextCompat.getColor(context, R.color.emerald_400)
+                    ContextCompat.getColor(context, R.color.status_positive)
                 )
             } else {
                 holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_badge_rose)
                 holder.binding.tvPickerChange.setTextColor(
-                    ContextCompat.getColor(context, R.color.rose_400)
+                    ContextCompat.getColor(context, R.color.status_negative)
                 )
             }
         } else {
             holder.binding.tvPickerTypeTag.text = "Fiat Currency"
             holder.binding.tvPickerTypeTag.setTextColor(
-                ContextCompat.getColor(context, R.color.emerald_400)
+                ContextCompat.getColor(context, R.color.status_positive)
             )
 
             holder.binding.tvPickerPrice.text = item.symbol
@@ -84,16 +84,16 @@ class CurrencyPickerAdapter(
                 holder.binding.tvPickerChange.text = prefix + String.format("%.2f%%", kotlin.math.abs(change))
                 if (isPos) {
                     holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_badge_emerald)
-                    holder.binding.tvPickerChange.setTextColor(ContextCompat.getColor(context, R.color.emerald_400))
+                    holder.binding.tvPickerChange.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
                 } else {
                     holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_badge_rose)
-                    holder.binding.tvPickerChange.setTextColor(ContextCompat.getColor(context, R.color.rose_400))
+                    holder.binding.tvPickerChange.setTextColor(ContextCompat.getColor(context, R.color.status_negative))
                 }
             } else {
                 holder.binding.tvPickerChange.setText(R.string.stable_rate)
                 holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_chip_unselected)
                 holder.binding.tvPickerChange.setTextColor(
-                    ContextCompat.getColor(context, R.color.slate_400)
+                    ContextCompat.getColor(context, R.color.content_secondary)
                 )
             }
         }

@@ -86,10 +86,10 @@ class MarketsFragment : Fragment() {
         chips.forEach { (chipView, category) ->
             if (category == selectedCategory) {
                 chipView.setBackgroundResource(R.drawable.bg_chip_selected)
-                chipView.setTextColor(ContextCompat.getColor(context, R.color.cyan_400))
+                chipView.setTextColor(ContextCompat.getColor(context, R.color.brand_accent))
             } else {
                 chipView.setBackgroundResource(R.drawable.bg_chip_unselected)
-                chipView.setTextColor(ContextCompat.getColor(context, R.color.slate_400))
+                chipView.setTextColor(ContextCompat.getColor(context, R.color.content_secondary))
             }
         }
     }

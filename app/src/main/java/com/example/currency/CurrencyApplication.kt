@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import com.example.currency.data.local.PreferencesHelper
 import dagger.hilt.android.HiltAndroidApp
 
 
@@ -14,6 +15,9 @@ import dagger.hilt.android.HiltAndroidApp
 class CurrencyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
+        val themeMode = PreferencesHelper.getThemeMode(this)
+        PreferencesHelper.applyTheme(themeMode)
+
         val languageTag = getSharedPreferences("coinflux_prefs", Context.MODE_PRIVATE)
             .getString("app_language", "en") ?: "en"
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageTag))

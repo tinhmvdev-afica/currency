@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đô la Mỹ"
-            android:textColor="@color/white"
+            android:textColor="@color/content_primary"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="USD"
-            android:textColor="@color/slate_400"
+            android:textColor="@color/content_secondary"
             android:textSize="11sp" />
     </LinearLayout>
 
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="$102,400.00"
-            android:textColor="@color/white"
+            android:textColor="@color/content_primary"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
             android:paddingEnd="6dp"
             android:paddingBottom="2dp"
             android:text="@string/base_rate_usd"
-            android:textColor="@color/slate_400"
+            android:textColor="@color/content_secondary"
             android:textSize="10sp" />
     </LinearLayout>
 

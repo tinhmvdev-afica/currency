@@ -1,11 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Currency" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowBackground">@color/bg_dark</item>
-        <item name="android:statusBarColor">@color/bg_dark</item>
-        <item name="android:navigationBarColor">@color/bg_dark</item>
-        <item name="colorPrimary">@color/cyan_500</item>
-        <item name="colorSecondary">@color/blue_600</item>
+    <style name="Base.Theme.Currency" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/background_app</item>
+        <item name="android:statusBarColor">@color/background_app</item>
+        <item name="android:navigationBarColor">@color/background_app</item>
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorSecondary">@color/brand_gradient_end</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?attr/isLightTheme</item>
     </style>
 
     <style name="Theme.Currency" parent="Base.Theme.Currency" />

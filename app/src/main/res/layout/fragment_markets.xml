@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@color/background_app"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/markets"
-        android:textColor="@color/white"
+        android:textColor="@color/content_primary"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="@string/markets_subtitle"
-        android:textColor="@color/slate_400"
+        android:textColor="@color/content_secondary"
         android:textSize="11sp" />
 
     <!-- Search Input -->
@@ -47,8 +47,8 @@
             android:background="@null"
         android:hint="@string/search_coins"
             android:inputType="text"
-            android:textColor="@color/white"
-            android:textColorHint="@color/slate_500"
+            android:textColor="@color/content_primary"
+            android:textColorHint="@color/content_tertiary"
             android:textSize="13sp" />
     </LinearLayout>
 

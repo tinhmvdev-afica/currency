@@ -137,10 +137,10 @@ class QuickCurrenciesBottomSheet(
         for (tab in tabs) {
             if (tab == selectedView) {
                 tab.setBackgroundResource(R.drawable.bg_button_gradient)
-                tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.content_primary))
             } else {
                 tab.background = null
-                tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.slate_400))
+                tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.content_secondary))
             }
         }
     }

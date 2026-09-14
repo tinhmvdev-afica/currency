@@ -51,14 +51,14 @@ class CurrencyPickerBottomSheet(
             binding.tvPickerSlotBadge.setText(R.string.from_currency)
             binding.tvPickerSlotBadge.setBackgroundResource(R.drawable.bg_badge_cyan)
             binding.tvPickerSlotBadge.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.cyan_400)
+                ContextCompat.getColor(requireContext(), R.color.brand_accent)
             )
         } else {
             binding.tvPickerTitle.setText(R.string.picker_to_title)
             binding.tvPickerSlotBadge.setText(R.string.to_currency)
             binding.tvPickerSlotBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
             binding.tvPickerSlotBadge.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.emerald_400)
+                ContextCompat.getColor(requireContext(), R.color.status_positive)
             )
         }
 
@@ -118,16 +118,16 @@ class CurrencyPickerBottomSheet(
         val context = requireContext()
         if (isCryptoTab) {
             binding.btnTabCrypto.setBackgroundResource(R.drawable.bg_button_gradient)
-            binding.btnTabCrypto.setTextColor(ContextCompat.getColor(context, R.color.white))
+            binding.btnTabCrypto.setTextColor(ContextCompat.getColor(context, R.color.content_primary))
 
             binding.btnTabFiat.background = null
-            binding.btnTabFiat.setTextColor(ContextCompat.getColor(context, R.color.slate_400))
+            binding.btnTabFiat.setTextColor(ContextCompat.getColor(context, R.color.content_secondary))
         } else {
             binding.btnTabFiat.setBackgroundResource(R.drawable.bg_button_gradient)
-            binding.btnTabFiat.setTextColor(ContextCompat.getColor(context, R.color.white))
+            binding.btnTabFiat.setTextColor(ContextCompat.getColor(context, R.color.content_primary))
 
             binding.btnTabCrypto.background = null
-            binding.btnTabCrypto.setTextColor(ContextCompat.getColor(context, R.color.slate_400))
+            binding.btnTabCrypto.setTextColor(ContextCompat.getColor(context, R.color.content_secondary))
         }
     }
 

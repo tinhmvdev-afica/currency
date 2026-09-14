@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@color/background_app"
     android:fillViewport="true">
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings"
-            android:textColor="@color/white"
+            android:textColor="@color/content_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="@string/settings_subtitle"
-            android:textColor="@color/slate_400"
+            android:textColor="@color/content_secondary"
             android:textSize="11sp" />
 
         <!-- Section 1: Currency Options -->
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="@string/currency_options"
-                android:textColor="@color/slate_400"
+                android:textColor="@color/content_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
 <!--                        android:layout_width="wrap_content"-->
 <!--                        android:layout_height="wrap_content"-->
 <!--                        android:text="@string/default_currency"-->
-<!--                        android:textColor="@color/white"-->
+<!--                        android:textColor="@color/content_primary"-->
 <!--                        android:textSize="13sp"-->
 <!--                        android:textStyle="bold" />-->
 
@@ -76,7 +76,7 @@
 <!--                        android:layout_height="wrap_content"-->
 <!--                        android:layout_marginTop="2dp"-->
 <!--                        android:text="@string/default_currency_summary"-->
-<!--                        android:textColor="@color/slate_400"-->
+<!--                        android:textColor="@color/content_secondary"-->
 <!--                        android:textSize="11sp" />-->
 <!--                </LinearLayout>-->
 
@@ -90,7 +90,7 @@
 <!--                    android:paddingEnd="10dp"-->
 <!--                    android:paddingBottom="4dp"-->
 <!--                    android:text="VND (₫)"-->
-<!--                    android:textColor="@color/cyan_400"-->
+<!--                    android:textColor="@color/brand_accent"-->
 <!--                    android:textSize="12sp"-->
 <!--                    android:textStyle="bold" />-->
 <!--            </LinearLayout>-->
@@ -98,7 +98,7 @@
 <!--            <View-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="1dp"-->
-<!--                android:background="@color/border_dark" />-->
+<!--                android:background="@color/outline_default" />-->
 
 <!--            &lt;!&ndash; Auto Refresh &ndash;&gt;-->
 <!--            <LinearLayout-->
@@ -119,7 +119,7 @@
 <!--                        android:layout_width="wrap_content"-->
 <!--                        android:layout_height="wrap_content"-->
 <!--                        android:text="@string/auto_refresh"-->
-<!--                        android:textColor="@color/white"-->
+<!--                        android:textColor="@color/content_primary"-->
 <!--                        android:textSize="13sp"-->
 <!--                        android:textStyle="bold" />-->
 
@@ -128,7 +128,7 @@
 <!--                        android:layout_height="wrap_content"-->
 <!--                        android:layout_marginTop="2dp"-->
 <!--                        android:text="@string/refresh_every_minute"-->
-<!--                        android:textColor="@color/slate_400"-->
+<!--                        android:textColor="@color/content_secondary"-->
 <!--                        android:textSize="11sp" />-->
 <!--                </LinearLayout>-->
 
@@ -137,14 +137,14 @@
 <!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
 <!--                    android:checked="true"-->
-<!--                    app:thumbTint="@color/white"-->
-<!--                    app:trackTint="@color/cyan_500" />-->
+<!--                    app:thumbTint="@color/content_primary"-->
+<!--                    app:trackTint="@color/brand_primary" />-->
 <!--            </LinearLayout>-->
 
 <!--            <View-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="1dp"-->
-<!--                android:background="@color/border_dark" />-->
+<!--                android:background="@color/outline_default" />-->
 
             <!-- Quick Multi-Currencies -->
             <LinearLayout
@@ -169,7 +169,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/quick_currencies_title"
-                        android:textColor="@color/white"
+                        android:textColor="@color/content_primary"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -178,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="@string/quick_currencies_summary"
-                        android:textColor="@color/slate_400"
+                        android:textColor="@color/content_secondary"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -198,7 +198,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5/5 ›"
-                        android:textColor="@color/cyan_400"
+                        android:textColor="@color/brand_accent"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -220,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="@string/language_and_region"
-                android:textColor="@color/slate_400"
+                android:textColor="@color/content_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -265,7 +265,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tiếng Việt"
-                        android:textColor="@color/white"
+                        android:textColor="@color/content_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -287,7 +287,112 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/select_language"
-                        android:textColor="@color/cyan_400"
+                        android:textColor="@color/brand_accent"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Section 3: Theme / Appearance -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card_surface"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Section Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/theme_and_display"
+                android:textColor="@color/content_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <!-- Theme Picker Row (Click to open dialog) -->
+            <LinearLayout
+                android:id="@+id/btnThemePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+
+                <!-- Theme Icon Container -->
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_input_box">
+
+                    <ImageView
+                        android:id="@+id/ivActiveThemeIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_theme_dark"
+                        app:tint="@color/brand_accent" />
+                </FrameLayout>
+
+                <!-- Theme Name & Description -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvActiveThemeName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/theme_dark"
+                        android:textColor="@color/content_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvActiveThemeSubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/theme_subtitle"
+                        android:textColor="@color/content_secondary"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <!-- Current Theme Badge / Button -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_badge_cyan"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/tvThemeBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/theme_dark"
+                        android:textColor="@color/brand_accent"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 

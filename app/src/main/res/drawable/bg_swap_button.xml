@@ -3,9 +3,9 @@
     android:shape="oval">
     <gradient
         android:angle="45"
-        android:startColor="@color/cyan_500"
-        android:endColor="@color/blue_600" />
+        android:startColor="@color/brand_primary"
+        android:endColor="@color/brand_gradient_end" />
     <stroke
         android:width="2dp"
-        android:color="@color/bg_dark" />
+        android:color="@color/background_app" />
 </shape>

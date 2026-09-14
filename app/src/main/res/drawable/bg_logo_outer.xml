@@ -6,8 +6,8 @@
 
     <gradient
         android:angle="0"
-        android:startColor="#22D3EE"
-        android:centerColor="#2196F3"
-        android:endColor="#6366F1" />
+        android:startColor="@color/brand_accent"
+        android:centerColor="@color/splash_logo_gradient_center"
+        android:endColor="@color/splash_logo_gradient_end" />
 
 </shape>

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import com.example.currency.R
@@ -38,6 +39,9 @@ class SettingsFragment : Fragment() {
 
         // Setup Quick Multi-Currencies
         setupQuickCurrencies()
+
+        // Setup Theme / Appearance
+        setupThemeSection()
 
         // Load default currency
 //        val currentDefault = prefs.getString("default_currency", "VND (₫)") ?: "VND (₫)"
@@ -117,6 +121,42 @@ class SettingsFragment : Fragment() {
 
         // Set application locale - this automatically recreates the activity and applies new locale
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language.tag))
+    }
+
+    private fun setupThemeSection() {
+        val currentTheme = PreferencesHelper.getThemeMode(requireContext())
+        updateThemeUI(currentTheme)
+
+        binding.btnThemePicker.setOnClickListener {
+            val themeDialog = ThemePickerDialogFragment(
+                currentTheme = PreferencesHelper.getThemeMode(requireContext())
+            ) { newTheme ->
+                onThemeOptionSelected(newTheme)
+            }
+            themeDialog.show(parentFragmentManager, "ThemePickerDialogFragment")
+        }
+    }
+
+    private fun onThemeOptionSelected(newTheme: String) {
+        val currentTheme = PreferencesHelper.getThemeMode(requireContext())
+        if (currentTheme == newTheme) return
+
+        PreferencesHelper.setThemeMode(requireContext(), newTheme)
+        PreferencesHelper.applyTheme(newTheme)
+        updateThemeUI(newTheme)
+    }
+
+    private fun updateThemeUI(selectedTheme: String) {
+        val (iconRes, nameRes) = when (selectedTheme) {
+            PreferencesHelper.THEME_LIGHT -> Pair(R.drawable.ic_theme_light, R.string.theme_light)
+            PreferencesHelper.THEME_DARK -> Pair(R.drawable.ic_theme_dark, R.string.theme_dark)
+            else -> Pair(R.drawable.ic_theme_system, R.string.theme_system)
+        }
+
+        binding.ivActiveThemeIcon.setImageResource(iconRes)
+        val themeName = getString(nameRes)
+        binding.tvActiveThemeName.text = themeName
+        binding.tvThemeBadge.text = themeName
     }
 
     override fun onDestroyView() {
