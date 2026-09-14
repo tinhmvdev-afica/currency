@@ -68,6 +68,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -99,5 +100,6 @@ dependencies {
     implementation(libs.realm.base)
     implementation(libs.hilt.android)
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 }

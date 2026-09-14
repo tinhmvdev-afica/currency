@@ -119,7 +119,7 @@ class ConverterFragment : Fragment() {
             val to = toCurrency ?: return@setOnClickListener
             isRotatingSwap = true
 
-            binding.btnSwap.animate()
+            binding.ivSwapIcon.animate()
                 .rotationBy(180f)
                 .setDuration(300)
                 .withEndAction { isRotatingSwap = false }

@@ -118,7 +118,7 @@
 
         <ImageView
             android:id="@+id/ivLightRadio"
-            android:layout_width="22dp"
+            android:layout_width="18dp"
             android:layout_height="22dp"
             android:src="@drawable/ic_checkbox_unchecked" />
     </LinearLayout>
