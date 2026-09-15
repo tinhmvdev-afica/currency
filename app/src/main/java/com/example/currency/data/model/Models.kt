@@ -27,16 +27,7 @@ data class CurrencyFreaksDetail(
 data class CurrencyFreaksResponse(
     val supportedCurrenciesMap: Map<String, CurrencyFreaksDetail>
 )
-data class RatesResponse(
-    val base: String,
-    val date: String,
-    val rates: Map<String, String>
-)
 
-data class CurrencyRate(
-    val currencyCode: String,
-    val rate: Double
-)
 
 /**
  * Model phản hồi từ endpoint /exchange_rates của CoinGecko
@@ -74,58 +65,10 @@ data class CurrencyItem(
     val marketCapRank: Int? = null
 )
 
-
-
-fun CoinMarket.toCurrencyItem(usdPrice: Double? = null): CurrencyItem {
-    return CurrencyItem(
-        id = this.id,
-        symbol = this.symbol.uppercase(),
-        name = this.name,
-        isCrypto = true,
-        iconUrl = this.image,
-        symbolChar = when (this.symbol.lowercase()) {
-            "btc" -> "₿"
-            "eth" -> "Ξ"
-            "usdt" -> "₮"
-            "doge" -> "Ð"
-            else -> this.symbol.take(3).uppercase()
-        },
-        priceInUsd = usdPrice ?: this.currentPrice,
-        priceChange24h = this.priceChangePercentage24h
-    )
-}
-
-/**
- * Định dạng số tiền hiển thị chuẩn theo ngôn ngữ và đơn vị tiền tệ
- */
-fun formatAmountDisplay(value: Double, symbol: String = ""): String {
-    val isZeroDecimal = symbol.uppercase() in listOf("VND", "JPY", "KRW")
-    return if (isZeroDecimal || value >= 1000.0) {
-        val longVal = value.toLong()
-        if (isZeroDecimal || Math.abs(value - longVal) < 0.001) {
-            NumberFormat.getNumberInstance(Locale.US).format(longVal)
-        } else {
-            NumberFormat.getNumberInstance(Locale.US).apply {
-                maximumFractionDigits = 2
-                minimumFractionDigits = 0
-            }.format(value)
-        }
-    } else if (value >= 1.0) {
-        String.format(Locale.US, "%,.2f", value)
-    } else if (value >= 0.0001) {
-        String.format(Locale.US, "%.6f", value).trimEnd('0').trimEnd('.')
-    } else if (value > 0.0) {
-        String.format(Locale.US, "%.8f", value).trimEnd('0').trimEnd('.')
-    } else {
-        "0"
-    }
-}
-
-/**
- * Model hiển thị danh sách quy đổi nhanh đa tiền tệ
- */
-data class QuickConversionItem(
-    val currency: CurrencyItem,
-    val convertedAmount: Double,
-    val formattedAmount: String
+data class MarketChartResponse(
+    @SerializedName("prices") val prices: List<List<Double>>
+)
+data class PricePoint(
+    val timestamp: Long,
+    val price: Double
 )

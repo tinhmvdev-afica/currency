@@ -72,6 +72,15 @@
         <action
             android:id="@+id/action_homeFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_marketChartFragment"
+            app:destination="@id/marketChartFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/marketChartFragment"
+        android:name="com.example.currency.ui.markets.MarketChartFragment"
+        android:label="Market Chart">
 
     </fragment>
 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_start_price">Preço inicial do período: %1$s</string>
+    <string name="market_cap_rank">Top #%1$d</string>
+    <string name="crypto_category">🪙 Cripto</string>
+    <string name="crypto_plain">Cripto</string>
+    <string name="fiat_category">💵 Fiat</string>
+    <string name="fiat_plain">Fiat</string>
+    <string name="fiat_currency_plain">Moeda fiduciária</string>
+    <string name="currency_name_parenthesized">(%1$s)</string>
+    <string name="market_cap_value">Capitalização de mercado: %1$s</string>
+    <string name="count_out_of_limit">%1$d/%2$d</string>
+    <string name="splash_tagline">MOEDA E CRIPTO INTELIGENTES</string>
+    <string name="chart_low_24h">Mínimo de 24h</string>
+    <string name="chart_high_24h">Máximo de 24h</string>
+    <string name="chart_market_cap">Capitalização de mercado</string>
+    <string name="sample_coin_name">Bitcoin</string>
+    <string name="sample_market_cap_rank">Top #1</string>
+    <string name="sample_chart_price_change">▲ +1,234.56 (+1.63%)</string>
+    <string name="sample_chart_start_price">Preço inicial do período: $75,610.21</string>
+    <string name="sample_currency_name_parenthesized">(Bitcoin)</string>
+    <string name="sample_market_cap_value">Capitalização de mercado: $2.01T</string>
+    <string name="selected_count_placeholder">Selecionadas: 0/5 moedas</string>
+    <string name="count_placeholder">0/5</string>
+    <string name="quick_currencies_badge_placeholder">0/5 ›</string>
+</resources>

@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/background_app">
+    android:background="@color/background_app"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,17 +16,42 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <LinearLayout
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_chart_tab_selected"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_back"
+                app:tint="@color/brand_primary" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/markets"
+                android:textColor="@color/content_primary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
         <!-- HEADER -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="14dp">
+
 
             <ImageView
                 android:id="@+id/ivCoinIcon"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:contentDescription="@string/app_name"
                 android:scaleType="centerCrop" />
 
@@ -35,14 +62,33 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvCoinName"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Bitcoin"
-                    android:textColor="@color/content_primary"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvCoinName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/sample_coin_name"
+                        android:textColor="@color/content_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvMarketCapRank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/sample_market_cap_rank"
+                        android:textColor="@color/brand_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvCoinSymbol"
@@ -58,40 +104,40 @@
 
         </LinearLayout>
 
-        <!-- CURRENT PRICE -->
-        <TextView
-            android:id="@+id/tvCurrentPrice"
-            android:layout_width="wrap_content"
+        <!-- CURRENT PRICE, CHANGE & PERIOD START PRICE -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="$76,845.32"
-            android:textColor="@color/content_primary"
-            android:textSize="38sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <!-- CHANGE -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvCurrentPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$76,845.32"
+                android:textColor="@color/content_primary"
+                android:textSize="38sp"
+                android:textStyle="bold" />
 
+            <!-- CHANGE -->
             <TextView
                 android:id="@+id/tvPriceChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="▲ +1,234.56 (+1.63%)"
+                android:layout_marginTop="8dp"
+                android:text="@string/sample_chart_price_change"
                 android:textColor="@color/status_positive"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvStartPeriodPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="24h"
-                android:textColor="@color/content_tertiary"
+                android:layout_marginTop="4dp"
+                android:text="@string/sample_chart_start_price"
+                android:textColor="@color/content_secondary"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -188,7 +234,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24h Low"
+                    android:text="@string/chart_low_24h"
                     android:textColor="@color/content_secondary"
                     android:textSize="12sp" />
 
@@ -213,8 +259,8 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="11dp"
-                    android:text="24h High"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chart_high_24h"
                     android:textColor="@color/content_secondary"
                     android:textSize="12sp" />
 
@@ -240,7 +286,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Market Cap"
+                    android:text="@string/chart_market_cap"
                     android:textColor="@color/content_secondary"
                     android:textSize="12sp" />
 

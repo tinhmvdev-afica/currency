@@ -44,7 +44,7 @@
                 android:id="@+id/tvCoinName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bitcoin"
+                android:text="@string/sample_coin_name"
                 android:textColor="@color/content_primary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Cap: $2.01T"
+            android:text="@string/sample_market_cap_value"
             android:textColor="@color/content_secondary"
             android:textSize="10sp" />
     </LinearLayout>

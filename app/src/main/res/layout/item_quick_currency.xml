@@ -29,7 +29,7 @@
             android:id="@+id/tvQuickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đô la Mỹ"
+                android:text="@string/us_dollar"
             android:textColor="@color/content_primary"
             android:textSize="13sp"
             android:textStyle="bold" />

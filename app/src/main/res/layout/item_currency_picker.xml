@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:text="(Bitcoin)"
+                android:text="@string/sample_currency_name_parenthesized"
                 android:textColor="@color/content_secondary"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Crypto"
+            android:text="@string/crypto_category"
             android:textColor="@color/brand_accent"
             android:textSize="10sp" />
     </LinearLayout>

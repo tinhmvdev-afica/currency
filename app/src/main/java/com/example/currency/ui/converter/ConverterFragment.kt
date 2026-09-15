@@ -288,7 +288,12 @@ class ConverterFragment : Fragment() {
 
             // Luôn hiển thị tỷ giá của 1 đơn vị tiền nguồn, thay vì % biến động 24 giờ.
             val rate = calculateRate(from, currency)
-            val subText = "1 ${from.symbol} = ${formatNumber(rate)} ${currency.symbol}"
+            val subText = getString(
+                R.string.rate_ratio,
+                from.symbol,
+                formatNumber(rate),
+                currency.symbol
+            )
 
             QuickCurrencyItem(
                 symbol = currency.symbol,

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_start_price">Harga awal periode: %1$s</string>
+    <string name="market_cap_rank">Top #%1$d</string>
+    <string name="crypto_category">🪙 Kripto</string>
+    <string name="crypto_plain">Kripto</string>
+    <string name="fiat_category">💵 Fiat</string>
+    <string name="fiat_plain">Fiat</string>
+    <string name="fiat_currency_plain">Mata uang fiat</string>
+    <string name="currency_name_parenthesized">(%1$s)</string>
+    <string name="market_cap_value">Kapitalisasi pasar: %1$s</string>
+    <string name="count_out_of_limit">%1$d/%2$d</string>
+    <string name="splash_tagline">MATA UANG &amp; KRIPTO CERDAS</string>
+    <string name="chart_low_24h">Terendah 24j</string>
+    <string name="chart_high_24h">Tertinggi 24j</string>
+    <string name="chart_market_cap">Kapitalisasi pasar</string>
+    <string name="sample_coin_name">Bitcoin</string>
+    <string name="sample_market_cap_rank">Top #1</string>
+    <string name="sample_chart_price_change">▲ +1,234.56 (+1.63%)</string>
+    <string name="sample_chart_start_price">Harga awal periode: $75,610.21</string>
+    <string name="sample_currency_name_parenthesized">(Bitcoin)</string>
+    <string name="sample_market_cap_value">Kapitalisasi pasar: $2.01T</string>
+    <string name="selected_count_placeholder">Dipilih: 0/5 mata uang</string>
+    <string name="count_placeholder">0/5</string>
+    <string name="quick_currencies_badge_placeholder">0/5 ›</string>
+</resources>

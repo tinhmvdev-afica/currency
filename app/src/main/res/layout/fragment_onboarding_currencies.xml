@@ -44,7 +44,7 @@
             android:paddingTop="4dp"
             android:paddingEnd="10dp"
             android:paddingBottom="4dp"
-            android:text="5/5 đồng tiền"
+            android:text="@string/selected_count_placeholder"
             android:textColor="@color/status_positive"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -95,7 +95,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center"
-            android:text="🪙 Crypto"
+            android:text="@string/crypto_category"
             android:textColor="@color/content_secondary"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -107,7 +107,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center"
-            android:text="💵 Fiat"
+            android:text="@string/fiat_category"
             android:textColor="@color/content_secondary"
             android:textSize="12sp"
             android:textStyle="bold" />

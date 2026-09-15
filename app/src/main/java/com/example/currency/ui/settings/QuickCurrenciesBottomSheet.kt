@@ -125,7 +125,11 @@ class QuickCurrenciesBottomSheet(
     }
 
     private fun updateCountBadge(count: Int) {
-        binding.tvSelectedCountBadge.text = "$count/${PreferencesHelper.MAX_QUICK_CURRENCIES}"
+        binding.tvSelectedCountBadge.text = getString(
+            R.string.count_out_of_limit,
+            count,
+            PreferencesHelper.MAX_QUICK_CURRENCIES
+        )
     }
 
     private fun submitCurrencies() {

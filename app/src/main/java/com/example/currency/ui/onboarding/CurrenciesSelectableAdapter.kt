@@ -96,11 +96,11 @@ class CurrenciesSelectableAdapter(
             }
 
             if (item.isCrypto) {
-                binding.tvCurrencyTypeBadge.text = "Crypto"
+                binding.tvCurrencyTypeBadge.setText(R.string.crypto_plain)
                 binding.tvCurrencyTypeBadge.setBackgroundResource(R.drawable.bg_badge_cyan)
                 binding.tvCurrencyTypeBadge.setTextColor(ContextCompat.getColor(context, R.color.brand_accent))
             } else {
-                binding.tvCurrencyTypeBadge.text = "Fiat"
+                binding.tvCurrencyTypeBadge.setText(R.string.fiat_plain)
                 binding.tvCurrencyTypeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
                 binding.tvCurrencyTypeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
             }

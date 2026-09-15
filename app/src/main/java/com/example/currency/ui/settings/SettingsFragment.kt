@@ -59,7 +59,7 @@ class SettingsFragment : Fragment() {
 
     private fun updateQuickCurrenciesBadge() {
         val count = PreferencesHelper.getQuickCurrencies(requireContext()).size
-        binding.tvQuickCurrenciesBadge.text = "$count/${PreferencesHelper.MAX_QUICK_CURRENCIES} ›"
+        binding.tvQuickCurrenciesBadge.text = getString(R.string.quick_currencies_badge, count)
     }
 
     private fun setupLanguageSection(prefs: SharedPreferences) {

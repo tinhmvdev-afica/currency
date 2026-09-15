@@ -8,12 +8,14 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.currency.data.model.CoinMarket
 import com.example.currency.data.model.CurrencyFreaksDetail
 import com.example.currency.data.model.CurrencyItem
+import com.example.currency.data.model.PricePoint
 import com.example.currency.data.repository.CurrencyRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 data class CryptoUiState(
@@ -28,6 +30,11 @@ data class FiatsUiState(
     val selectedCurrency: CurrencyItem? = null,
     val errorMessage: String? = null
 )
+data class MarketChartUiState(
+    val isLoading: Boolean = false,
+    val chartData: List<PricePoint> = emptyList(),
+    val errorMessage: String? = null
+)
 @HiltViewModel
 class CoinViewModel  @Inject constructor (
     private val repository: CurrencyRepository
@@ -38,6 +45,9 @@ class CoinViewModel  @Inject constructor (
 
     private val _fiatUiState = MutableStateFlow(FiatsUiState())
     val fiatUiState: StateFlow<FiatsUiState> = _fiatUiState.asStateFlow()
+    private val _chartUiState = MutableStateFlow(MarketChartUiState())
+    val chartUiState: StateFlow<MarketChartUiState> = _chartUiState.asStateFlow()
+    private var chartJob: Job? = null
     /**
      * Lấy danh sách coin theo loại tiền.
      *
@@ -98,6 +108,31 @@ class CoinViewModel  @Inject constructor (
                 }
         }
     }
+    fun loadChart(id:String,currency: String = "usd",days : Int = 1){
+        chartJob?.cancel()
+        chartJob = viewModelScope.launch {
+            _chartUiState.value = _chartUiState.value.copy(
+                isLoading = true,
+                errorMessage = null
+            )
+
+            repository.getMarketChart(id,currency, days)
+                .onSuccess { chartData ->
+                    _chartUiState.value = _chartUiState.value.copy(
+                        isLoading = false,
+                        chartData = chartData,
+                        errorMessage = null
+                    )
+                }
+                .onFailure { error ->
+                    _chartUiState.value = _chartUiState.value.copy(
+                        isLoading = false,
+                        errorMessage = error.message ?: "Có lỗi xảy ra"
+                    )
+
+                }
+        }
+    }
     fun refreshAll() {
         viewModelScope.launch {
             val cryptoResult = repository.getCoinMarket(currency = "usd", forceRefresh = true)
@@ -107,6 +142,11 @@ class CoinViewModel  @Inject constructor (
                 Log.d("REFRESH", "Refresh thành công")
             }
         }
+    }
+    fun selectMarketCurrency(currency: CurrencyItem) {
+        _uiState.value = _uiState.value.copy(
+            selectedCurrency = currency
+        )
     }
     /**
      * Lấy một coin cụ thể.

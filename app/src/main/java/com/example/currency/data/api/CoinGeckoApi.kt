@@ -2,8 +2,10 @@ package com.example.currency.data.api
 
 import com.example.currency.data.model.CoinMarket
 import com.example.currency.data.model.ExchangeRatesResponse
+import com.example.currency.data.model.MarketChartResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CoinGeckoApi {
@@ -32,13 +34,13 @@ interface CoinGeckoApi {
         @Header("x-cg-demo-api-key") demoApiKey: String? = "CG-jvm7rDh1hweD1s99Wk3yhicn"
 
     ): List<CoinMarket>
+    @GET("coins/{id}/market_chart")
+    suspend fun getCoinMarketChart(
+        @Path("id") id :String,
+        @Query("vs_currency") vsCurrency: String = "usd",
+        @Query("days") days: Int = 1,
+        @Header("x-cg-demo-api-key") demoApiKey: String? = "CG-jvm7rDh1hweD1s99Wk3yhicn"
 
-    /**
-     * Lấy bảng tỷ giá quy đổi của tất cả các đồng Fiat & Crypto theo chuẩn Bitcoin (BTC)
-     * Rất thích hợp để tính tỷ giá chéo giữa Fiat ⇄ Fiat, Crypto ⇄ Fiat và Crypto ⇄ Crypto
-     */
-    @GET("exchange_rates")
-    suspend fun getExchangeRates(
-        @Header("x-cg-demo-api-key") demoApiKey: String? = null
-    ): ExchangeRatesResponse
+    ): MarketChartResponse
+
 }

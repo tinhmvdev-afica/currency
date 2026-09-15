@@ -45,7 +45,7 @@
             android:paddingTop="2dp"
             android:paddingEnd="8dp"
             android:paddingBottom="2dp"
-            android:text="From Currency"
+            android:text="@string/from_currency"
             android:textColor="@color/brand_accent"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -78,7 +78,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_button_gradient"
             android:gravity="center"
-            android:text="🪙 Crypto"
+            android:text="@string/crypto_category"
             android:textColor="@color/content_primary"
             android:textSize="12sp"
             android:textStyle="bold" />

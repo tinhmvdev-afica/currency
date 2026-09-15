@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.currency.R
 import com.example.currency.databinding.BottomSheetLanguagePickerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -54,7 +55,7 @@ class LanguagePickerBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvLanguageCountBadge.text = "${ALL_LANGUAGES.size}"
+        binding.tvLanguageCountBadge.text = getString(R.string.all_languages_count, ALL_LANGUAGES.size)
 
         binding.btnClosePicker.setOnClickListener {
             dismiss()

@@ -1,6 +1,7 @@
 package com.example.currency.ui.markets
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -48,8 +49,10 @@ class MarketCoinAdapter(
         }
         holder.binding.tvCoinName.text = item.name
         holder.binding.tvCoinSymbol.text = item.symbol
-        holder.binding.tvCoinMarketCap.text = "MCap: $" +
-            CurrencyMockRepository.formatNumber(item.marketCap ?: 0.0)
+        holder.binding.tvCoinMarketCap.text = context.getString(
+            R.string.market_cap_value,
+            "$" + CurrencyMockRepository.formatNumber(item.marketCap ?: 0.0)
+        )
         holder.binding.tvCoinPrice.text = "$" + CurrencyMockRepository.formatNumber(item.priceInUsd)
 
         val change = item.priceChange24h ?: 0.0
@@ -71,6 +74,7 @@ class MarketCoinAdapter(
 
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(item)
+            Log.d("CLICK", "${item.name}")
         }
     }
 

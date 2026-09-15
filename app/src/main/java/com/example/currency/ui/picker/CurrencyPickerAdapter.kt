@@ -44,10 +44,13 @@ class CurrencyPickerAdapter(
             error(R.drawable.bg_swap_button)
         }
         holder.binding.tvPickerSymbol.text = item.symbol
-        holder.binding.tvPickerName.text = "(${item.name})"
+        holder.binding.tvPickerName.text = context.getString(
+            R.string.currency_name_parenthesized,
+            item.name
+        )
 
         if (item.isCrypto) {
-            holder.binding.tvPickerTypeTag.text = "Crypto"
+            holder.binding.tvPickerTypeTag.setText(R.string.crypto_plain)
             holder.binding.tvPickerTypeTag.setTextColor(
                 ContextCompat.getColor(context, R.color.brand_accent)
             )
@@ -71,7 +74,7 @@ class CurrencyPickerAdapter(
                 )
             }
         } else {
-            holder.binding.tvPickerTypeTag.text = "Fiat Currency"
+            holder.binding.tvPickerTypeTag.setText(R.string.fiat_currency_plain)
             holder.binding.tvPickerTypeTag.setTextColor(
                 ContextCompat.getColor(context, R.color.status_positive)
             )

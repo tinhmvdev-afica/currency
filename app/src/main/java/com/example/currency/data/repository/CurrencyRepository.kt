@@ -9,9 +9,12 @@ import com.example.currency.data.model.CurrencyItem
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import com.example.currency.data.local.RefreshInfo
+import com.example.currency.data.model.PricePoint
 import kotlin.text.get
 
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
+
 class CurrencyRepository @Inject constructor(
     private val coinGeckoApi: CoinGeckoApi,
     private val currencyFreaksApi: CurrencyFreaksApi
@@ -176,8 +179,6 @@ class CurrencyRepository @Inject constructor(
             }
         }
     }
-
-
     fun getCryptosFromLocal(): List<CurrencyItem> {
         return realm
             .query<CurrencyRealm>("isCrypto == true")
@@ -213,5 +214,26 @@ class CurrencyRepository @Inject constructor(
                     priceChange24h = item.priceChange24h
                 )
             }
+    }
+    suspend fun getMarketChart(id :String,currency :String, days: Int = 1):Result<List<PricePoint>>{
+        return try{
+            val result = coinGeckoApi.getCoinMarketChart(
+                id = id,
+                vsCurrency = currency,
+                days = days
+            )
+            val items = result.prices.map { item ->
+                PricePoint(
+                    timestamp = item[0].toLong(),
+                    price = item[1]
+                )
+            }
+            Result.success(items)
+        }catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception){
+            Result.failure(e)
+
+        }
     }
 }
