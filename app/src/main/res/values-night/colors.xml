@@ -14,7 +14,8 @@
     <color name="content_emphasized">#E2E8F0</color>
     <color name="content_section_title">#CBD5E1</color>
     <color name="content_secondary">#94A3B8</color>
-    <color name="content_tertiary">#64748B</color>
+<!--    <color name="content_tertiary">#64748B</color>-->
+    <color name="content_tertiary">#FFFFFFFF</color>
     <color name="content_hint">#475569</color>
     <color name="content_on_brand">#FFFFFFFF</color>
 

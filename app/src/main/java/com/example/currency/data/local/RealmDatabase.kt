@@ -3,6 +3,7 @@ package com.example.currency.data.local
 import com.example.currency.data.local.CurrencyRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.migration.AutomaticSchemaMigration
 
 object RealmDatabase {
 
@@ -13,6 +14,8 @@ object RealmDatabase {
         )
     )
         .name("currency.realm")
+        .schemaVersion(1)
+        .migration(AutomaticSchemaMigration {})
         .build()
 
     val realm: Realm by lazy {

@@ -147,7 +147,10 @@ class CurrencyPickerBottomSheet(
                     it.name.lowercase().contains(query)
         }
 
-        adapter.updateList(filtered)
+        adapter.updateList(
+            newItems = filtered,
+            newMarketCoins = if (isCryptoTab) viewModel.uiState.value.marketCoins else emptyList()
+        )
     }
 
     override fun onDestroyView() {

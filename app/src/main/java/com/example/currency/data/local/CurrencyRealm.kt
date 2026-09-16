@@ -24,4 +24,6 @@ class CurrencyRealm : RealmObject {
     var priceChange24h: Double? = null
     var marketCap: Double? = null
     var marketCapRank: Int? = null
+    var low24h: Double? = null
+    var high24h: Double? = null
 }

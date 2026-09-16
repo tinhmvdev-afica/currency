@@ -1,8 +1,10 @@
 package com.example.currency.ui.markets
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,8 +15,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.currency.R
-import com.example.currency.data.model.CurrencyItem
+import com.example.currency.data.model.CoinMarketItem
 import com.example.currency.data.model.PricePoint
+import com.example.currency.data.repository.CurrencyMockRepository
 import com.example.currency.databinding.FragmentMarketChartBinding
 import com.example.currency.helper.ChartHelper
 import com.example.currency.helper.ChartHelper.getTimeFormatter
@@ -38,7 +41,7 @@ class MarketChartFragment : Fragment() {
     private var _binding: FragmentMarketChartBinding? = null
     private val binding get() = _binding!!
     private val viewModel: CoinViewModel by activityViewModels()
-    private lateinit var selectedCurrency: CurrencyItem
+    private lateinit var selectedCoin: CoinMarketItem
     private var days: Int = 1
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +52,7 @@ class MarketChartFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.root.setOnClickListener {
@@ -56,9 +60,9 @@ class MarketChartFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                selectedCurrency = state.selectedCurrency?: return@collect
-                setup(selectedCurrency)
-                viewModel.loadChart(selectedCurrency.id,days = days)
+                selectedCoin = state.selectedCoin ?: return@collect
+                setup(selectedCoin)
+                viewModel.loadChart(selectedCoin.currency.id, days = days)
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -68,36 +72,42 @@ class MarketChartFragment : Fragment() {
                 }
             }
         }
+        binding.priceChart.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                    // Yêu cầu NestedScrollView/ViewGroup cha KHÔNG ĐƯỢC chặn/cướp touch
+                    binding.priceChart.parent?.requestDisallowInterceptTouchEvent(true)
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Trả lại quyền cuộn cho NestedScrollView khi nhấc tay hoặc hủy chạm
+                    binding.priceChart.parent?.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            // Trả về false để LineChart vẫn nhận được event và tự xử lý tính toán MarkerView của nó
+            false
+        }
     }
-    private fun setup(currency: CurrencyItem){
+
+    private fun setup(coin: CoinMarketItem){
+        val currency = coin.currency
 
         binding.ivCoinIcon.load(currency.iconUrl) {
             crossfade(true)
         }
         binding.tvCoinName.text = currency.name
         binding.tvCoinSymbol.text = currency.symbol
-        currency.marketCapRank?.let { rank ->
+        coin.marketCapRank?.let { rank ->
             binding.tvMarketCapRank.text = getString(R.string.market_cap_rank, rank)
             binding.tvMarketCapRank.visibility = View.VISIBLE
         } ?: run {
             binding.tvMarketCapRank.visibility = View.GONE
         }
 
-        binding.tvCurrentPrice.text = "$" + currency.priceInUsd
-//        val change = currency.priceChange24h ?: 0.0
-//        val isPos = change >= 0
-//        val prefix = if (isPos) "↑ +" else "↓ "
-//        binding.tvPriceChange.text = prefix + String.format("%.2f%%", kotlin.math.abs(change))
-//        if(isPos){
-//            binding.tvPriceChange.setTextColor(
-//                ContextCompat.getColor(requireContext(), R.color.status_positive)
-//            )
-//        }
-//        else{
-//            binding.tvPriceChange.setTextColor(
-//                ContextCompat.getColor(requireContext(), R.color.status_negative)
-//            )
-//        }
+        binding.tvCurrentPrice.text = formatUsd(coin.currentPrice)
+        binding.tvLow24h.text = formatUsd(coin.low24h)
+        binding.tvHigh24h.text = formatUsd(coin.high24h)
+        binding.tvMarketCap.text = ChartHelper.formatCompactCurrency(coin.marketCap)
+
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
@@ -124,16 +134,18 @@ class MarketChartFragment : Fragment() {
         updateSelectedTab(binding.tab1D)
     }
     private fun selectChartRange(newDays: Int) {
+        binding.priceChart.highlightValue(null)
         if (days == newDays) return
         days = newDays
 
-        val currency = viewModel.uiState.value.selectedCurrency
+        val currency = viewModel.uiState.value.selectedCoin?.currency
             ?: return
 
         viewModel.loadChart(
             id = currency.id,
             days = days
         )
+
 
         when (days) {
             1 -> updateSelectedTab(binding.tab1D)
@@ -142,6 +154,10 @@ class MarketChartFragment : Fragment() {
             90 -> updateSelectedTab(binding.tab3M)
             365 -> updateSelectedTab(binding.tab1Y)
         }
+    }
+
+    private fun formatUsd(value: Double?): String {
+        return value?.let { "$" + CurrencyMockRepository.formatNumber(it) } ?: "—"
     }
     private fun updateSelectedTab(selectedTab: TextView) {
 
@@ -175,10 +191,10 @@ class MarketChartFragment : Fragment() {
                 tab.setTypeface(null, Typeface.NORMAL)
             }
         }
+
     }
     private fun renderChart(pricePoints: List<PricePoint>) {
         if (pricePoints.isEmpty()) return
-
 // Lấy giá đầu kỳ và giá cuối kỳ
         val startPrice = pricePoints.first().price
         val endPrice = pricePoints.last().price
@@ -190,16 +206,12 @@ class MarketChartFragment : Fragment() {
             } else {
                 0.0
             }
-
         val isPos = diffAmount >= 0
-
         val arrow = if (isPos) "▲" else "▼"
         val sign = if (isPos) "+" else "-"
-
         val formattedDiff = ChartHelper.formatPrice(
             kotlin.math.abs(diffAmount).toFloat()
         )
-
         binding.tvPriceChange.text = String.format(
             Locale.US,
             "%s %s%s (%s%.2f%%)",
@@ -309,8 +321,15 @@ class MarketChartFragment : Fragment() {
             setScaleEnabled(false)
             setPinchZoom(false)
             // Hiệu ứng mượt khi vẽ
+//            maxHighlightDistance = 30f
             animateX(500)
             invalidate()
+        }
+        binding.root.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                binding.priceChart.highlightValue(null)
+            }
+            false
         }
     }
 }

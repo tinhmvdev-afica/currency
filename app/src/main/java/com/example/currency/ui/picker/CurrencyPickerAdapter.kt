@@ -7,17 +7,23 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currency.R
 import com.example.currency.data.model.CurrencyItem
+import com.example.currency.data.model.CoinMarketItem
 import com.example.currency.data.repository.CurrencyMockRepository
 import com.example.currency.databinding.ItemCurrencyPickerBinding
 import coil.load
 
 class CurrencyPickerAdapter(
     private var items: List<CurrencyItem> = emptyList(),
+    private var marketCoins: Map<String, CoinMarketItem> = emptyMap(),
     private val onItemClick: (CurrencyItem) -> Unit
 ) : RecyclerView.Adapter<CurrencyPickerAdapter.PickerViewHolder>() {
 
-    fun updateList(newItems: List<CurrencyItem>) {
+    fun updateList(
+        newItems: List<CurrencyItem>,
+        newMarketCoins: List<CoinMarketItem> = emptyList()
+    ) {
         items = newItems
+        marketCoins = newMarketCoins.associateBy { it.currency.id }
         notifyDataSetChanged()
     }
 
@@ -57,7 +63,7 @@ class CurrencyPickerAdapter(
 
             holder.binding.tvPickerPrice.text = "$" + CurrencyMockRepository.formatNumber(item.priceInUsd)
 
-            val change = item.priceChange24h ?: 0.0
+            val change = marketCoins[item.id]?.priceChange24h ?: 0.0
             val isPos = change >= 0
             val prefix = if (isPos) "↑ +" else "↓ "
             holder.binding.tvPickerChange.text = prefix + String.format("%.2f%%", kotlin.math.abs(change))
@@ -80,25 +86,11 @@ class CurrencyPickerAdapter(
             )
 
             holder.binding.tvPickerPrice.text = item.symbol
-            val change = item.priceChange24h
-            if (change != null) {
-                val isPos = change >= 0
-                val prefix = if (isPos) "↑ +" else "↓ "
-                holder.binding.tvPickerChange.text = prefix + String.format("%.2f%%", kotlin.math.abs(change))
-                if (isPos) {
-                    holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_badge_emerald)
-                    holder.binding.tvPickerChange.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
-                } else {
-                    holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_badge_rose)
-                    holder.binding.tvPickerChange.setTextColor(ContextCompat.getColor(context, R.color.status_negative))
-                }
-            } else {
-                holder.binding.tvPickerChange.setText(R.string.stable_rate)
-                holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_chip_unselected)
-                holder.binding.tvPickerChange.setTextColor(
-                    ContextCompat.getColor(context, R.color.content_secondary)
-                )
-            }
+            holder.binding.tvPickerChange.setText(R.string.stable_rate)
+            holder.binding.tvPickerChange.setBackgroundResource(R.drawable.bg_chip_unselected)
+            holder.binding.tvPickerChange.setTextColor(
+                ContextCompat.getColor(context, R.color.content_secondary)
+            )
         }
 
         holder.itemView.setOnClickListener {

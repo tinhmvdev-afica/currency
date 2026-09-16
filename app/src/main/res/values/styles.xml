@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Style phím số chuẩn phẳng Material 3, viền mỏng 1dp, đúng mã màu theme -->
+    <style name="KeyStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_margin">4dp</item>
+
+        <!-- Màu nền: surface_card (Trắng ở Light, Xanh đen ở Dark) -->
+        <item name="backgroundTint">@color/surface_card</item>
+
+        <!-- Viền mỏng 1dp: outline_default -->
+        <item name="strokeColor">@color/outline_default</item>
+        <item name="strokeWidth">1dp</item>
+
+        <!-- Bo góc 14dp -->
+        <item name="cornerRadius">14dp</item>
+
+        <!-- Màu chữ số: content_primary -->
+        <item name="android:textColor">@color/content_primary</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+
+        <!-- Hiệu ứng chạm đổi màu dịu mắt -->
+        <item name="rippleColor">@color/brand_container_outline</item>
+
+        <!-- Bỏ bóng đổ và inset mặc định để phím phẳng đều đẹp -->
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+</resources>

@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currency.R
-import com.example.currency.data.model.CurrencyItem
+import com.example.currency.data.model.CoinMarketItem
 import com.example.currency.databinding.FragmentMarketsBinding
 import com.example.currency.viewmodel.CoinViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +26,7 @@ class MarketsFragment : Fragment() {
 
     private lateinit var adapter: MarketCoinAdapter
     private val viewModel: CoinViewModel by activityViewModels()
-    private var marketCoins: List<CurrencyItem> = emptyList()
+    private var marketCoins: List<CoinMarketItem> = emptyList()
     private var selectedCategory: String = "Tất cả"
 
     override fun onCreateView(
@@ -42,7 +42,7 @@ class MarketsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = MarketCoinAdapter{ coin ->
-            viewModel.selectMarketCurrency(coin)
+            viewModel.selectMarketCoin(coin)
             findNavController().navigate(
                 R.id.action_homeFragment_to_marketChartFragment
             )
@@ -61,7 +61,7 @@ class MarketsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                marketCoins = state.currencies.sortedByDescending {
+                marketCoins = state.marketCoins.sortedByDescending {
                     it.marketCap ?: Double.NEGATIVE_INFINITY
                 }
                 filterCoins()
@@ -75,8 +75,8 @@ class MarketsFragment : Fragment() {
         val query = binding.etMarketSearch.text.toString().trim().lowercase()
         val filtered = marketCoins.filter { coin ->
             query.isEmpty() ||
-                    coin.name.lowercase().contains(query) ||
-                    coin.symbol.lowercase().contains(query)
+                    coin.currency.name.lowercase().contains(query) ||
+                    coin.currency.symbol.lowercase().contains(query)
         }
         adapter.updateData(filtered)
     }

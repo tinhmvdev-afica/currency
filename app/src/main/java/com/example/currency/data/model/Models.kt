@@ -13,7 +13,9 @@ data class CoinMarket(
     @SerializedName("current_price") val currentPrice: Double,
     @SerializedName("market_cap") val marketCap: Double? = null,
     @SerializedName("market_cap_rank") val marketCapRank: Int? = null,
-    @SerializedName("price_change_percentage_24h") val priceChangePercentage24h: Double? = null
+    @SerializedName("price_change_percentage_24h") val priceChangePercentage24h: Double? = null,
+    @SerializedName("low_24h") val low24h: Double? = null,
+    @SerializedName("high_24h") val high24h: Double? = null
 )
 
 data class CurrencyFreaksDetail(
@@ -59,8 +61,17 @@ data class CurrencyItem(
     val isCrypto: Boolean,
     val iconUrl: String? = null,
     val symbolChar: String = "",
-    val priceInUsd: Double = 0.0,
+    val priceInUsd: Double = 0.0
+)
+
+/** Market-only data for a crypto asset. Fiat currencies never use this model. */
+data class CoinMarketItem(
+    val currency: CurrencyItem,
+    val currentPrice: Double,
+    val quoteCurrency: String,
     val priceChange24h: Double? = null,
+    val low24h: Double? = null,
+    val high24h: Double? = null,
     val marketCap: Double? = null,
     val marketCapRank: Int? = null
 )

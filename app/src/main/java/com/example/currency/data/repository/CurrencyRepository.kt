@@ -1,11 +1,11 @@
 package com.example.currency.data.repository
 
-import android.util.Log
 import com.example.currency.data.api.CoinGeckoApi
 import com.example.currency.data.api.CurrencyFreaksApi
 import com.example.currency.data.local.CurrencyRealm
 import com.example.currency.data.local.RealmDatabase.realm
 import com.example.currency.data.model.CurrencyItem
+import com.example.currency.data.model.CoinMarketItem
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import com.example.currency.data.local.RefreshInfo
@@ -31,10 +31,13 @@ class CurrencyRepository @Inject constructor(
             30 * 60 * 1000L // 30 phút
     }
 
-    suspend fun getCoinMarket(currency: String= "usd",forceRefresh: Boolean = false): Result<List<CurrencyItem>>{
+    suspend fun getCoinMarket(
+        currency: String = "usd",
+        forceRefresh: Boolean = false
+    ): Result<List<CoinMarketItem>> {
         return try {
             val localData = getCryptosFromLocal()
-            if (localData.isNotEmpty() && !shouldRefresh(CRYPTO_KEY, CRYPTO_REFRESH_TIME)) {
+            if (!forceRefresh && localData.isNotEmpty() && !shouldRefresh(CRYPTO_KEY, CRYPTO_REFRESH_TIME)) {
                 return Result.success(localData)
             }
             val result = coinGeckoApi.getCoinMarkets(
@@ -42,20 +45,27 @@ class CurrencyRepository @Inject constructor(
             )
             val items = result.map { detail ->
 
-                CurrencyItem(
+                val currencyItem = CurrencyItem(
                     id = detail.id,
                     symbol = detail.symbol.uppercase(),
                     name = detail.name,
                     isCrypto = true,
                     iconUrl = detail.image,
                     symbolChar = detail.symbol.take(3).uppercase(),
-                    priceInUsd = detail.currentPrice,
+                    priceInUsd = detail.currentPrice
+                )
+                CoinMarketItem(
+                    currency = currencyItem,
+                    currentPrice = detail.currentPrice,
+                    quoteCurrency = currency.uppercase(),
                     priceChange24h = detail.priceChangePercentage24h,
+                    low24h = detail.low24h,
+                    high24h = detail.high24h,
                     marketCap = detail.marketCap,
                     marketCapRank = detail.marketCapRank
                 )
             }
-            saveCurrencies(items)
+            saveCoinMarkets(items)
             updateRefreshTime(CRYPTO_KEY)
             Result.success(items)
         }
@@ -67,7 +77,7 @@ class CurrencyRepository @Inject constructor(
     suspend fun getFiats(forceRefresh: Boolean = false): Result<List<CurrencyItem>>{
         return try{
             val localData = getFiatsFromLocal()
-            if (localData.isNotEmpty() && !shouldRefresh(FIAT_KEY, FIAT_REFRESH_TIME)) {
+            if (!forceRefresh && localData.isNotEmpty() && !shouldRefresh(FIAT_KEY, FIAT_REFRESH_TIME)) {
                 return Result.success(localData)
             }
             // 1. Lấy supported currencies
@@ -170,29 +180,58 @@ class CurrencyRepository @Inject constructor(
                         iconUrl = currency.iconUrl
                         symbolChar = currency.symbolChar
                         priceInUsd = currency.priceInUsd
-                        priceChange24h = currency.priceChange24h
-                        marketCap = currency.marketCap
-                        marketCapRank = currency.marketCapRank
                     },
                     updatePolicy = UpdatePolicy.ALL
                 )
             }
         }
     }
-    fun getCryptosFromLocal(): List<CurrencyItem> {
+    suspend fun saveCoinMarkets(coins: List<CoinMarketItem>) {
+        realm.write {
+            coins.forEach { coin ->
+                val currency = coin.currency
+                copyToRealm(
+                    CurrencyRealm().apply {
+                        id = currency.id
+                        symbol = currency.symbol
+                        name = currency.name
+                        isCrypto = true
+                        iconUrl = currency.iconUrl
+                        symbolChar = currency.symbolChar
+                        priceInUsd = currency.priceInUsd
+                        priceChange24h = coin.priceChange24h
+                        marketCap = coin.marketCap
+                        marketCapRank = coin.marketCapRank
+                        low24h = coin.low24h
+                        high24h = coin.high24h
+                    },
+                    updatePolicy = UpdatePolicy.ALL
+                )
+            }
+        }
+    }
+
+    fun getCryptosFromLocal(): List<CoinMarketItem> {
         return realm
             .query<CurrencyRealm>("isCrypto == true")
             .find()
             .map { item ->
-                CurrencyItem(
+                val currency = CurrencyItem(
                     id = item.id,
                     symbol = item.symbol,
                     name = item.name,
                     isCrypto = true,
                     iconUrl = item.iconUrl,
                     symbolChar = item.symbolChar,
-                    priceInUsd = item.priceInUsd,
+                    priceInUsd = item.priceInUsd
+                )
+                CoinMarketItem(
+                    currency = currency,
+                    currentPrice = item.priceInUsd,
+                    quoteCurrency = "USD",
                     priceChange24h = item.priceChange24h,
+                    low24h = item.low24h,
+                    high24h = item.high24h,
                     marketCap = item.marketCap,
                     marketCapRank = item.marketCapRank
                 )
@@ -210,8 +249,7 @@ class CurrencyRepository @Inject constructor(
                     isCrypto = false,
                     iconUrl = item.iconUrl,
                     symbolChar = item.symbolChar,
-                    priceInUsd = item.priceInUsd,
-                    priceChange24h = item.priceChange24h
+                    priceInUsd = item.priceInUsd
                 )
             }
     }

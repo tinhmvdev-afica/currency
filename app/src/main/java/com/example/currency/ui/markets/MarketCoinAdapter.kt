@@ -8,17 +8,17 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.currency.R
-import com.example.currency.data.model.CurrencyItem
+import com.example.currency.data.model.CoinMarketItem
 import com.example.currency.data.repository.CurrencyMockRepository
 import com.example.currency.databinding.ItemMarketCoinBinding
 
 class MarketCoinAdapter(
-    private var items: List<CurrencyItem> = emptyList(),
-    private val onItemClick: ((CurrencyItem) -> Unit)? = null
+    private var items: List<CoinMarketItem> = emptyList(),
+    private val onItemClick: ((CoinMarketItem) -> Unit)? = null
 ) : RecyclerView.Adapter<MarketCoinAdapter.CoinViewHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newItems: List<CurrencyItem>) {
+    fun updateData(newItems: List<CoinMarketItem>) {
         items = newItems
         notifyDataSetChanged()
     }
@@ -38,22 +38,23 @@ class MarketCoinAdapter(
     @SuppressLint("SetTextI18n", "DefaultLocale")
     override fun onBindViewHolder(holder: CoinViewHolder, position: Int) {
         val item = items[position]
+        val currency = item.currency
         val context = holder.itemView.context
 
         holder.binding.tvCoinRank.text = item.marketCapRank?.toString() ?: ""
 
-        holder.binding.tvCoinIcon.load(item.iconUrl) {
+        holder.binding.tvCoinIcon.load(currency.iconUrl) {
             crossfade(true)
             placeholder(R.drawable.bg_swap_button)
             error(R.drawable.bg_swap_button)
         }
-        holder.binding.tvCoinName.text = item.name
-        holder.binding.tvCoinSymbol.text = item.symbol
+        holder.binding.tvCoinName.text = currency.name
+        holder.binding.tvCoinSymbol.text = currency.symbol
         holder.binding.tvCoinMarketCap.text = context.getString(
             R.string.market_cap_value,
             "$" + CurrencyMockRepository.formatNumber(item.marketCap ?: 0.0)
         )
-        holder.binding.tvCoinPrice.text = "$" + CurrencyMockRepository.formatNumber(item.priceInUsd)
+        holder.binding.tvCoinPrice.text = "$" + CurrencyMockRepository.formatNumber(item.currentPrice)
 
         val change = item.priceChange24h ?: 0.0
         val isPos = change >= 0
@@ -74,7 +75,7 @@ class MarketCoinAdapter(
 
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(item)
-            Log.d("CLICK", "${item.name}")
+            Log.d("CLICK", currency.name)
         }
     }
 

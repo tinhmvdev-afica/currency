@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.currency.data.model.CoinMarket
-import com.example.currency.data.model.CurrencyFreaksDetail
+import com.example.currency.data.model.CoinMarketItem
 import com.example.currency.data.model.CurrencyItem
 import com.example.currency.data.model.PricePoint
 import com.example.currency.data.repository.CurrencyRepository
@@ -21,7 +20,8 @@ import javax.inject.Inject
 data class CryptoUiState(
     val isLoading: Boolean = false,
     val currencies: List<CurrencyItem> = emptyList(),
-    val selectedCurrency: CurrencyItem? = null,
+    val marketCoins: List<CoinMarketItem> = emptyList(),
+    val selectedCoin: CoinMarketItem? = null,
     val errorMessage: String? = null
 )
 data class FiatsUiState(
@@ -63,11 +63,12 @@ class CoinViewModel  @Inject constructor (
                 errorMessage = null
             )
             repository.getCoinMarket(currency)
-                .onSuccess { currencies ->
+                .onSuccess { marketCoins ->
 
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        currencies = currencies,
+                        currencies = marketCoins.map { it.currency },
+                        marketCoins = marketCoins,
                         errorMessage = null
                     )
                 }
@@ -143,9 +144,9 @@ class CoinViewModel  @Inject constructor (
             }
         }
     }
-    fun selectMarketCurrency(currency: CurrencyItem) {
+    fun selectMarketCoin(coin: CoinMarketItem) {
         _uiState.value = _uiState.value.copy(
-            selectedCurrency = currency
+            selectedCoin = coin
         )
     }
     /**

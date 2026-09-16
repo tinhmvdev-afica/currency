@@ -3,8 +3,11 @@ package com.example.currency.helper
 import com.example.currency.data.model.PricePoint
 import kotlin.collections.mapIndexed
 import com.github.mikephil.charting.data.Entry
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.abs
 
 object ChartHelper {
 
@@ -67,5 +70,23 @@ object ChartHelper {
             else ->
                 String.format(Locale.US, "$%.8f", value)
         }
+    }
+
+    fun formatCompactCurrency(value: Double?): String {
+        if (value == null) return "—"
+
+        val absoluteValue = abs(value)
+        val (scaledValue, suffix) = when {
+            absoluteValue >= 1_000_000_000_000 -> value / 1_000_000_000_000 to "T"
+            absoluteValue >= 1_000_000_000 -> value / 1_000_000_000 to "B"
+            absoluteValue >= 1_000_000 -> value / 1_000_000 to "M"
+            absoluteValue >= 1_000 -> value / 1_000 to "K"
+            else -> value to ""
+        }
+        val formatter = DecimalFormat(
+            "#,##0.##",
+            DecimalFormatSymbols(Locale.US)
+        )
+        return "$${formatter.format(scaledValue)}$suffix"
     }
 }

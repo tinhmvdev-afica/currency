@@ -2,8 +2,10 @@ package com.example.currency.ui.converter
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
@@ -18,15 +20,20 @@ import com.example.currency.data.local.PreferencesHelper
 import com.example.currency.data.model.CurrencyItem
 import com.example.currency.data.model.QuickCurrencyItem
 import com.example.currency.databinding.FragmentConverterBinding
+import com.example.currency.helper.CurrencyFormatHelper.formatInputAmount
+import com.example.currency.helper.CurrencyFormatHelper.formatNumber
+import com.example.currency.helper.CurrencyFormatHelper.formatOutputAmount
+import com.example.currency.helper.CurrencyFormatHelper.formatPercentage
 import com.example.currency.ui.picker.CurrencyPickerBottomSheet
 import com.example.currency.viewmodel.CoinViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.Locale
 @AndroidEntryPoint
 class ConverterFragment : Fragment() {
+
+    private companion object {
+        const val MAX_INPUT_DIGITS = 15
+    }
 
     private val viewModel: CoinViewModel by activityViewModels()
     private var _binding: FragmentConverterBinding? = null
@@ -38,6 +45,7 @@ class ConverterFragment : Fragment() {
     private var cryptoCurrencies: List<CurrencyItem> = emptyList()
     private var fiatCurrencies: List<CurrencyItem> = emptyList()
     private var inputAmount: Double = 1.0
+    private var isFormattingInput = false
 
     private lateinit var quickAdapter: QuickCurrencyAdapter
     private var isRotatingSwap = false
@@ -53,6 +61,26 @@ class ConverterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.customKeyboard.attachTo(binding.etInputAmount)
+        binding.etInputAmount.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+            val nextInput = buildString {
+                append(dest, 0, dstart)
+                append(source, start, end)
+                append(dest, dend, dest.length)
+            }
+            if (nextInput.count { it.isDigit() } <= MAX_INPUT_DIGITS) null else ""
+        })
+        binding.root.requestFocus()
+
+        binding.etInputAmount.setOnFocusChangeListener { _, hasFocus ->
+            binding.customKeyboard.visibility = if (hasFocus) View.VISIBLE else View.GONE
+        }
+        binding.converterScroll.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                binding.root.requestFocus()
+            }
+            false
+        }
 
         // Setup Quick Currencies RecyclerView
         quickAdapter = QuickCurrencyAdapter(
@@ -100,11 +128,22 @@ class ConverterFragment : Fragment() {
         binding.etInputAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                val inputStr = s.toString().trim()
+                val inputStr = s.toString().replace(",", "").trim()
                 inputAmount = inputStr.toDoubleOrNull() ?: 0.0
                 calculateConversion()
             }
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (isFormattingInput) return
+
+                val currentInput = s?.toString().orEmpty()
+                val formattedInput = formatInputAmount(currentInput)
+                if (formattedInput == currentInput) return
+
+                isFormattingInput = true
+                binding.etInputAmount.setText(formattedInput)
+                binding.etInputAmount.setSelection(formattedInput.length)
+                isFormattingInput = false
+            }
         })
 
         // Pickers
@@ -149,6 +188,7 @@ class ConverterFragment : Fragment() {
     }
 
     private fun openPicker(slot: String) {
+        binding.root.requestFocus()
         val currentCurrency = (if (slot == "from") fromCurrency else toCurrency) ?: return
         val currentIsCrypto = currentCurrency.isCrypto
         val bottomSheet = CurrencyPickerBottomSheet(
@@ -185,11 +225,13 @@ class ConverterFragment : Fragment() {
                 formatNumber(fromCurrency.priceInUsd)
             )
 
-            val change = fromCurrency.priceChange24h ?: 0.0
+            val change = viewModel.uiState.value.marketCoins
+                .firstOrNull { it.currency.id == fromCurrency.id }
+                ?.priceChange24h ?: 0.0
             val isPos = change >= 0
             val changeText = getString(
                 if (isPos) R.string.price_change_up else R.string.price_change_down,
-                String.format("%.2f", kotlin.math.abs(change))
+                formatPercentage(kotlin.math.abs(change))
             )
             binding.tvFromChangeBadge.text = changeText
             binding.tvFromChangeBadge.visibility = View.VISIBLE
@@ -209,11 +251,13 @@ class ConverterFragment : Fragment() {
         if (toCurrency.isCrypto) {
             binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))
 
-            val change = toCurrency.priceChange24h ?: 0.0
+            val change = viewModel.uiState.value.marketCoins
+                .firstOrNull { it.currency.id == toCurrency.id }
+                ?.priceChange24h ?: 0.0
             val isPos = change >= 0
             val changeText = getString(
                 if (isPos) R.string.price_change_up else R.string.price_change_down,
-                String.format("%.2f", kotlin.math.abs(change))
+                formatPercentage(kotlin.math.abs(change))
             )
             binding.tvToChangeBadge.text = changeText
             binding.tvToChangeBadge.visibility = View.VISIBLE
@@ -230,7 +274,6 @@ class ConverterFragment : Fragment() {
             // Keep the badge's layout space so the TO box stays the same height as crypto.
             binding.tvToChangeBadge.visibility = View.INVISIBLE
         }
-
         // TO UI
         binding.tvToSymbol.text = toCurrency.symbol
         binding.tvToIcon.load(toCurrency.iconUrl) {
@@ -239,26 +282,18 @@ class ConverterFragment : Fragment() {
             error(R.drawable.bg_swap_button)
         }
         binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))
-//        if (toCurrency.isCrypto) {
-//
-//        } else {
-//            binding.tvToSubtext.text = "Đồng tiền pháp định (${toCurrency.name})"
-//        }
 
         // RATE RATIO
         val rate = calculateRate(fromCurrency, toCurrency)
         val rateString = formatNumber(rate)
         binding.tvRateRatio.text = getString(R.string.rate_ratio, fromCurrency.symbol, rateString, toCurrency.symbol)
-
-
     }
-
     private fun calculateConversion() {
         val fromCurrency = fromCurrency ?: return
         val toCurrency = toCurrency ?: return
         val rate = calculateRate(fromCurrency, toCurrency)
         val result = inputAmount * rate
-        binding.tvOutputAmount.text = formatNumber(result)
+        binding.tvOutputAmount.text = formatOutputAmount(result)
 
         // Update Quick Multi-Currency list
         val quickList = getQuickConversions(inputAmount, fromCurrency)
@@ -279,11 +314,6 @@ class ConverterFragment : Fragment() {
             } else {
                 0.0
             }
-//            val formattedAmount = if (currency.symbolChar.isNotBlank() && currency.symbolChar.length <= 2) {
-//                "${currency.symbolChar}${formatNumber(convertedValue)}"
-//            } else {
-//                "${formatNumber(convertedValue)} ${currency.symbol}"
-//            }
             val formattedAmount = "${formatNumber(convertedValue)} ${currency.symbol}"
 
             // Luôn hiển thị tỷ giá của 1 đơn vị tiền nguồn, thay vì % biến động 24 giờ.
@@ -308,20 +338,6 @@ class ConverterFragment : Fragment() {
 
     private fun calculateRate(from: CurrencyItem, to: CurrencyItem): Double {
         return if (to.priceInUsd == 0.0) 0.0 else from.priceInUsd / to.priceInUsd
-    }
-
-    private fun formatNumber(value: Double): String {
-        val symbols = DecimalFormatSymbols(Locale.US).apply {
-            groupingSeparator = ','
-            decimalSeparator = '.'
-        }
-        return when {
-            value >= 1_000_000 -> DecimalFormat("#,###", symbols).format(value)
-            value >= 1 -> DecimalFormat("#,##0.00", symbols).format(value)
-            value >= 0.0001 -> DecimalFormat("#,##0.0000", symbols).format(value)
-            value > 0 -> DecimalFormat("0.00000000", symbols).format(value)
-            else -> "0.00"
-        }
     }
 
     override fun onResume() {

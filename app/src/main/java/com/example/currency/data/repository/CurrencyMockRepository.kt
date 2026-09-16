@@ -5,9 +5,7 @@ import com.example.currency.R
 import com.example.currency.data.model.CurrencyItem
 import com.example.currency.data.model.OnboardingSlideItem
 import com.example.currency.data.model.QuickCurrencyItem
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.Locale
+import com.example.currency.helper.CurrencyFormatHelper
 
 object CurrencyMockRepository {
 
@@ -19,8 +17,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
             symbolChar = "₿",
-            priceInUsd = 102400.0,
-            priceChange24h = -1.85
+            priceInUsd = 102400.0
         ),
         CurrencyItem(
             id = "ethereum",
@@ -29,8 +26,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/279/small/ethereum.png",
             symbolChar = "Ξ",
-            priceInUsd = 3315.20,
-            priceChange24h = -2.40
+            priceInUsd = 3315.20
         ),
         CurrencyItem(
             id = "solana",
@@ -39,8 +35,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/4128/small/solana.png",
             symbolChar = "◎",
-            priceInUsd = 218.40,
-            priceChange24h = 6.18
+            priceInUsd = 218.40
         ),
         CurrencyItem(
             id = "binancecoin",
@@ -49,8 +44,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png",
             symbolChar = "BNB",
-            priceInUsd = 645.10,
-            priceChange24h = 1.12
+            priceInUsd = 645.10
         ),
         CurrencyItem(
             id = "tether",
@@ -59,8 +53,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/325/small/Tether.png",
             symbolChar = "₮",
-            priceInUsd = 1.00,
-            priceChange24h = 0.02
+            priceInUsd = 1.00
         ),
         CurrencyItem(
             id = "ripple",
@@ -69,8 +62,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/44/small/xrp-symbol-white-128.png",
             symbolChar = "✕",
-            priceInUsd = 2.45,
-            priceChange24h = -3.15
+            priceInUsd = 2.45
         ),
         CurrencyItem(
             id = "dogecoin",
@@ -79,8 +71,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/5/small/dogecoin.png",
             symbolChar = "Ð",
-            priceInUsd = 0.26,
-            priceChange24h = -4.80
+            priceInUsd = 0.26
         ),
         CurrencyItem(
             id = "cardano",
@@ -89,8 +80,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = "https://assets.coingecko.com/coins/images/975/small/cardano.png",
             symbolChar = "₳",
-            priceInUsd = 0.82,
-            priceChange24h = -1.25
+            priceInUsd = 0.82
         ),
         CurrencyItem(
             id = "avalanche-2",
@@ -99,8 +89,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = null,
             symbolChar = "▲",
-            priceInUsd = 28.50,
-            priceChange24h = 3.20
+            priceInUsd = 28.50
         ),
         CurrencyItem(
             id = "chainlink",
@@ -109,8 +98,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = null,
             symbolChar = "⬡",
-            priceInUsd = 18.90,
-            priceChange24h = 0.80
+            priceInUsd = 18.90
         ),
         CurrencyItem(
             id = "sui",
@@ -119,8 +107,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = null,
             symbolChar = "💧",
-            priceInUsd = 3.25,
-            priceChange24h = 4.50
+            priceInUsd = 3.25
         ),
         CurrencyItem(
             id = "shiba-inu",
@@ -129,8 +116,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = null,
             symbolChar = "🐕",
-            priceInUsd = 0.0000185,
-            priceChange24h = -2.10
+            priceInUsd = 0.0000185
         ),
         CurrencyItem(
             id = "pepe",
@@ -139,8 +125,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = null,
             symbolChar = "🐸",
-            priceInUsd = 0.0000112,
-            priceChange24h = 8.40
+            priceInUsd = 0.0000112
         ),
         CurrencyItem(
             id = "near",
@@ -149,8 +134,7 @@ object CurrencyMockRepository {
             isCrypto = true,
             iconUrl = null,
             symbolChar = "Ⓝ",
-            priceInUsd = 5.60,
-            priceChange24h = 1.80
+            priceInUsd = 5.60
         )
     )
 
@@ -161,8 +145,7 @@ object CurrencyMockRepository {
             name = "Việt Nam Đồng",
             isCrypto = false,
             symbolChar = "★",
-            priceInUsd = 1.0 / 25450.0,
-            priceChange24h = null
+            priceInUsd = 1.0 / 25450.0
         ),
         CurrencyItem(
             id = "USD",
@@ -170,8 +153,7 @@ object CurrencyMockRepository {
             name = "Đô la Mỹ",
             isCrypto = false,
             symbolChar = "$",
-            priceInUsd = 1.0,
-            priceChange24h = null
+            priceInUsd = 1.0
         ),
         CurrencyItem(
             id = "EUR",
@@ -179,8 +161,7 @@ object CurrencyMockRepository {
             name = "Euro Châu Âu",
             isCrypto = false,
             symbolChar = "€",
-            priceInUsd = 1.0 / 0.92,
-            priceChange24h = -0.35
+            priceInUsd = 1.0 / 0.92
         ),
         CurrencyItem(
             id = "JPY",
@@ -188,8 +169,7 @@ object CurrencyMockRepository {
             name = "Yên Nhật",
             isCrypto = false,
             symbolChar = "¥",
-            priceInUsd = 1.0 / 154.5,
-            priceChange24h = null
+            priceInUsd = 1.0 / 154.5
         ),
         CurrencyItem(
             id = "GBP",
@@ -197,8 +177,7 @@ object CurrencyMockRepository {
             name = "Bảng Anh",
             isCrypto = false,
             symbolChar = "£",
-            priceInUsd = 1.0 / 0.79,
-            priceChange24h = null
+            priceInUsd = 1.0 / 0.79
         ),
         CurrencyItem(
             id = "KRW",
@@ -206,8 +185,7 @@ object CurrencyMockRepository {
             name = "Won Hàn Quốc",
             isCrypto = false,
             symbolChar = "₩",
-            priceInUsd = 1.0 / 1420.0,
-            priceChange24h = null
+            priceInUsd = 1.0 / 1420.0
         ),
         CurrencyItem(
             id = "SGD",
@@ -215,8 +193,7 @@ object CurrencyMockRepository {
             name = "Đô la Singapore",
             isCrypto = false,
             symbolChar = "S$",
-            priceInUsd = 1.0 / 1.34,
-            priceChange24h = null
+            priceInUsd = 1.0 / 1.34
         ),
         CurrencyItem(
             id = "AUD",
@@ -224,8 +201,7 @@ object CurrencyMockRepository {
             name = "Đô la Úc",
             isCrypto = false,
             symbolChar = "A$",
-            priceInUsd = 1.0 / 1.55,
-            priceChange24h = null
+            priceInUsd = 1.0 / 1.55
         ),
         CurrencyItem(
             id = "CAD",
@@ -233,8 +209,7 @@ object CurrencyMockRepository {
             name = "Đô la Canada",
             isCrypto = false,
             symbolChar = "C$",
-            priceInUsd = 1.0 / 1.41,
-            priceChange24h = null
+            priceInUsd = 1.0 / 1.41
         ),
         CurrencyItem(
             id = "CNY",
@@ -242,8 +217,7 @@ object CurrencyMockRepository {
             name = "Nhân dân tệ",
             isCrypto = false,
             symbolChar = "¥",
-            priceInUsd = 1.0 / 7.24,
-            priceChange24h = null
+            priceInUsd = 1.0 / 7.24
         )
     )
 
@@ -272,27 +246,7 @@ object CurrencyMockRepository {
         return from.priceInUsd / to.priceInUsd
     }
 
-    fun formatNumber(value: Double): String {
-        val symbols = DecimalFormatSymbols(Locale.US).apply {
-            groupingSeparator = ','
-            decimalSeparator = '.'
-        }
-        return when {
-            value >= 1_000_000 -> {
-                DecimalFormat("#,###", symbols).format(value)
-            }
-            value >= 1 -> {
-                DecimalFormat("#,##0.00", symbols).format(value)
-            }
-            value >= 0.0001 -> {
-                DecimalFormat("#,##0.0000", symbols).format(value)
-            }
-            value > 0 -> {
-                DecimalFormat("0.00000000", symbols).format(value)
-            }
-            else -> "0.00"
-        }
-    }
+    fun formatNumber(value: Double): String = CurrencyFormatHelper.formatNumber(value)
 
 
 }
