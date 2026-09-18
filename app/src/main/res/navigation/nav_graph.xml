@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.example.currency.ui.splash.SplashFragment"
+        android:name="com.example.currency.presentation.splash.SplashFragment"
         android:label="Splash">
 
         <action
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.example.currency.ui.onboarding.OnboardingFragment"
+        android:name="com.example.currency.presentation.onboarding.OnboardingFragment"
         android:label="Onboarding">
 
         <action
@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/onboardingLanguageFragment"
-        android:name="com.example.currency.ui.onboarding.OnboardingLanguageFragment"
+        android:name="com.example.currency.presentation.onboarding.OnboardingLanguageFragment"
         android:label="OnboardingLanguage">
 
         <action
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/onboardingCurrenciesFragment"
-        android:name="com.example.currency.ui.onboarding.OnboardingCurrenciesFragment"
+        android:name="com.example.currency.presentation.onboarding.OnboardingCurrenciesFragment"
         android:label="OnboardingCurrencies">
 
         <action
@@ -66,7 +66,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.currency.ui.home.HomeFragment"
+        android:name="com.example.currency.presentation.home.HomeFragment"
         android:label="Home">
 
         <action
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/marketChartFragment"
-        android:name="com.example.currency.ui.markets.MarketChartFragment"
+        android:name="com.example.currency.presentation.markets.chart.MarketChartFragment"
         android:label="Market Chart">
 
     </fragment>

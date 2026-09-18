@@ -208,10 +208,67 @@
             android:orientation="vertical"
             android:padding="12dp">
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/priceChart"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="280dp" />
+                android:layout_height="280dp">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/priceChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/chartLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/chartUnavailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvChartUnavailableTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/content_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvChartUnavailableDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:textColor="@color/content_secondary"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/btnRetryChart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/chart_try_again"
+                        android:textAllCaps="false" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvChartStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/content_secondary"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

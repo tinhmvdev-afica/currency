@@ -1,7 +1,7 @@
 package com.example.currency
 
-import com.example.currency.helper.ChartHelper
-import com.example.currency.helper.CurrencyFormatHelper
+import com.example.currency.presentation.common.chart.ChartHelper
+import com.example.currency.presentation.common.format.CurrencyFormatHelper
 import org.junit.Test
 
 import org.junit.Assert.*

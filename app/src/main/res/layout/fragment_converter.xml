@@ -314,7 +314,8 @@
                             android:text="2,550,000,000"
                             android:textColor="@color/brand_accent"
                             android:textSize="24sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:textIsSelectable="true" />
 
                     </LinearLayout>
 
@@ -435,7 +436,7 @@
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.example.currency.ui.CustomNumericKeyboard
+    <com.example.currency.presentation.common.view.CustomNumericKeyboard
         android:id="@+id/customKeyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

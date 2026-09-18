@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,18 @@ plugins {
     alias(libs.plugins.ksp)
 
 }
+
+val localProperties = Properties().apply {
+    val localFile = rootProject.file("local.properties")
+    if (localFile.exists()) localFile.inputStream().use { load(it) }
+}
+
+fun apiKey(name: String): String =
+    providers.environmentVariable(name).orNull
+        ?: localProperties.getProperty(name)
+        ?: error("Missing $name: set an environment variable or add it to local.properties")
+
+fun buildConfigString(value: String): String = "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
 
 //android {
 //    namespace = "com.example.currency"
@@ -50,6 +64,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "COINGECKO_API_KEY", buildConfigString(apiKey("COINGECKO_API_KEY")))
+        buildConfigField("String", "CURRENCYFREAKS_API_KEY", buildConfigString(apiKey("CURRENCYFREAKS_API_KEY")))
     }
 
     buildTypes {
