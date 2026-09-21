@@ -3,13 +3,13 @@ package com.example.currency
 import com.example.currency.domain.model.CoinMarketItem
 import com.example.currency.domain.model.CurrencyItem
 import com.example.currency.domain.model.ChartLoadResult
+import com.example.currency.domain.model.CurrencyListLoadResult
 import com.example.currency.domain.repository.CurrencyRepository
 import com.example.currency.domain.usecase.converter.CalculateConversionUseCase
-import com.example.currency.domain.usecase.currency.GetCryptoListUseCase
-import com.example.currency.domain.usecase.currency.GetFiatListUseCase
 import com.example.currency.domain.usecase.currency.RefreshCurrenciesUseCase
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -33,13 +33,17 @@ class ConversionAndRefreshUseCaseTest {
             var cryptoForced = false
             var fiatForced = false
 
-            override suspend fun getCoinMarket(forceRefresh: Boolean): Result<List<CoinMarketItem>> {
-                cryptoForced = forceRefresh
+            override fun getCoinMarket(forceRefresh: Boolean): Flow<CurrencyListLoadResult<CoinMarketItem>> = emptyFlow()
+
+            override fun getFiats(forceRefresh: Boolean): Flow<CurrencyListLoadResult<CurrencyItem>> = emptyFlow()
+
+            override suspend fun refreshCoinMarket(): Result<List<CoinMarketItem>> {
+                cryptoForced = true
                 return Result.success(listOf(CoinMarketItem(bitcoin, 100.0)))
             }
 
-            override suspend fun getFiats(forceRefresh: Boolean): Result<List<CurrencyItem>> {
-                fiatForced = forceRefresh
+            override suspend fun refreshFiats(): Result<List<CurrencyItem>> {
+                fiatForced = true
                 return Result.failure(IllegalStateException("fiat unavailable"))
             }
 
@@ -47,7 +51,7 @@ class ConversionAndRefreshUseCaseTest {
                 error("Not used")
         }
 
-        val result = RefreshCurrenciesUseCase(GetCryptoListUseCase(repository), GetFiatListUseCase(repository))()
+        val result = RefreshCurrenciesUseCase(repository)()
 
         assertTrue(repository.cryptoForced)
         assertTrue(repository.fiatForced)

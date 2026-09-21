@@ -4,6 +4,7 @@ import com.example.currency.data.local.realm.ChartCacheRealm
 import com.example.currency.data.local.realm.CurrencyRealm
 import com.example.currency.data.local.realm.PricePointRealm
 import com.example.currency.data.local.realm.RefreshInfo
+import com.example.currency.data.local.asset.AssetCurrencySeedDataSource
 import com.example.currency.data.mapper.toCoinMarketItem
 import com.example.currency.data.mapper.toCurrencyItem
 import com.example.currency.data.mapper.toFiatCurrencyItems
@@ -13,6 +14,7 @@ import com.example.currency.data.remote.api.CurrencyFreaksApi
 import com.example.currency.data.network.NetworkMonitor
 import com.example.currency.domain.model.ChartLoadResult
 import com.example.currency.domain.model.CoinMarketItem
+import com.example.currency.domain.model.CurrencyListLoadResult
 import com.example.currency.domain.model.CurrencyItem
 import com.example.currency.domain.model.PricePoint
 import com.example.currency.domain.repository.CurrencyRepository
@@ -25,6 +27,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -32,8 +37,11 @@ class CurrencyRepositoryImpl @Inject constructor(
     private val coinGeckoApi: CoinGeckoApi,
     private val currencyFreaksApi: CurrencyFreaksApi,
     private val realm: Realm,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val assetCurrencySeedDataSource: AssetCurrencySeedDataSource
 ) : CurrencyRepository {
+    private val seedMutex = Mutex()
+
     private companion object {
         const val CRYPTO_KEY = "crypto"
         const val FIAT_KEY = "fiat"
@@ -42,74 +50,135 @@ class CurrencyRepositoryImpl @Inject constructor(
         const val MAX_CACHED_CHART_POINTS = 80
     }
 
-    override suspend fun getCoinMarket(forceRefresh: Boolean): Result<List<CoinMarketItem>> = withContext(Dispatchers.IO) {
+    override fun getCoinMarket(forceRefresh: Boolean): Flow<CurrencyListLoadResult<CoinMarketItem>> = flow {
+        ensureSeeded()
+        val cached = getCachedCoinMarkets()
+        val updatedAt = getRefreshTime(CRYPTO_KEY)
+        val needsRefresh = forceRefresh || cached.isEmpty() || shouldRefresh(CRYPTO_KEY, CRYPTO_REFRESH_TIME)
+        if (!needsRefresh) {
+            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true))
+            return@flow
+        }
+
+        if (!networkMonitor.hasInternetConnection()) {
+            emit(
+                if (cached.isEmpty()) CurrencyListLoadResult.OfflineNoCache
+                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isOffline = true)
+            )
+            return@flow
+        }
+
+        if (cached.isNotEmpty()) {
+            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isRefreshing = true))
+        }
+
         try {
-            val cached = realm.query<CurrencyRealm>("isCrypto == true").find()
-                .map { realmItem -> realmItem.toCoinMarketItem() }
-            if (!forceRefresh && cached.isNotEmpty() && !shouldRefresh(CRYPTO_KEY, CRYPTO_REFRESH_TIME)) {
-                Result.success(cached)
-            } else {
-                val items = coinGeckoApi.getCoinMarkets().map { dto -> dto.toCoinMarketItem() }
-                if (items.isEmpty()) {
-                    Result.success(cached)
-                } else {
-                    realm.write {
-                        delete(query<CurrencyRealm>("isCrypto == true").find())
-                        items.forEach { coinItem ->
-                            copyToRealm(coinItem.toRealm(), updatePolicy = UpdatePolicy.ALL)
-                        }
-                    }
-                    updateRefreshTime(CRYPTO_KEY)
-                    Result.success(items)
-                }
-            }
+            emit(
+                CurrencyListLoadResult.Data(
+                    items = refreshCoinMarket().getOrThrow(),
+                    updatedAt = getRefreshTime(CRYPTO_KEY),
+                    isCached = false
+                )
+            )
         } catch (error: CancellationException) {
             throw error
         } catch (error: Exception) {
-            Result.failure(error)
+            emit(
+                if (cached.isEmpty()) CurrencyListLoadResult.NetworkError
+                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, refreshFailed = true)
+            )
         }
     }
 
-    override suspend fun getFiats(forceRefresh: Boolean): Result<List<CurrencyItem>> = withContext(Dispatchers.IO) {
+    override fun getFiats(forceRefresh: Boolean): Flow<CurrencyListLoadResult<CurrencyItem>> = flow {
+        ensureSeeded()
+        val cached = getCachedFiats()
+        val updatedAt = getRefreshTime(FIAT_KEY)
+        val needsRefresh = forceRefresh || cached.isEmpty() || shouldRefresh(FIAT_KEY, FIAT_REFRESH_TIME)
+        if (!needsRefresh) {
+            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true))
+            return@flow
+        }
+
+        if (!networkMonitor.hasInternetConnection()) {
+            emit(
+                if (cached.isEmpty()) CurrencyListLoadResult.OfflineNoCache
+                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isOffline = true)
+            )
+            return@flow
+        }
+
+        if (cached.isNotEmpty()) {
+            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isRefreshing = true))
+        }
+
         try {
-            val cached = realm.query<CurrencyRealm>("isCrypto == false").find()
-                .map { realmItem -> realmItem.toCurrencyItem() }
-            if (!forceRefresh && cached.isNotEmpty() && !shouldRefresh(FIAT_KEY, FIAT_REFRESH_TIME)) {
-                Result.success(cached)
-            } else {
-                val (supported, rates) = coroutineScope {
-                    val supportedRequest = async { currencyFreaksApi.getSupportedCurrencies() }
-                    val ratesRequest = async { currencyFreaksApi.getLatestRates() }
-                    supportedRequest.await() to ratesRequest.await()
-                }
-                val items = supported.toFiatCurrencyItems(rates)
-                realm.write {
-                    delete(query<CurrencyRealm>("isCrypto == false").find())
-                    items.forEach { currencyItem ->
-                        copyToRealm(currencyItem.toRealm(), updatePolicy = UpdatePolicy.ALL)
-                    }
-                }
-                updateRefreshTime(FIAT_KEY)
-                Result.success(items)
-            }
+            emit(
+                CurrencyListLoadResult.Data(
+                    items = refreshFiats().getOrThrow(),
+                    updatedAt = getRefreshTime(FIAT_KEY),
+                    isCached = false
+                )
+            )
         } catch (error: CancellationException) {
             throw error
         } catch (error: Exception) {
-            Result.failure(error)
+            emit(
+                if (cached.isEmpty()) CurrencyListLoadResult.NetworkError
+                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, refreshFailed = true)
+            )
         }
+    }
+
+    override suspend fun refreshCoinMarket(): Result<List<CoinMarketItem>> = runCatching {
+        withContext(Dispatchers.IO) {
+            val items = coinGeckoApi.getCoinMarkets().map { dto -> dto.toCoinMarketItem() }
+            check(items.isNotEmpty()) { "Coin market response was empty" }
+            realm.write {
+                delete(query<CurrencyRealm>("isCrypto == true").find())
+                items.forEach { coinItem ->
+                    copyToRealm(coinItem.toRealm(), updatePolicy = UpdatePolicy.ALL)
+                }
+            }
+            updateRefreshTime(CRYPTO_KEY)
+            items
+        }
+    }.onFailure { error ->
+        if (error is CancellationException) throw error
+    }
+
+    override suspend fun refreshFiats(): Result<List<CurrencyItem>> = runCatching {
+        withContext(Dispatchers.IO) {
+            val (supported, rates) = coroutineScope {
+                val supportedRequest = async { currencyFreaksApi.getSupportedCurrencies() }
+                val ratesRequest = async { currencyFreaksApi.getLatestRates() }
+                supportedRequest.await() to ratesRequest.await()
+            }
+            val items = supported.toFiatCurrencyItems(rates)
+            check(items.isNotEmpty()) { "Fiat currency response was empty" }
+            realm.write {
+                delete(query<CurrencyRealm>("isCrypto == false").find())
+                items.forEach { currencyItem ->
+                    copyToRealm(currencyItem.toRealm(), updatePolicy = UpdatePolicy.ALL)
+                }
+            }
+            updateRefreshTime(FIAT_KEY)
+            items
+        }
+    }.onFailure { error ->
+        if (error is CancellationException) throw error
     }
 
     override fun getMarketChart(id: String, days: Int): Flow<ChartLoadResult> = flow {
         val cacheKey = "${id}_$days"
-        val cached = withContext(Dispatchers.IO) {
-            realm.query<ChartCacheRealm>("key == $0", cacheKey).first().find()
+        val cached = realm.query<ChartCacheRealm>("key == $0", cacheKey).first().find()
                 ?.let { chart ->
                     CachedChart(
                         points = chart.points.map { PricePoint(it.timestamp, it.price) },
                         updatedAt = chart.updatedAt
                     )
                 }
-        }
+
 
         if (cached != null) {
             val isOnline = networkMonitor.hasInternetConnection()
@@ -174,7 +243,7 @@ class CurrencyRepositoryImpl @Inject constructor(
                 }
             )
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     private suspend fun fetchAndCacheChart(id: String, days: Int, cacheKey: String): List<PricePoint> =
         withContext(Dispatchers.IO) {
@@ -225,10 +294,66 @@ class CurrencyRepositoryImpl @Inject constructor(
         val updatedAt: Long
     )
 
-    private fun shouldRefresh(key: String, intervalMs: Long): Boolean {
+    private suspend fun ensureSeeded() = seedMutex.withLock {
+        val needsSeed = withContext(Dispatchers.IO) {
+            realm.query<CurrencyRealm>().find().let { currencies ->
+                currencies.none { it.isCrypto } || currencies.none { !it.isCrypto }
+            }
+        }
+        if (!needsSeed) return@withLock
+
+        val seed = assetCurrencySeedDataSource.load() ?: return@withLock
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val hasCrypto = query<CurrencyRealm>("isCrypto == true").find().isNotEmpty()
+                if (!hasCrypto) {
+                    seed.coinMarkets.forEach { coin ->
+                        copyToRealm(coin.toRealm(), updatePolicy = UpdatePolicy.ALL)
+                    }
+                    updateRefreshInfo(CRYPTO_KEY, seed.cryptoUpdatedAt)
+                }
+
+                val hasFiats = query<CurrencyRealm>("isCrypto == false").find().isNotEmpty()
+                if (!hasFiats) {
+                    seed.fiats.forEach { fiat ->
+                        copyToRealm(fiat.toRealm(), updatePolicy = UpdatePolicy.ALL)
+                    }
+                    updateRefreshInfo(FIAT_KEY, seed.fiatUpdatedAt)
+                }
+            }
+        }
+    }
+
+    private fun io.realm.kotlin.MutableRealm.updateRefreshInfo(key: String, timestamp: Long) {
+        val refreshInfo = query<RefreshInfo>("key == $0", key).first().find()
+        if (refreshInfo == null) {
+            copyToRealm(RefreshInfo().apply {
+                this.key = key
+                lastUpdated = timestamp
+            })
+        } else {
+            refreshInfo.lastUpdated = timestamp
+        }
+    }
+
+    private suspend fun getCachedCoinMarkets(): List<CoinMarketItem> = withContext(Dispatchers.IO) {
+        realm.query<CurrencyRealm>("isCrypto == true").find()
+            .map { realmItem -> realmItem.toCoinMarketItem() }
+    }
+
+    private suspend fun getCachedFiats(): List<CurrencyItem> = withContext(Dispatchers.IO) {
+        realm.query<CurrencyRealm>("isCrypto == false").find()
+            .map { realmItem -> realmItem.toCurrencyItem() }
+    }
+
+    private suspend fun getRefreshTime(key: String): Long? = withContext(Dispatchers.IO) {
+        realm.query<RefreshInfo>("key == $0", key).first().find()?.lastUpdated
+    }
+
+    private suspend fun shouldRefresh(key: String, intervalMs: Long): Boolean = withContext(Dispatchers.IO) {
         val timestamp = realm.query<RefreshInfo>("key == $0", key).first().find()?.lastUpdated
-            ?: return true
-        return System.currentTimeMillis() - timestamp >= intervalMs
+            ?: return@withContext true
+        System.currentTimeMillis() - timestamp >= intervalMs
     }
 
     private suspend fun updateRefreshTime(key: String) {

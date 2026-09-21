@@ -1,10 +1,10 @@
 package com.example.currency.presentation.markets
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.currency.R
@@ -13,14 +13,21 @@ import com.example.currency.presentation.common.format.CurrencyFormatHelper
 import com.example.currency.databinding.ItemMarketCoinBinding
 
 class MarketCoinAdapter(
-    private var items: List<CoinMarketItem> = emptyList(),
     private val onItemClick: ((CoinMarketItem) -> Unit)? = null
-) : RecyclerView.Adapter<MarketCoinAdapter.CoinViewHolder>() {
+) : ListAdapter<CoinMarketItem, MarketCoinAdapter.CoinViewHolder>(DIFF_CALLBACK) {
 
-    @SuppressLint("NotifyDataSetChanged")
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CoinMarketItem>() {
+            override fun areItemsTheSame(oldItem: CoinMarketItem, newItem: CoinMarketItem) =
+                oldItem.currency.id == newItem.currency.id
+
+            override fun areContentsTheSame(oldItem: CoinMarketItem, newItem: CoinMarketItem) =
+                oldItem == newItem
+        }
+    }
+
     fun updateData(newItems: List<CoinMarketItem>) {
-        items = newItems
-        notifyDataSetChanged()
+        submitList(newItems)
     }
 
     inner class CoinViewHolder(val binding: ItemMarketCoinBinding) :
@@ -35,9 +42,8 @@ class MarketCoinAdapter(
         return CoinViewHolder(binding)
     }
 
-    @SuppressLint("SetTextI18n", "DefaultLocale")
     override fun onBindViewHolder(holder: CoinViewHolder, position: Int) {
-        val item = items[position]
+        val item = getItem(position)
         val currency = item.currency
         val context = holder.itemView.context
 
@@ -75,9 +81,6 @@ class MarketCoinAdapter(
 
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(item)
-            Log.d("CLICK", currency.name)
         }
     }
-
-    override fun getItemCount(): Int = items.size
 }

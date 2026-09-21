@@ -25,6 +25,8 @@ data class ConverterUiState(
     val toCurrency: CurrencyItem? = null,
     val cryptoCurrencies: List<CurrencyItem> = emptyList(),
     val fiatCurrencies: List<CurrencyItem> = emptyList(),
+    val cryptoUpdatedAt: Long? = null,
+    val fiatUpdatedAt: Long? = null,
     val inputAmount: Double = 1.0,
     val rate: Double = 0.0,
     val convertedAmount: Double = 0.0,
@@ -42,18 +44,32 @@ class ConverterViewModel @Inject constructor(
     private val savedPair = getPreferences().lastConversionPair
     private var lastPersistedPair = savedPair
 
-    fun updateCryptoCurrencies(currencies: List<CurrencyItem>) {
+    fun updateCryptoCurrencies(currencies: List<CurrencyItem>, updatedAt: Long? = null) {
         val current = _uiState.value
         val from = resolveCurrency(current.fromCurrency, savedPair?.from, currencies, current.fiatCurrencies, true)
         val to = resolveCurrency(current.toCurrency, savedPair?.to, currencies, current.fiatCurrencies, false)
-        recalculate(current.copy(cryptoCurrencies = currencies, fromCurrency = from, toCurrency = to))
+        recalculate(
+            current.copy(
+                cryptoCurrencies = currencies,
+                cryptoUpdatedAt = updatedAt,
+                fromCurrency = from,
+                toCurrency = to
+            )
+        )
     }
 
-    fun updateFiatCurrencies(currencies: List<CurrencyItem>) {
+    fun updateFiatCurrencies(currencies: List<CurrencyItem>, updatedAt: Long? = null) {
         val current = _uiState.value
         val from = resolveCurrency(current.fromCurrency, savedPair?.from, current.cryptoCurrencies, currencies, true)
         val to = resolveCurrency(current.toCurrency, savedPair?.to, current.cryptoCurrencies, currencies, false)
-        recalculate(current.copy(fiatCurrencies = currencies, fromCurrency = from, toCurrency = to))
+        recalculate(
+            current.copy(
+                fiatCurrencies = currencies,
+                fiatUpdatedAt = updatedAt,
+                fromCurrency = from,
+                toCurrency = to
+            )
+        )
     }
 
     fun updateAmount(amount: Double) = recalculate(_uiState.value.copy(inputAmount = amount))

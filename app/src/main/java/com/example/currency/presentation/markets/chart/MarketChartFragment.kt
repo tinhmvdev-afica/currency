@@ -21,6 +21,7 @@ import com.example.currency.domain.model.PricePoint
 import com.example.currency.databinding.FragmentMarketChartBinding
 import com.example.currency.presentation.base.BaseFragment
 import com.example.currency.presentation.common.chart.ChartHelper
+import com.example.currency.presentation.common.UpdatedAtFormatter
 import com.example.currency.presentation.common.chart.ChartHelper.getTimeFormatter
 import com.example.currency.presentation.common.chart.ChartHelper.reducePoints
 import com.example.currency.presentation.common.format.CurrencyFormatHelper
@@ -221,7 +222,7 @@ class MarketChartFragment : BaseFragment<FragmentMarketChartBinding>(FragmentMar
             )
         }
 
-        val updatedText = state.updatedAt?.let(::formatUpdatedAt)
+        val updatedText = state.updatedAt?.let { UpdatedAtFormatter.format(requireContext(), it) }
         val statusText = when {
             hasChart && state.isOffline && updatedText != null ->
                 getString(R.string.chart_offline_saved_data, updatedText)
@@ -232,18 +233,6 @@ class MarketChartFragment : BaseFragment<FragmentMarketChartBinding>(FragmentMar
         }
         binding.tvChartStatus.text = statusText
         binding.tvChartStatus.visibility = if (statusText == null) View.GONE else View.VISIBLE
-    }
-
-    private fun formatUpdatedAt(updatedAt: Long): String {
-        val elapsedMinutes = ((System.currentTimeMillis() - updatedAt) / 60_000).coerceAtLeast(0)
-        return when {
-            elapsedMinutes < 1 -> getString(R.string.updated_just_now)
-            elapsedMinutes < 60 -> getString(R.string.updated_minutes_ago, elapsedMinutes)
-            elapsedMinutes < 120 -> getString(R.string.updated_hour_ago)
-            elapsedMinutes < 24 * 60 -> getString(R.string.updated_hours_ago, elapsedMinutes / 60)
-            elapsedMinutes < 48 * 60 -> getString(R.string.updated_yesterday)
-            else -> getString(R.string.updated_days_ago, elapsedMinutes / (24 * 60))
-        }
     }
 
     private fun renderChart(pricePoints: List<PricePoint>) {

@@ -6,6 +6,7 @@ data class CurrencyFreaksDetailDto(
     @SerializedName("currencyCode") val id: String?,
     @SerializedName("currencyName") val name: String?,
     @SerializedName("countryCode") val countryCode: String?,
+    val status: String? = null,
     val icon: String? = null
 )
 

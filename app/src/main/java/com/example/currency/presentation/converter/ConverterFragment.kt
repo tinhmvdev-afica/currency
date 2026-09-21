@@ -19,6 +19,7 @@ import coil.load
 import com.example.currency.R
 import com.example.currency.databinding.FragmentConverterBinding
 import com.example.currency.presentation.base.BaseFragment
+import com.example.currency.presentation.common.UpdatedAtFormatter
 import com.example.currency.presentation.common.format.CurrencyFormatHelper.formatInputAmount
 import com.example.currency.presentation.common.format.CurrencyFormatHelper.formatNumber
 import com.example.currency.presentation.common.format.CurrencyFormatHelper.formatOutputAmount
@@ -75,12 +76,12 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.uiState.collect { state ->
-                        converterViewModel.updateCryptoCurrencies(state.currencies)
+                        converterViewModel.updateCryptoCurrencies(state.currencies, state.updatedAt)
                     }
                 }
                 launch {
                     viewModel.fiatUiState.collect { state ->
-                        converterViewModel.updateFiatCurrencies(state.currencies)
+                        converterViewModel.updateFiatCurrencies(state.currencies, state.updatedAt)
                     }
                 }
                 launch {
@@ -265,6 +266,12 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
         binding.tvRateRatio.text = getString(R.string.rate_ratio, fromCurrency.symbol, rateString, toCurrency.symbol)
     }
     private fun renderConversion(state: ConverterUiState) {
+        val updatedAt = listOfNotNull(state.cryptoUpdatedAt, state.fiatUpdatedAt).minOrNull()
+        binding.tvConverterUpdatedAt.visibility = if (updatedAt == null) View.GONE else View.VISIBLE
+        if (updatedAt != null) {
+            binding.tvConverterUpdatedAt.text = UpdatedAtFormatter.format(requireContext(), updatedAt)
+        }
+
         val from = state.fromCurrency ?: return
         if (state.toCurrency != null) {
             updatePairUI(state)

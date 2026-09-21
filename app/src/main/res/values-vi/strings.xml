@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="markets_last_updated">%1$s</string>
     <string name="app_name">CoinFlux</string>
     <string name="converter_title">Quy đổi tỷ giá</string>
     <string name="fast_convenient">Nhanh chóng, tiện lợi</string>
@@ -104,4 +105,18 @@
     <string name="theme_system_desc">Tự động thích ứng theo thiết bị</string>
     <string name="theme_dialog_title">Chọn chế độ giao diện</string>
     <string name="theme_dialog_subtitle">Tùy chỉnh phong cách hiển thị của CoinFlux</string>
+    <string name="chart_offline_saved_data">Bạn đang ngoại tuyến — hiển thị dữ liệu đã lưu\n%1$s</string>
+    <string name="chart_refreshing_saved_data">Đang làm mới dữ liệu đã lưu…</string>
+    <string name="chart_refresh_failed_saved_data">Không thể làm mới · Hiển thị dữ liệu đã lưu\n%1$s</string>
+    <string name="chart_not_available_offline">Biểu đồ không khả dụng khi ngoại tuyến</string>
+    <string name="chart_not_saved_offline">Biểu đồ này chưa được lưu trên thiết bị. Hãy kết nối Internet để tải biểu đồ.</string>
+    <string name="chart_not_loaded">Chưa tải biểu đồ</string>
+    <string name="chart_load_failed">Không thể tải biểu đồ này. Hãy kiểm tra kết nối và thử lại.</string>
+    <string name="chart_try_again">Thử lại</string>
+    <string name="updated_just_now">Vừa cập nhật</string>
+    <string name="updated_minutes_ago">Đã cập nhật %1$d phút trước</string>
+    <string name="updated_hour_ago">Đã cập nhật 1 giờ trước</string>
+    <string name="updated_hours_ago">Đã cập nhật %1$d giờ trước</string>
+    <string name="updated_yesterday">Đã cập nhật hôm qua</string>
+    <string name="updated_days_ago">Đã cập nhật %1$d ngày trước</string>
 </resources>

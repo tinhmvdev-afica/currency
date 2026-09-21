@@ -36,7 +36,7 @@ class OnboardingLanguageFragment : BaseFragment<FragmentOnboardingLanguageBindin
 
         binding.rvLanguages.layoutManager = LinearLayoutManager(requireContext())
         binding.rvLanguages.adapter = adapter
-        adapter.submitList(LanguagePickerBottomSheet.ALL_LANGUAGES)
+        adapter.setLanguages(LanguagePickerBottomSheet.ALL_LANGUAGES)
 
         binding.etSearchLanguage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

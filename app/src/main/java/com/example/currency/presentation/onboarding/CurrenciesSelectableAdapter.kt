@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.currency.R
@@ -15,15 +17,33 @@ class CurrenciesSelectableAdapter(
     initialSelected: List<String> = emptyList(),
     private val onSelectionChanged: (selectedCount: Int) -> Unit,
     private val onMaxLimitReached: () -> Unit
-) : RecyclerView.Adapter<CurrenciesSelectableAdapter.CurrencyViewHolder>() {
+) : ListAdapter<CurrenciesSelectableAdapter.SelectableCurrencyRow, CurrenciesSelectableAdapter.CurrencyViewHolder>(DIFF_CALLBACK) {
 
     private val selectedSymbols = initialSelected.map { it.uppercase() }.toMutableSet()
     private var originalList: List<CurrencyItem> = emptyList()
-    private var currentFilteredList: List<CurrencyItem> = emptyList()
     private var currentFilterQuery: String = ""
     private var currentCategory: String = "all" // "all", "crypto", "fiat"
 
-    fun submitList(list: List<CurrencyItem>) {
+    data class SelectableCurrencyRow(
+        val currency: CurrencyItem,
+        val isSelected: Boolean
+    )
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SelectableCurrencyRow>() {
+            override fun areItemsTheSame(
+                oldItem: SelectableCurrencyRow,
+                newItem: SelectableCurrencyRow
+            ) = oldItem.currency.id == newItem.currency.id
+
+            override fun areContentsTheSame(
+                oldItem: SelectableCurrencyRow,
+                newItem: SelectableCurrencyRow
+            ) = oldItem == newItem
+        }
+    }
+
+    fun setCurrencies(list: List<CurrencyItem>) {
         originalList = list
         applyFilters()
     }
@@ -39,7 +59,7 @@ class CurrenciesSelectableAdapter(
     }
 
     private fun applyFilters() {
-        currentFilteredList = originalList.filter { item ->
+        val filteredItems = originalList.filter { item ->
             val matchCategory = when (currentCategory) {
                 "crypto" -> item.isCrypto
                 "fiat" -> !item.isCrypto
@@ -51,7 +71,13 @@ class CurrenciesSelectableAdapter(
             }
             matchCategory && matchQuery
         }.sortedByDescending { item -> selectedSymbols.contains(item.symbol.uppercase()) }
-        notifyDataSetChanged()
+
+        submitList(filteredItems.map { item ->
+            SelectableCurrencyRow(
+                currency = item,
+                isSelected = selectedSymbols.contains(item.symbol.uppercase())
+            )
+        })
     }
 
     fun getSelectedSymbols(): List<String> {
@@ -68,17 +94,15 @@ class CurrenciesSelectableAdapter(
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
-        holder.bind(currentFilteredList[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount(): Int = currentFilteredList.size
 
     inner class CurrencyViewHolder(private val binding: ItemCurrencySelectableBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CurrencyItem) {
+        fun bind(row: SelectableCurrencyRow) {
+            val item = row.currency
             val context = binding.root.context
-            val isSelected = selectedSymbols.contains(item.symbol.uppercase())
 
             binding.tvCurrencySymbol.text = item.symbol
             binding.tvCurrencyName.text = item.name
@@ -105,7 +129,7 @@ class CurrenciesSelectableAdapter(
                 binding.tvCurrencyTypeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
             }
 
-            if (isSelected) {
+            if (row.isSelected) {
                 binding.layoutCurrencyItem.setBackgroundResource(R.drawable.bg_language_item_selected)
                 binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_checked)
             } else {
@@ -115,9 +139,6 @@ class CurrenciesSelectableAdapter(
 
             binding.root.setOnClickListener {
                 val symbolKey = item.symbol.uppercase()
-                val pos = adapterPosition
-                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-
                 if (selectedSymbols.contains(symbolKey)) {
                     selectedSymbols.remove(symbolKey)
                     // Lọc lại để mục vừa bỏ chọn trở về vị trí của nhóm chưa chọn.

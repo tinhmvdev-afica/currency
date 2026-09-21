@@ -103,7 +103,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation("io.coil-kt:coil:2.7.0")
+    implementation(libs.coil)
 
     // Retrofit & Gson Converter
     implementation("com.squareup.retrofit2:retrofit:2.11.0")

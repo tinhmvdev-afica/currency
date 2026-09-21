@@ -122,7 +122,7 @@ class QuickCurrenciesBottomSheet(
     }
 
     private fun submitCurrencies() {
-        adapter.submitList(cryptoCurrencies + fiatCurrencies)
+        adapter.setCurrencies(cryptoCurrencies + fiatCurrencies)
     }
 
     private fun updateTabSelection(selectedView: TextView) {

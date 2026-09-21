@@ -16,6 +16,7 @@ import com.example.currency.R
 import com.example.currency.domain.model.CoinMarketItem
 import com.example.currency.databinding.FragmentMarketsBinding
 import com.example.currency.presentation.base.BaseFragment
+import com.example.currency.presentation.common.UpdatedAtFormatter
 import com.example.currency.presentation.shared.CoinViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -55,6 +56,11 @@ class MarketsFragment : BaseFragment<FragmentMarketsBinding>(FragmentMarketsBind
                         it.marketCap ?: Double.NEGATIVE_INFINITY
                     }
                     filterCoins()
+                    val updatedAt = state.updatedAt
+                    binding.tvMarketsUpdatedAt.text = updatedAt?.let {
+                        getString(R.string.markets_last_updated, UpdatedAtFormatter.format(requireContext(), it))
+                    }
+                    binding.tvMarketsUpdatedAt.visibility = if (updatedAt == null) View.GONE else View.VISIBLE
                 }
             }
         }

@@ -20,7 +20,6 @@ class NetworkMonitor @Inject constructor(
 
     private val _isOnline = MutableStateFlow(hasInternetConnection())
     val isOnline: StateFlow<Boolean> = _isOnline.asStateFlow()
-
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) = updateNetworkStatus()
 

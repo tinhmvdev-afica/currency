@@ -61,6 +61,7 @@
     <string name="choose_app_language">Choose the app language</string>
     <string name="markets">Crypto Markets</string>
     <string name="markets_subtitle">Top 100 coins by market cap from CoinGecko</string>
+    <string name="markets_last_updated">%1$s</string>
     <string name="search_coins">Search Bitcoin, ETH, Solana…</string>
     <string name="all">All</string>
     <string name="choose_currency">Choose currency</string>

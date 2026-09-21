@@ -51,7 +51,7 @@ class LanguagePickerBottomSheet(
 
         binding.rvLanguages.layoutManager = LinearLayoutManager(requireContext())
         binding.rvLanguages.adapter = adapter
-        adapter.submitList(ALL_LANGUAGES)
+        adapter.setLanguages(ALL_LANGUAGES)
 
         binding.etSearchLanguage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

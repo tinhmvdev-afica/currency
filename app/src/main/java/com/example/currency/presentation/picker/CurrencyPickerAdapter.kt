@@ -1,9 +1,10 @@
 package com.example.currency.presentation.picker
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currency.R
 import com.example.currency.domain.model.CurrencyItem
@@ -13,18 +14,32 @@ import com.example.currency.databinding.ItemCurrencyPickerBinding
 import coil.load
 
 class CurrencyPickerAdapter(
-    private var items: List<CurrencyItem> = emptyList(),
-    private var marketCoins: Map<String, CoinMarketItem> = emptyMap(),
     private val onItemClick: (CurrencyItem) -> Unit
-) : RecyclerView.Adapter<CurrencyPickerAdapter.PickerViewHolder>() {
+) : ListAdapter<CurrencyPickerAdapter.PickerRow, CurrencyPickerAdapter.PickerViewHolder>(DIFF_CALLBACK) {
+
+    data class PickerRow(
+        val currency: CurrencyItem,
+        val marketCoin: CoinMarketItem?
+    )
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PickerRow>() {
+            override fun areItemsTheSame(oldItem: PickerRow, newItem: PickerRow) =
+                oldItem.currency.id == newItem.currency.id
+
+            override fun areContentsTheSame(oldItem: PickerRow, newItem: PickerRow) =
+                oldItem == newItem
+        }
+    }
 
     fun updateList(
         newItems: List<CurrencyItem>,
         newMarketCoins: List<CoinMarketItem> = emptyList()
     ) {
-        items = newItems
-        marketCoins = newMarketCoins.associateBy { it.currency.id }
-        notifyDataSetChanged()
+        val marketCoinsById = newMarketCoins.associateBy { it.currency.id }
+        submitList(newItems.map { currency ->
+            PickerRow(currency, marketCoinsById[currency.id])
+        })
     }
 
     inner class PickerViewHolder(val binding: ItemCurrencyPickerBinding) :
@@ -39,9 +54,9 @@ class CurrencyPickerAdapter(
         return PickerViewHolder(binding)
     }
 
-    @SuppressLint("SetTextI18n", "DefaultLocale")
     override fun onBindViewHolder(holder: PickerViewHolder, position: Int) {
-        val item = items[position]
+        val row = getItem(position)
+        val item = row.currency
         val context = holder.itemView.context
 
         holder.binding.ivPickerIcon.load(item.iconUrl) {
@@ -63,7 +78,7 @@ class CurrencyPickerAdapter(
 
             holder.binding.tvPickerPrice.text = "$" + CurrencyFormatHelper.formatNumber(item.priceInUsd)
 
-            val change = marketCoins[item.id]?.priceChange24h ?: 0.0
+            val change = row.marketCoin?.priceChange24h ?: 0.0
             val isPos = change >= 0
             val prefix = if (isPos) "↑ +" else "↓ "
             holder.binding.tvPickerChange.text = prefix + String.format("%.2f%%", kotlin.math.abs(change))
@@ -97,6 +112,4 @@ class CurrencyPickerAdapter(
             onItemClick(item)
         }
     }
-
-    override fun getItemCount(): Int = items.size
 }

@@ -2,20 +2,33 @@ package com.example.currency.presentation.converter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.currency.R
 import com.example.currency.databinding.ItemQuickCurrencyBinding
 
 class QuickCurrencyAdapter(
-    private val onCurrencyClick: (QuickCurrencyDisplayItem) -> Unit,
-    private var items: List<QuickCurrencyDisplayItem> = emptyList()
-) : RecyclerView.Adapter<QuickCurrencyAdapter.QuickViewHolder>() {
+    private val onCurrencyClick: (QuickCurrencyDisplayItem) -> Unit
+) : ListAdapter<QuickCurrencyDisplayItem, QuickCurrencyAdapter.QuickViewHolder>(DIFF_CALLBACK) {
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<QuickCurrencyDisplayItem>() {
+            override fun areItemsTheSame(
+                oldItem: QuickCurrencyDisplayItem,
+                newItem: QuickCurrencyDisplayItem
+            ) = oldItem.symbol == newItem.symbol
+
+            override fun areContentsTheSame(
+                oldItem: QuickCurrencyDisplayItem,
+                newItem: QuickCurrencyDisplayItem
+            ) = oldItem == newItem
+        }
+    }
 
     fun updateData(newItems: List<QuickCurrencyDisplayItem>) {
-        items = newItems
-        notifyDataSetChanged()
+        submitList(newItems)
     }
 
     inner class QuickViewHolder(val binding: ItemQuickCurrencyBinding) :
@@ -31,8 +44,7 @@ class QuickCurrencyAdapter(
     }
 
     override fun onBindViewHolder(holder: QuickViewHolder, position: Int) {
-        val item = items[position]
-        val context = holder.itemView.context
+        val item = getItem(position)
         holder.binding.tvQuickIcon.load(item.iconUrl) {
             crossfade(true)
             placeholder(R.drawable.bg_swap_button)
@@ -44,6 +56,4 @@ class QuickCurrencyAdapter(
         holder.binding.tvQuickSubtext.text = item.subText
         holder.binding.root.setOnClickListener { onCurrencyClick(item) }
     }
-
-    override fun getItemCount(): Int = items.size
 }
