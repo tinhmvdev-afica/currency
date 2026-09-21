@@ -39,6 +39,8 @@ class MarketsFragment : BaseFragment<FragmentMarketsBinding>(FragmentMarketsBind
         }
         binding.rvMarkets.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMarkets.adapter = adapter
+        binding.marketsSwipeRefresh.setColorSchemeResources(R.color.brand_accent)
+        binding.marketsSwipeRefresh.setOnRefreshListener(viewModel::refreshCoins)
 
 
         binding.etMarketSearch.addTextChangedListener(object : TextWatcher {
@@ -52,6 +54,7 @@ class MarketsFragment : BaseFragment<FragmentMarketsBinding>(FragmentMarketsBind
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    binding.marketsSwipeRefresh.isRefreshing = state.isLoading || state.isRefreshing
                     marketCoins = state.marketCoins.sortedByDescending {
                         it.marketCap ?: Double.NEGATIVE_INFINITY
                     }

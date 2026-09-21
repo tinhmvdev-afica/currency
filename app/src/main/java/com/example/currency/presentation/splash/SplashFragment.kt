@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 import com.example.currency.presentation.shared.CoinViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
+import kotlin.time.Duration.Companion.milliseconds
+
 @AndroidEntryPoint
 class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::inflate) {
 
@@ -28,7 +30,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
         viewModel.uiState
 
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(2000)
+            delay(2000.milliseconds)
             if (isAdded) {
                 if (splashViewModel.isOnboardingCompleted) {
                     findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
