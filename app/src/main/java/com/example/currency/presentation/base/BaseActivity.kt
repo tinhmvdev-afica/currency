@@ -16,7 +16,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         _binding = inflateBinding(layoutInflater)
         setContentView(binding.root)
         window.hideSystemBars()
-        window.hideSystemBarsAfterImeDismissed()
     }
 
     override fun onResume() {

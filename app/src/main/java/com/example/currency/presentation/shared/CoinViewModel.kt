@@ -84,7 +84,6 @@ class CoinViewModel @Inject constructor(
     private var chartRequestId = 0L
 
     init {
-        // Khởi tạo dữ liệu khi vào app
         loadCoins()
         loadFiats()
         viewModelScope.launch {
@@ -94,12 +93,12 @@ class CoinViewModel @Inject constructor(
         }
     }
 
-    fun loadCoins(forceRefresh: Boolean = false) {
+    fun loadCoins() {
         cryptoJob?.cancel()
         val requestId = ++cryptoRequestId
         cryptoJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-            getCryptoList(forceRefresh).collect { result ->
+            getCryptoList().collect { result ->
                 if (requestId != cryptoRequestId) return@collect
                 _uiState.value = when (result) {
                     is CurrencyListLoadResult.Data -> {
@@ -133,8 +132,6 @@ class CoinViewModel @Inject constructor(
             }
         }
     }
-
-    fun refreshCoins() = loadCoins(forceRefresh = true)
 
     fun loadFiats() {
         fiatJob?.cancel()

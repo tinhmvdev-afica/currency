@@ -18,7 +18,6 @@ import com.example.currency.domain.model.CurrencyListLoadResult
 import com.example.currency.domain.model.CurrencyItem
 import com.example.currency.domain.model.PricePoint
 import com.example.currency.domain.repository.CurrencyRepository
-import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
@@ -46,8 +45,8 @@ class CurrencyRepositoryImpl @Inject constructor(
     private companion object {
         const val CRYPTO_KEY = "crypto"
         const val FIAT_KEY = "fiat"
-        const val CRYPTO_REFRESH_TIME = 15 * 60 * 1000L
-        const val FIAT_REFRESH_TIME = 3*60 * 60 * 1000L
+        const val CRYPTO_REFRESH_TIME = 5 * 60 * 1000L
+        const val FIAT_REFRESH_TIME = 30 * 60 * 1000L
         const val MAX_CACHED_CHART_POINTS = 80
     }
 
@@ -100,6 +99,7 @@ class CurrencyRepositoryImpl @Inject constructor(
             emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true))
             return@flow
         }
+
         if (!networkMonitor.hasInternetConnection()) {
             emit(
                 if (cached.isEmpty()) CurrencyListLoadResult.OfflineNoCache
@@ -107,9 +107,11 @@ class CurrencyRepositoryImpl @Inject constructor(
             )
             return@flow
         }
+
         if (cached.isNotEmpty()) {
             emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isRefreshing = true))
         }
+
         try {
             emit(
                 CurrencyListLoadResult.Data(
@@ -322,7 +324,7 @@ class CurrencyRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun MutableRealm.updateRefreshInfo(key: String, timestamp: Long) {
+    private fun io.realm.kotlin.MutableRealm.updateRefreshInfo(key: String, timestamp: Long) {
         val refreshInfo = query<RefreshInfo>("key == $0", key).first().find()
         if (refreshInfo == null) {
             copyToRealm(RefreshInfo().apply {

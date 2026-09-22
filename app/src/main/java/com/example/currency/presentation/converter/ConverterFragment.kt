@@ -7,6 +7,7 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -71,23 +72,16 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
         )
         binding.rvQuickCurrencies.layoutManager = LinearLayoutManager(requireContext())
         binding.rvQuickCurrencies.adapter = quickAdapter
-        binding.converterSwipeRefresh.setColorSchemeResources(R.color.brand_accent)
-        binding.converterSwipeRefresh.setOnRefreshListener {
-            binding.root.requestFocus()
-            viewModel.refreshAll()
-        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.uiState.collect { state ->
                         converterViewModel.updateCryptoCurrencies(state.currencies, state.updatedAt)
-                        renderRefreshState()
                     }
                 }
                 launch {
                     viewModel.fiatUiState.collect { state ->
                         converterViewModel.updateFiatCurrencies(state.currencies, state.updatedAt)
-                        renderRefreshState()
                     }
                 }
                 launch {
@@ -153,18 +147,22 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
             converterViewModel.swap()
         }
 
+        // Refresh Button with 360-degree spin animation
+        binding.btnRefresh.setOnClickListener {
+            val refreshButton = binding.btnRefresh
+            refreshButton.isEnabled = false
+            binding.ivRefreshIcon.animate()
+                .rotationBy(360f)
+                .setDuration(600)
+                .setInterpolator(LinearInterpolator())
+                .start()
+            viewModel.refreshAll()
+            refreshButton.postDelayed({ refreshButton.isEnabled = true }, 1000)
+        }
         val retainedAmount = converterViewModel.uiState.value.inputAmount
         if (retainedAmount != 1.0) {
             binding.etInputAmount.setText(retainedAmount.toString())
         }
-    }
-
-    private fun renderRefreshState() {
-        val cryptoState = viewModel.uiState.value
-        val fiatState = viewModel.fiatUiState.value
-        binding.converterSwipeRefresh.isRefreshing =
-            cryptoState.isLoading || cryptoState.isRefreshing ||
-                fiatState.isLoading || fiatState.isRefreshing
     }
 
     private fun openPicker(slot: String) {
@@ -268,7 +266,7 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
         binding.tvRateRatio.text = getString(R.string.rate_ratio, fromCurrency.symbol, rateString, toCurrency.symbol)
     }
     private fun renderConversion(state: ConverterUiState) {
-        val updatedAt = listOfNotNull(state.cryptoUpdatedAt, state.fiatUpdatedAt).maxOrNull()
+        val updatedAt = listOfNotNull(state.cryptoUpdatedAt, state.fiatUpdatedAt).minOrNull()
         binding.tvConverterUpdatedAt.visibility = if (updatedAt == null) View.GONE else View.VISIBLE
         if (updatedAt != null) {
             binding.tvConverterUpdatedAt.text = UpdatedAtFormatter.format(requireContext(), updatedAt)
