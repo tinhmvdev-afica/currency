@@ -18,13 +18,10 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
     private val settingsViewModel: SettingsViewModel by activityViewModels()
 
     override fun setUp() {
-
         // Setup Language Section
         setupLanguageSection()
-
         // Setup Quick Multi-Currencies
         setupQuickCurrencies()
-
         // Setup Theme / Appearance
         setupThemeSection()
 

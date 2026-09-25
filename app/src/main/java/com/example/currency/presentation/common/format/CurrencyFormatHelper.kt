@@ -7,6 +7,9 @@ import kotlin.math.abs
 
 object CurrencyFormatHelper {
 
+    /**
+     * Biến này là mốc ranh giới để quyết định xem số tiền kết quả quy đổi hiển thị trên màn hình có nên rút gọn kèm theo chữ viết tắt (M, B, T) hay không, giúp số tiền quá dài không bị tràn màn hình hoặc rớt dòng.
+     */
     private const val compactThreshold = 100_000_000
 
     private val usSymbols = DecimalFormatSymbols(Locale.US).apply {
@@ -37,7 +40,9 @@ object CurrencyFormatHelper {
         return DecimalFormat("#,##0.##", usSymbols).format(scaledValue) + suffix
     }
 
-    /** Formats an editable amount while preserving its decimal part, including a trailing dot. */
+    /**
+     * Hàm này dùng để tự động thêm dấu phẩy phân cách hàng nghìn (,) cho số tiền người dùng nhập vào ô EditText, đồng thời giữ nguyên phần thập phân.
+     */
     fun formatInputAmount(value: String): String {
         if (value.isEmpty()) return value
 

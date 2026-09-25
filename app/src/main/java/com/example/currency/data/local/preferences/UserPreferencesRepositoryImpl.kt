@@ -26,6 +26,11 @@ class UserPreferencesRepositoryImpl @Inject constructor(
         prefs.edit().putString("default_currency", code).apply()
     }
 
+    /**
+     * Lấy danh sách các mã tiền tệ nhanh được lưu trữ trong SharedPreferences.
+
+     *
+     */
     override fun getQuickCurrencies(): List<String> {
         val raw = prefs.getString("quick_currencies", null)
         return if (raw.isNullOrBlank()) QuickCurrencyPolicy.DEFAULT_CURRENCIES else

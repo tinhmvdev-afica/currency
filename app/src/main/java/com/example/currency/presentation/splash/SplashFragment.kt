@@ -9,11 +9,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.currency.R
+import com.example.currency.ads.AppOpenAdManager
 import com.example.currency.databinding.FragmentSplashBinding
 import com.example.currency.presentation.base.BaseFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.currency.presentation.shared.CoinViewModel
+import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAd
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 @AndroidEntryPoint
@@ -22,12 +24,17 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
     private val viewModel: CoinViewModel by activityViewModels()
     private val splashViewModel: SplashViewModel by viewModels()
 
-    override fun setUp() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // Resolve the activity-scoped ViewModel. Its init block starts the initial data load.
-        viewModel.uiState
-
+        if (!splashViewModel.isOnboardingCompleted) {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_onboardingFragment
+            )
+            return
+        }
         viewLifecycleOwner.lifecycleScope.launch {
+//            AppOpenAdManager.waitForAd()
             delay(2000)
             if (isAdded) {
                 if (splashViewModel.isOnboardingCompleted) {
@@ -36,6 +43,31 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
                     findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
                 }
             }
+
         }
+    }
+
+    override fun setUp() {
+        // Resolve the activity-scoped ViewModel. Its init block starts the initial data load.
+        viewModel.uiState
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            delay(1_500)
+//            if (!isAdded)
+//            return@launch
+//
+//            if (!splashViewModel.isOnboardingCompleted) {
+//                findNavController().navigate(
+//                    R.id.action_splashFragment_to_onboardingFragment
+//                )
+//                return@launch
+//            }
+//            AppOpenAdManager.showAdIfAvailable(requireActivity()){
+//                if(isAdded){
+//                    findNavController().navigate(
+//                        R.id.action_splashFragment_to_homeFragment
+//                    )
+//                }
+//            }
+
     }
 }

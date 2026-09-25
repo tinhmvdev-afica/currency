@@ -7,7 +7,8 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
-import android.view.animation.LinearInterpolator
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.currency.R
 import com.example.currency.databinding.FragmentConverterBinding
+import com.example.currency.domain.model.CurrencyItem
 import com.example.currency.presentation.base.BaseFragment
 import com.example.currency.presentation.common.UpdatedAtFormatter
 import com.example.currency.presentation.common.format.CurrencyFormatHelper.formatInputAmount
@@ -26,8 +28,16 @@ import com.example.currency.presentation.common.format.CurrencyFormatHelper.form
 import com.example.currency.presentation.common.format.CurrencyFormatHelper.formatPercentage
 import com.example.currency.presentation.picker.CurrencyPickerBottomSheet
 import com.example.currency.presentation.shared.CoinViewModel
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize
+import com.google.android.libraries.ads.mobile.sdk.banner.AdView
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerRequest
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConverterBinding::inflate) {
@@ -40,9 +50,11 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
     private var isFormattingInput = false
     private lateinit var quickAdapter: QuickCurrencyAdapter
     private var isRotatingSwap = false
+    private var adView: AdView ?= null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun setUp() {
+        loadBannerAd()
         binding.customKeyboard.attachTo(binding.etInputAmount)
         binding.etInputAmount.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
             val nextInput = buildString {
@@ -63,6 +75,12 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
             }
             false
         }
+        binding.swipeRefresh.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.brand_primary)
+        )
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refreshAll()
+        }
 
         // Setup Quick Currencies RecyclerView
         quickAdapter = QuickCurrencyAdapter(
@@ -77,11 +95,13 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
                 launch {
                     viewModel.uiState.collect { state ->
                         converterViewModel.updateCryptoCurrencies(state.currencies, state.updatedAt)
+                        renderRefreshState()
                     }
                 }
                 launch {
                     viewModel.fiatUiState.collect { state ->
                         converterViewModel.updateFiatCurrencies(state.currencies, state.updatedAt)
+                        renderRefreshState()
                     }
                 }
                 launch {
@@ -101,7 +121,6 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
             }
             override fun afterTextChanged(s: Editable?) {
                 if (isFormattingInput) return
-
                 val currentInput = s?.toString().orEmpty()
                 val formattedInput = formatInputAmount(currentInput)
                 if (formattedInput == currentInput) return
@@ -147,24 +166,40 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
             converterViewModel.swap()
         }
 
-        // Refresh Button with 360-degree spin animation
-        binding.btnRefresh.setOnClickListener {
-            val refreshButton = binding.btnRefresh
-            refreshButton.isEnabled = false
-            binding.ivRefreshIcon.animate()
-                .rotationBy(360f)
-                .setDuration(600)
-                .setInterpolator(LinearInterpolator())
-                .start()
-            viewModel.refreshAll()
-            refreshButton.postDelayed({ refreshButton.isEnabled = true }, 1000)
-        }
         val retainedAmount = converterViewModel.uiState.value.inputAmount
         if (retainedAmount != 1.0) {
             binding.etInputAmount.setText(retainedAmount.toString())
         }
     }
 
+    private fun renderRefreshState() {
+        binding.swipeRefresh.isRefreshing =
+            viewModel.uiState.value.isRefreshing || viewModel.fiatUiState.value.isRefreshing
+    }
+
+    private fun loadBannerAd(){
+        val activity = requireActivity()
+        adView = AdView(activity)
+        binding.adContainer.addView(adView)
+        val adSize = AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity,360)
+        val adRequest = BannerAdRequest.Builder(
+            "ca-app-pub-3940256099942544/6300978111",
+            adSize = adSize
+        ).build()
+        adView?.loadAd(
+            adRequest,
+            object : AdLoadCallback<BannerAd>{
+                override fun onAdLoaded(ad: BannerAd) {
+                    super.onAdLoaded(ad)
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    super.onAdFailedToLoad(adError)
+                }
+            }
+        )
+
+    }
     private fun openPicker(slot: String) {
         binding.root.requestFocus()
         val state = converterViewModel.uiState.value
@@ -186,92 +221,78 @@ class ConverterFragment : BaseFragment<FragmentConverterBinding>(FragmentConvert
     private fun updatePairUI(state: ConverterUiState) {
         val fromCurrency = state.fromCurrency ?: return
         val toCurrency = state.toCurrency ?: return
-        val context = requireContext()
-
-        // FROM UI
-        binding.tvFromSymbol.text = fromCurrency.symbol
-        binding.tvFromIcon.load(fromCurrency.iconUrl) {
-            crossfade(true)
-            placeholder(R.drawable.bg_swap_button)
-            error(R.drawable.bg_swap_button)
-        }
-
-        if (fromCurrency.isCrypto) {
-            binding.tvFromSubtext.text = getString(
-                R.string.price_reference,
-                fromCurrency.symbol,
-                formatNumber(fromCurrency.priceInUsd)
-            )
-
-            val change = viewModel.uiState.value.marketCoins
-                .firstOrNull { it.currency.id == fromCurrency.id }
-                ?.priceChange24h ?: 0.0
-            val isPos = change >= 0
-            val changeText = getString(
-                if (isPos) R.string.price_change_up else R.string.price_change_down,
-                formatPercentage(kotlin.math.abs(change))
-            )
-            binding.tvFromChangeBadge.text = changeText
-            binding.tvFromChangeBadge.visibility = View.VISIBLE
-
-            if (isPos) {
-                binding.tvFromChangeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
-                binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
-            } else {
-                binding.tvFromChangeBadge.setBackgroundResource(R.drawable.bg_badge_rose)
-                binding.tvFromChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_negative))
-            }
-        } else {
-            binding.tvFromSubtext.text = getString(R.string.price_reference, fromCurrency.symbol, formatNumber(fromCurrency.priceInUsd))
-            // Keep the badge's layout space so the FROM box stays the same height as crypto.
-            binding.tvFromChangeBadge.visibility = View.INVISIBLE
-        }
-        if (toCurrency.isCrypto) {
-            binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))
-
-            val change = viewModel.uiState.value.marketCoins
-                .firstOrNull { it.currency.id == toCurrency.id }
-                ?.priceChange24h ?: 0.0
-            val isPos = change >= 0
-            val changeText = getString(
-                if (isPos) R.string.price_change_up else R.string.price_change_down,
-                formatPercentage(kotlin.math.abs(change))
-            )
-            binding.tvToChangeBadge.text = changeText
-            binding.tvToChangeBadge.visibility = View.VISIBLE
-
-            if (isPos) {
-                binding.tvToChangeBadge.setBackgroundResource(R.drawable.bg_badge_emerald)
-                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_positive))
-            } else {
-                binding.tvToChangeBadge.setBackgroundResource(R.drawable.bg_badge_rose)
-                binding.tvToChangeBadge.setTextColor(ContextCompat.getColor(context, R.color.status_negative))
-            }
-        } else {
-            binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))
-            // Keep the badge's layout space so the TO box stays the same height as crypto.
-            binding.tvToChangeBadge.visibility = View.INVISIBLE
-        }
-        // TO UI
-        binding.tvToSymbol.text = toCurrency.symbol
-        binding.tvToIcon.load(toCurrency.iconUrl) {
-            crossfade(true)
-            placeholder(R.drawable.bg_swap_button)
-            error(R.drawable.bg_swap_button)
-        }
-        binding.tvToSubtext.text = getString(R.string.price_reference, toCurrency.symbol, formatNumber(toCurrency.priceInUsd))
+        renderCurrencyCard(
+            currency = fromCurrency,
+            symbolView = binding.tvFromSymbol,
+            iconView = binding.tvFromIcon,
+            subtextView = binding.tvFromSubtext,
+            changeBadgeView = binding.tvFromChangeBadge
+        )
+        renderCurrencyCard(
+            currency = toCurrency,
+            symbolView = binding.tvToSymbol,
+            iconView = binding.tvToIcon,
+            subtextView = binding.tvToSubtext,
+            changeBadgeView = binding.tvToChangeBadge
+        )
 
         // RATE RATIO
         val rateString = formatNumber(state.rate)
         binding.tvRateRatio.text = getString(R.string.rate_ratio, fromCurrency.symbol, rateString, toCurrency.symbol)
     }
+
+    private fun renderCurrencyCard(
+        currency: CurrencyItem,
+        symbolView: TextView,
+        iconView: ImageView,
+        subtextView: TextView,
+        changeBadgeView: TextView
+    ) {
+        symbolView.text = currency.symbol
+        iconView.load(currency.iconUrl) {
+            crossfade(true)
+            placeholder(R.drawable.bg_swap_button)
+            error(R.drawable.bg_swap_button)
+        }
+        subtextView.text = getString(
+            R.string.price_reference,
+            currency.symbol,
+            formatNumber(currency.priceInUsd)
+        )
+
+        if (!currency.isCrypto) {
+            // Keep the badge's layout space so both currency boxes have the same height.
+            changeBadgeView.visibility = View.INVISIBLE
+            return
+        }
+
+        val change = viewModel.uiState.value.marketCoins
+            .firstOrNull { it.currency.id == currency.id }
+            ?.priceChange24h ?: 0.0
+        val isPositive = change >= 0
+
+        changeBadgeView.text = getString(
+            if (isPositive) R.string.price_change_up else R.string.price_change_down,
+            formatPercentage(kotlin.math.abs(change))
+        )
+        changeBadgeView.visibility = View.VISIBLE
+        changeBadgeView.setBackgroundResource(
+            if (isPositive) R.drawable.bg_badge_emerald else R.drawable.bg_badge_rose
+        )
+        changeBadgeView.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                if (isPositive) R.color.status_positive else R.color.status_negative
+            )
+        )
+    }
+
     private fun renderConversion(state: ConverterUiState) {
-        val updatedAt = listOfNotNull(state.cryptoUpdatedAt, state.fiatUpdatedAt).minOrNull()
+        val updatedAt = listOfNotNull(state.cryptoUpdatedAt, state.fiatUpdatedAt).maxOrNull()
         binding.tvConverterUpdatedAt.visibility = if (updatedAt == null) View.GONE else View.VISIBLE
         if (updatedAt != null) {
             binding.tvConverterUpdatedAt.text = UpdatedAtFormatter.format(requireContext(), updatedAt)
         }
-
         val from = state.fromCurrency ?: return
         if (state.toCurrency != null) {
             updatePairUI(state)

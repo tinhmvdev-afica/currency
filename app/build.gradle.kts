@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -117,5 +118,8 @@ dependencies {
     implementation(libs.hilt.android)
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.4.0")
+    implementation("androidx.lifecycle:lifecycle-process:2.9.4")
 
 }

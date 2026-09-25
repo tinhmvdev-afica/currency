@@ -51,84 +51,59 @@ class CurrencyRepositoryImpl @Inject constructor(
     }
 
     override fun getCoinMarket(forceRefresh: Boolean): Flow<CurrencyListLoadResult<CoinMarketItem>> = flow {
-        ensureSeeded()
-        val cached = getCachedCoinMarkets()
+        ensureSeeded() // Bước khởi tạo dữ liệu nếu chưa c
+        val cached = realm.query<CurrencyRealm>("isCrypto == true").find()
+            .map { realmItem -> realmItem.toCoinMarketItem() }
         val updatedAt = getRefreshTime(CRYPTO_KEY)
-        val needsRefresh = forceRefresh || cached.isEmpty() || shouldRefresh(CRYPTO_KEY, CRYPTO_REFRESH_TIME)
-        if (!needsRefresh) {
-            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true))
+        val needsRefresh = forceRefresh || updatedAt == null ||
+            System.currentTimeMillis() - updatedAt >= CRYPTO_REFRESH_TIME
+        if (!needsRefresh || !networkMonitor.hasInternetConnection()) { // Không có kết nối mạng hoặc cần refresh
+            emit(CurrencyListLoadResult(cached, updatedAt))
             return@flow
         }
-
-        if (!networkMonitor.hasInternetConnection()) {
-            emit(
-                if (cached.isEmpty()) CurrencyListLoadResult.OfflineNoCache
-                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isOffline = true)
-            )
-            return@flow
-        }
-
-        if (cached.isNotEmpty()) {
-            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isRefreshing = true))
-        }
+        emit(CurrencyListLoadResult(cached, updatedAt, isRefreshing = true)) // phát dữ liệu cho UI và cho biết là đang refresh thông qua spinner
 
         try {
             emit(
-                CurrencyListLoadResult.Data(
+                CurrencyListLoadResult(
                     items = refreshCoinMarket().getOrThrow(),
-                    updatedAt = getRefreshTime(CRYPTO_KEY),
-                    isCached = false
+                    updatedAt = getRefreshTime(CRYPTO_KEY)
                 )
-            )
+            ) // Cập nhật dữ liệu mới và phát dữ liệu cho UI
         } catch (error: CancellationException) {
             throw error
-        } catch (error: Exception) {
-            emit(
-                if (cached.isEmpty()) CurrencyListLoadResult.NetworkError
-                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, refreshFailed = true)
-            )
+        } catch (_: Exception) {
+            emit(CurrencyListLoadResult(cached, updatedAt))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getFiats(forceRefresh: Boolean): Flow<CurrencyListLoadResult<CurrencyItem>> = flow {
-        ensureSeeded()
-        val cached = getCachedFiats()
+        ensureSeeded() // Khởi tạo dữ liệu nếu chưa có
+        val cached = realm.query<CurrencyRealm>("isCrypto == false").find()
+            .map { realmItem -> realmItem.toCurrencyItem() }
         val updatedAt = getRefreshTime(FIAT_KEY)
-        val needsRefresh = forceRefresh || cached.isEmpty() || shouldRefresh(FIAT_KEY, FIAT_REFRESH_TIME)
-        if (!needsRefresh) {
-            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true))
+        val needsRefresh = forceRefresh || updatedAt == null ||
+            System.currentTimeMillis() - updatedAt >= FIAT_REFRESH_TIME
+        if (!needsRefresh || !networkMonitor.hasInternetConnection()) {
+            emit(CurrencyListLoadResult(cached, updatedAt))
             return@flow
         }
 
-        if (!networkMonitor.hasInternetConnection()) {
-            emit(
-                if (cached.isEmpty()) CurrencyListLoadResult.OfflineNoCache
-                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isOffline = true)
-            )
-            return@flow
-        }
-
-        if (cached.isNotEmpty()) {
-            emit(CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, isRefreshing = true))
-        }
+        emit(CurrencyListLoadResult(cached, updatedAt, isRefreshing = true))
 
         try {
             emit(
-                CurrencyListLoadResult.Data(
+                CurrencyListLoadResult(
                     items = refreshFiats().getOrThrow(),
-                    updatedAt = getRefreshTime(FIAT_KEY),
-                    isCached = false
+                    updatedAt = getRefreshTime(FIAT_KEY)
                 )
             )
         } catch (error: CancellationException) {
             throw error
-        } catch (error: Exception) {
-            emit(
-                if (cached.isEmpty()) CurrencyListLoadResult.NetworkError
-                else CurrencyListLoadResult.Data(items = cached, updatedAt = updatedAt, isCached = true, refreshFailed = true)
-            )
+        } catch (_: Exception) {
+            emit(CurrencyListLoadResult(cached, updatedAt))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun refreshCoinMarket(): Result<List<CoinMarketItem>> = runCatching {
         withContext(Dispatchers.IO) {
@@ -147,12 +122,12 @@ class CurrencyRepositoryImpl @Inject constructor(
         if (error is CancellationException) throw error
     }
 
-    override suspend fun refreshFiats(): Result<List<CurrencyItem>> = runCatching {
+    override suspend fun refreshFiats(): Result<List<CurrencyItem>> = runCatching { // Runcatching nếu chạy thành công trả kết quả về dạng Result
         withContext(Dispatchers.IO) {
             val (supported, rates) = coroutineScope {
                 val supportedRequest = async { currencyFreaksApi.getSupportedCurrencies() }
                 val ratesRequest = async { currencyFreaksApi.getLatestRates() }
-                supportedRequest.await() to ratesRequest.await()
+                supportedRequest.await() to ratesRequest.await() // Sử dụng await để đợi kết quả trả về và ghép thành cặp
             }
             val items = supported.toFiatCurrencyItems(rates)
             check(items.isNotEmpty()) { "Fiat currency response was empty" }
@@ -172,54 +147,30 @@ class CurrencyRepositoryImpl @Inject constructor(
     override fun getMarketChart(id: String, days: Int): Flow<ChartLoadResult> = flow {
         val cacheKey = "${id}_$days"
         val cached = realm.query<ChartCacheRealm>("key == $0", cacheKey).first().find()
-                ?.let { chart ->
-                    CachedChart(
-                        points = chart.points.map { PricePoint(it.timestamp, it.price) },
-                        updatedAt = chart.updatedAt
-                    )
-                }
-
+            ?.let { chart ->
+                CachedChart(
+                    points = chart.points.map { PricePoint(it.timestamp, it.price) },
+                    updatedAt = chart.updatedAt
+                )
+            }
+        val isOnline = networkMonitor.hasInternetConnection()
+        val needsRefresh = cached == null || isChartExpired(cached.updatedAt, days)
 
         if (cached != null) {
-            val isOnline = networkMonitor.hasInternetConnection()
-            val shouldRefresh = isOnline && isChartExpired(cached.updatedAt, days)
             emit(
                 ChartLoadResult.Data(
                     points = cached.points,
                     updatedAt = cached.updatedAt,
                     isCached = true,
                     isOffline = !isOnline,
-                    isRefreshing = shouldRefresh
+                    isRefreshing = isOnline && needsRefresh
                 )
             )
-            if (!shouldRefresh) return@flow
-
-            try {
-                val freshPoints = fetchAndCacheChart(id, days, cacheKey)
-                emit(
-                    ChartLoadResult.Data(
-                        points = freshPoints,
-                        updatedAt = System.currentTimeMillis(),
-                        isCached = false
-                    )
-                )
-            } catch (error: Exception) {
-                if (error is CancellationException) throw error
-                emit(
-                    ChartLoadResult.Data(
-                        points = cached.points,
-                        updatedAt = cached.updatedAt,
-                        isCached = true,
-                        isOffline = !networkMonitor.hasInternetConnection(),
-                        refreshFailed = true
-                    )
-                )
-            }
-            return@flow
         }
+        if (!needsRefresh) return@flow
 
-        if (!networkMonitor.hasInternetConnection()) {
-            emit(ChartLoadResult.OfflineNoCache)
+        if (!isOnline) {
+            if (cached == null) emit(ChartLoadResult.OfflineNoCache)
             return@flow
         }
 
@@ -236,15 +187,28 @@ class CurrencyRepositoryImpl @Inject constructor(
             throw error
         } catch (error: Exception) {
             emit(
-                if (networkMonitor.hasInternetConnection()) {
-                    ChartLoadResult.NetworkError
+                if (cached != null) {
+                    ChartLoadResult.Data(
+                        points = cached.points,
+                        updatedAt = cached.updatedAt,
+                        isCached = true,
+                        isOffline = !networkMonitor.hasInternetConnection(),
+                        refreshFailed = true
+                    )
                 } else {
-                    ChartLoadResult.OfflineNoCache
+                    if (networkMonitor.hasInternetConnection()) {
+                        ChartLoadResult.NetworkError
+                    } else {
+                        ChartLoadResult.OfflineNoCache
+                    }
                 }
             )
         }
     }.flowOn(Dispatchers.IO)
 
+    /**
+     * Lấy dữ liệu biểu đồ từ API và lưu vào cơ sở dữ liệu Realm.
+     */
     private suspend fun fetchAndCacheChart(id: String, days: Int, cacheKey: String): List<PricePoint> =
         withContext(Dispatchers.IO) {
             val points = downsample(
@@ -270,6 +234,9 @@ class CurrencyRepositoryImpl @Inject constructor(
             points
         }
 
+    /**
+     * Hàm này dùng để kiểm tra xem dữ liệu biểu đồ (Chart) đã lưu trong cache còn "hạn sử dụng" hay đã quá cũ (hết hạn - expired).
+     */
     private fun isChartExpired(updatedAt: Long, days: Int): Boolean =
         System.currentTimeMillis() - updatedAt >= chartTtl(days)
 
@@ -282,6 +249,9 @@ class CurrencyRepositoryImpl @Inject constructor(
         else -> 30 * 60 * 1000L
     }
 
+    /**
+     * Hàm này dùng để rút gọn điểm dữ liệu biểu đồ từ rất nhiều điểm xuống MAX_CACHED_CHART_POINTS điểm, ở đây đang để MAX_CACHED_CHART_POINTS = 80 điểm
+     */
     private fun downsample(points: List<PricePoint>): List<PricePoint> {
         if (points.size <= MAX_CACHED_CHART_POINTS) return points
         return List(MAX_CACHED_CHART_POINTS) { index ->
@@ -294,6 +264,11 @@ class CurrencyRepositoryImpl @Inject constructor(
         val updatedAt: Long
     )
 
+    /**
+     * Khởi tạo dữ liệu nếu chưa có trong cơ sở dữ liệu. Nếu có thì bỏ qua.
+     * Sử dụng seedMutex để đảm bảo chỉ có một luồng truy cập vào cơ sở dữ liệu tại một thời điểm.
+     *
+     */
     private suspend fun ensureSeeded() = seedMutex.withLock {
         val needsSeed = withContext(Dispatchers.IO) {
             realm.query<CurrencyRealm>().find().let { currencies ->
@@ -312,7 +287,6 @@ class CurrencyRepositoryImpl @Inject constructor(
                     }
                     updateRefreshInfo(CRYPTO_KEY, seed.cryptoUpdatedAt)
                 }
-
                 val hasFiats = query<CurrencyRealm>("isCrypto == false").find().isNotEmpty()
                 if (!hasFiats) {
                     seed.fiats.forEach { fiat ->
@@ -324,6 +298,10 @@ class CurrencyRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Cập nhật thời gian cập nhật cuối cùng cho một khóa cụ thể.
+     *
+     */
     private fun io.realm.kotlin.MutableRealm.updateRefreshInfo(key: String, timestamp: Long) {
         val refreshInfo = query<RefreshInfo>("key == $0", key).first().find()
         if (refreshInfo == null) {
@@ -336,24 +314,8 @@ class CurrencyRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun getCachedCoinMarkets(): List<CoinMarketItem> = withContext(Dispatchers.IO) {
-        realm.query<CurrencyRealm>("isCrypto == true").find()
-            .map { realmItem -> realmItem.toCoinMarketItem() }
-    }
-
-    private suspend fun getCachedFiats(): List<CurrencyItem> = withContext(Dispatchers.IO) {
-        realm.query<CurrencyRealm>("isCrypto == false").find()
-            .map { realmItem -> realmItem.toCurrencyItem() }
-    }
-
     private suspend fun getRefreshTime(key: String): Long? = withContext(Dispatchers.IO) {
         realm.query<RefreshInfo>("key == $0", key).first().find()?.lastUpdated
-    }
-
-    private suspend fun shouldRefresh(key: String, intervalMs: Long): Boolean = withContext(Dispatchers.IO) {
-        val timestamp = realm.query<RefreshInfo>("key == $0", key).first().find()?.lastUpdated
-            ?: return@withContext true
-        System.currentTimeMillis() - timestamp >= intervalMs
     }
 
     private suspend fun updateRefreshTime(key: String) {

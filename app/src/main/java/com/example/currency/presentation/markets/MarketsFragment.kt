@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -40,6 +41,12 @@ class MarketsFragment : BaseFragment<FragmentMarketsBinding>(FragmentMarketsBind
         binding.rvMarkets.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMarkets.adapter = adapter
 
+        binding.swipeRefresh.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.brand_primary)
+        )
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refreshCoins()
+        }
 
         binding.etMarketSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -52,6 +59,7 @@ class MarketsFragment : BaseFragment<FragmentMarketsBinding>(FragmentMarketsBind
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    binding.swipeRefresh.isRefreshing = state.isRefreshing
                     marketCoins = state.marketCoins.sortedByDescending {
                         it.marketCap ?: Double.NEGATIVE_INFINITY
                     }

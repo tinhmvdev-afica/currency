@@ -11,4 +11,5 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
     val isOnboardingCompleted: Boolean
         get() = getPreferences().onboardingCompleted
+
 }

@@ -29,6 +29,9 @@ class CurrenciesSelectableAdapter(
         val isSelected: Boolean
     )
 
+    /**
+     *
+     */
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SelectableCurrencyRow>() {
             override fun areItemsTheSame(

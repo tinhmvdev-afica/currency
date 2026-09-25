@@ -23,6 +23,9 @@ data class AssetSeedCurrencyData(
     val fiatUpdatedAt: Long
 )
 
+/**
+ * Lấy data từ trong folder assets và lưu vào trong cơ sở dữ liệu Realm.
+ */
 @Singleton
 class AssetCurrencySeedDataSource @Inject constructor(
     @ApplicationContext private val context: Context
@@ -36,7 +39,6 @@ class AssetCurrencySeedDataSource @Inject constructor(
             val rates = readJson<CurrencyFreaksRatesDto>(FIAT_RATES_FILE)
 
             check(rates.base.equals("USD", ignoreCase = true)) { "Seed rates must use USD as base" }
-
             val coinMarkets = coinDtos.mapNotNull { dto ->
                 val assetPath = assetPathOrNull(COINS_DIRECTORY, dto.symbol) ?: return@mapNotNull null
                 dto.toCoinMarketItem().let { market ->
@@ -76,11 +78,17 @@ class AssetCurrencySeedDataSource @Inject constructor(
         }.getOrNull()
     }
 
+    /**
+     * Hàm này dùng để đọc 1 file Json trong thư mục assets rồi chuyển đổi nó thành 1 đối tượng kiểu T
+     */
     private inline fun <reified T> readJson(fileName: String): T =
         context.assets.open(fileName).bufferedReader().use { reader ->
             gson.fromJson(reader, T::class.java)
         }
 
+    /**
+     * Hàm này dùng để lấy đường dẫn của 1 file ảnh trong thư mục assets,cách hoạt động:
+     */
     private fun assetPathOrNull(directory: String, code: String): String? {
         val fileName = "${code.lowercase(Locale.ROOT)}.png"
         val assetName = "$directory/$fileName"

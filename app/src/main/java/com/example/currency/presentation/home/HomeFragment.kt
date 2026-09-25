@@ -4,23 +4,32 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.currency.R
+import com.example.currency.ads.AppOpenAdManager
 import com.example.currency.databinding.FragmentHomeBinding
 import com.example.currency.presentation.base.BaseFragment
 import com.example.currency.presentation.converter.ConverterFragment
 import com.example.currency.presentation.markets.MarketsFragment
 import com.example.currency.presentation.settings.SettingsFragment
+import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            AppOpenAdManager.waitForAd()
+            AppOpenAdManager.showAdIfAvailable(requireActivity())
+        }
+    }
     override fun setUp() {
         // Setup ViewPager2 with 3 tabs
         binding.viewPagerMain.isUserInputEnabled = false
         binding.viewPagerMain.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 3
-
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
                     0 -> ConverterFragment()

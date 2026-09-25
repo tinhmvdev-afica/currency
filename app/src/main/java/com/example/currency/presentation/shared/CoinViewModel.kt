@@ -5,12 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.currency.data.network.NetworkMonitor
 import com.example.currency.domain.model.ChartLoadResult
 import com.example.currency.domain.model.CoinMarketItem
-import com.example.currency.domain.model.CurrencyListLoadResult
 import com.example.currency.domain.model.CurrencyItem
 import com.example.currency.domain.model.PricePoint
 import com.example.currency.domain.usecase.currency.GetCryptoListUseCase
 import com.example.currency.domain.usecase.currency.GetFiatListUseCase
-import com.example.currency.domain.usecase.currency.RefreshCurrenciesUseCase
 import com.example.currency.domain.usecase.market.GetMarketChartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -26,11 +24,7 @@ data class CryptoUiState(
     val marketCoins: List<CoinMarketItem> = emptyList(),
     val selectedCoin: CoinMarketItem? = null,
     val updatedAt: Long? = null,
-    val isCached: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val refreshFailed: Boolean = false,
-    val isOffline: Boolean = false,
-    val errorMessage: String? = null
+    val isRefreshing: Boolean = false
 )
 
 data class FiatsUiState(
@@ -38,11 +32,7 @@ data class FiatsUiState(
     val currencies: List<CurrencyItem> = emptyList(),
     val selectedCurrency: CurrencyItem? = null,
     val updatedAt: Long? = null,
-    val isCached: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val refreshFailed: Boolean = false,
-    val isOffline: Boolean = false,
-    val errorMessage: String? = null
+    val isRefreshing: Boolean = false
 )
 
 data class MarketChartUiState(
@@ -61,7 +51,6 @@ data class MarketChartUiState(
 class CoinViewModel @Inject constructor(
     private val getCryptoList: GetCryptoListUseCase,
     private val getFiatList: GetFiatListUseCase,
-    private val refreshCurrencies: RefreshCurrenciesUseCase,
     private val getMarketChart: GetMarketChartUseCase,
     private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
@@ -78,7 +67,6 @@ class CoinViewModel @Inject constructor(
     private var cryptoJob: Job? = null
     private var fiatJob: Job? = null
     private var chartJob: Job? = null
-    private var refreshJob: Job? = null
     private var cryptoRequestId = 0L
     private var fiatRequestId = 0L
     private var chartRequestId = 0L
@@ -93,76 +81,40 @@ class CoinViewModel @Inject constructor(
         }
     }
 
-    fun loadCoins() {
+    fun loadCoins(forceRefresh: Boolean = false) {
         cryptoJob?.cancel()
         val requestId = ++cryptoRequestId
         cryptoJob = viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-            getCryptoList().collect { result ->
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            getCryptoList(forceRefresh).collect { result ->
                 if (requestId != cryptoRequestId) return@collect
-                _uiState.value = when (result) {
-                    is CurrencyListLoadResult.Data -> {
-                        val selectedId = _uiState.value.selectedCoin?.currency?.id
-                        _uiState.value.copy(
-                            isLoading = false,
-                            currencies = result.items.map { it.currency },
-                            marketCoins = result.items,
-                            selectedCoin = result.items.firstOrNull { it.currency.id == selectedId }
-                                ?: _uiState.value.selectedCoin,
-                            updatedAt = result.updatedAt,
-                            isCached = result.isCached,
-                            isRefreshing = result.isRefreshing,
-                            refreshFailed = result.refreshFailed,
-                            isOffline = result.isOffline,
-                            errorMessage = null
-                        )
-                    }
-
-                    CurrencyListLoadResult.OfflineNoCache -> _uiState.value.copy(
-                        isLoading = false,
-                        isOffline = true,
-                        errorMessage = "Không có mạng và chưa có dữ liệu đã lưu"
-                    )
-
-                    CurrencyListLoadResult.NetworkError -> _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "Không thể tải danh sách tiền điện tử"
-                    )
-                }
+                val selectedId = _uiState.value.selectedCoin?.currency?.id
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    currencies = result.items.map { it.currency },
+                    marketCoins = result.items,
+                    selectedCoin = result.items.firstOrNull { it.currency.id == selectedId }
+                        ?: _uiState.value.selectedCoin,
+                    updatedAt = result.updatedAt,
+                    isRefreshing = result.isRefreshing
+                )
             }
         }
     }
 
-    fun loadFiats() {
+    fun loadFiats(forceRefresh: Boolean = false) {
         fiatJob?.cancel()
         val requestId = ++fiatRequestId
         fiatJob = viewModelScope.launch {
-            _fiatUiState.value = _fiatUiState.value.copy(isLoading = true, errorMessage = null)
-            getFiatList().collect { result ->
+            _fiatUiState.value = _fiatUiState.value.copy(isLoading = true)
+            getFiatList(forceRefresh).collect { result ->
                 if (requestId != fiatRequestId) return@collect
-                _fiatUiState.value = when (result) {
-                    is CurrencyListLoadResult.Data -> _fiatUiState.value.copy(
-                        isLoading = false,
-                        currencies = result.items,
-                        updatedAt = result.updatedAt,
-                        isCached = result.isCached,
-                        isRefreshing = result.isRefreshing,
-                        refreshFailed = result.refreshFailed,
-                        isOffline = result.isOffline,
-                        errorMessage = null
-                    )
-
-                    CurrencyListLoadResult.OfflineNoCache -> _fiatUiState.value.copy(
-                        isLoading = false,
-                        isOffline = true,
-                        errorMessage = "Không có mạng và chưa có dữ liệu đã lưu"
-                    )
-
-                    CurrencyListLoadResult.NetworkError -> _fiatUiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "Không thể tải danh sách tiền tệ"
-                    )
-                }
+                _fiatUiState.value = _fiatUiState.value.copy(
+                    isLoading = false,
+                    currencies = result.items,
+                    updatedAt = result.updatedAt,
+                    isRefreshing = result.isRefreshing
+                )
             }
         }
     }
@@ -204,69 +156,19 @@ class CoinViewModel @Inject constructor(
     }
 
     fun refreshAll() {
-        cryptoJob?.cancel()
-        fiatJob?.cancel()
-        refreshJob?.cancel()
-        val cryptoId = ++cryptoRequestId
-        val fiatId = ++fiatRequestId
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-        _fiatUiState.value = _fiatUiState.value.copy(isLoading = true, errorMessage = null)
-        refreshJob = viewModelScope.launch {
-            val result = refreshCurrencies()
-            if (cryptoId == cryptoRequestId) {
-                result.crypto.onSuccess { coins ->
-                    val selectedId = _uiState.value.selectedCoin?.currency?.id
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        currencies = coins.map { it.currency },
-                        marketCoins = coins,
-                        selectedCoin = coins.firstOrNull { it.currency.id == selectedId }
-                            ?: _uiState.value.selectedCoin,
-                        updatedAt = System.currentTimeMillis(),
-                        isCached = false,
-                        isRefreshing = false,
-                        refreshFailed = false,
-                        isOffline = false,
-                        errorMessage = null
-                    )
-                }.onFailure { error ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        isRefreshing = false,
-                        refreshFailed = true,
-                        errorMessage = error.message ?: "Có lỗi xảy ra"
-                    )
-                }
-            }
-            if (fiatId == fiatRequestId) {
-                result.fiat.onSuccess { currencies ->
-                    _fiatUiState.value = _fiatUiState.value.copy(
-                        isLoading = false,
-                        currencies = currencies,
-                        updatedAt = System.currentTimeMillis(),
-                        isCached = false,
-                        isRefreshing = false,
-                        refreshFailed = false,
-                        isOffline = false,
-                        errorMessage = null
-                    )
-                }.onFailure { error ->
-                    _fiatUiState.value = _fiatUiState.value.copy(
-                        isLoading = false,
-                        isRefreshing = false,
-                        refreshFailed = true,
-                        errorMessage = error.message ?: "Có lỗi xảy ra"
-                    )
-                }
-            }
-        }
+        _uiState.value = _uiState.value.copy(isRefreshing = true)
+        _fiatUiState.value = _fiatUiState.value.copy(isRefreshing = true)
+        loadCoins(forceRefresh = true)
+        loadFiats(forceRefresh = true)
+    }
+
+    fun refreshCoins() {
+        _uiState.value = _uiState.value.copy(isRefreshing = true)
+        loadCoins(forceRefresh = true)
     }
 
     fun selectMarketCoin(coin: CoinMarketItem) {
         _uiState.value = _uiState.value.copy(selectedCoin = coin)
     }
 
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(errorMessage = null)
-    }
 }

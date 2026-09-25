@@ -8,12 +8,17 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/converterScroll"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:layout_weight="1">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/converterScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,21 +89,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Refresh Button -->
-            <FrameLayout
-                android:id="@+id/btnRefresh"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:background="@drawable/bg_currency_selector_btn">
-
-                <ImageView
-                    android:id="@+id/ivRefreshIcon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/auto_refresh"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_refresh" />
-            </FrameLayout>
         </LinearLayout>
 
         <!-- Main Card Container -->
@@ -400,6 +390,11 @@
             </FrameLayout>
 
         </FrameLayout>
+        <FrameLayout
+            android:id="@+id/adContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
 
         <!-- Quick Multi-Currency Section Header -->
         <LinearLayout
@@ -434,8 +429,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
-    </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.example.currency.presentation.common.view.CustomNumericKeyboard
         android:id="@+id/customKeyboard"
