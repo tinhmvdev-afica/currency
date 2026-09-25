@@ -30,7 +30,6 @@ abstract class BaseBottomSheetDialogFragment<VB : ViewBinding>(
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.hideSystemBars()
     }
 
     override fun onDestroyView() {
